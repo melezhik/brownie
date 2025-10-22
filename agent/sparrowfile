@@ -26,32 +26,51 @@ does Sparky::JobApi::Role
 
     my $orch-job = Sparky::JobApi.new(
       :api<https://sparky.sparrowhub.io>,
-      :project<browny.input>,
+      :project<browny.queue>,
     );
+
+    my $orch-job2 = Sparky::JobApi.new(
+      :api<https://sparky.sparrowhub.io>,
+      :project<browny.agents>,
+    );
+
+    my $chars = 'a'..'z', 'A'..'Z', '0'..'9';
+
+    my $random-string = $chars.roll(10).join;
+
+    my $agent = "/tmp/agent".IO ~~ :f ?? "/tmp/agent".IO.slurp !! $random-string;
+
+    unless  "/tmp/agent".IO ~~ :f {
+      "/tmp/agent".IO.spurt("agent-" ~ $random-string);
+    }
 
     while True {
 
+      $orch-job2.queue({
+        description => "hello from $agent", 
+        tags => %(
+          agent => $agent,
+        ),
+      });
+      
       my $q = $orch-job.get-stash();
 
-      say "load requests from orchestrator";
+      say "load requests from orchestrator queue";
       
       if $q && $q<list> {
         my $version = $q<version>;
         for $q<list><> -> $i {
-          if "/tmp/brownie/{$version}/job-{$i<job_id>}".IO ~~ :f {
-              say "job {$i<job_id>} already queued for rakudo version {$version}";
-          } else {
-            my $j = Sparky::JobApi.new(
-              :project<test>,
-            );
-            $j.put-stash(%(list => $i<modules>));
-            $j.queue({
-              description => "test job: {$i<job_id>}", 
-              tags => %(
-                rakudo-version => $version,
-              ),
-            });
-          }
+          next unless $i<agent> eq $agent;
+          my $j = Sparky::JobApi.new(
+            :project<test>,
+          );
+          $j.put-stash(%(list => $i<modules>));
+          $j.queue({
+            description => "test job: {$i<job_id>}", 
+            tags => %(
+              rakudo-version => $version,
+            ),
+          });
         }
       }
       sleep(10);
