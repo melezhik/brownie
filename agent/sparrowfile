@@ -1,0 +1,112 @@
+#!raku
+
+use Sparky::JobApi;
+
+use Sparky::JobApi;
+
+class Pipeline
+
+does Sparky::JobApi::Role
+
+{
+
+  method stage-main {
+
+    bash "raku -V > rakuenv.txt";
+
+    my $my = Sparky::JobApi.new( :mine );
+
+    $my.put-file("rakuenv.txt","rakuenv.txt");
+
+    file-delete "tasks.tar";
+
+    say "archiving tasks/ to tasks.tar";
+
+    bash "tar cf {$*CWD}/tasks.tar -C tasks/ .";    
+
+    my $orch-job = Sparky::JobApi.new(
+      :api<https://sparky.sparrowhub.io>,
+      :project<browny.input>,
+    );
+
+    while True {
+
+      my $q = $orch-job.get-stash();
+
+      say "load requests from orchestrator";
+      
+      if $q && $q<list> {
+        my $version = $q<version>;
+        for $q<list><> -> $i {
+          if "/tmp/brownie/{$version}/job-{$i<job_id>}".IO ~~ :f {
+              say "job {$i<job_id>} already queued for rakudo version {$version}";
+          } else {
+            my $j = Sparky::JobApi.new(
+              :project<test>,
+            );
+            $j.put-stash(%(list => $i<modules>));
+            $j.queue({
+              description => "test job: {$i<job_id>}", 
+              tags => %(
+                rakudo-version => $version,
+              ),
+            });
+          }
+        }
+      }
+      sleep(10);
+    }
+  }
+
+  method stage-test {
+
+    my $my = Sparky::JobApi.new( :mine );
+
+    my $blob = $my.get-file("tasks.tar");
+
+    directory "tasks";
+
+    my $fh = open "tasks/tasks.tar", :w, :bin;
+    $fh.write($blob);
+    $fh.close;
+
+    bash "tar -xf tasks.tar  && ls -l", %(
+      cwd => "{$*CWD}/tasks",
+      description => "unpack tasks.tar",
+    );
+
+    my @list = $my.get-stash()<list><>;
+    my %results;
+
+    my $orch-job = Sparky::JobApi.new(
+      :api<https://sparky.sparrowhub.io>,
+      :project<browny.results>,
+    );
+
+    for @list.sort -> $m {
+      %results{$m} = %( status => "", log => "" );
+      my $s = task-run "tasks/run-test", %(
+        module => $m
+      );
+      if $s<success> == 1 {
+        %results{$m}<status> = True
+      } else {
+        %results{$m}<status> = False;
+        %results{$m}<log> = "log.txt".IO.slurp;
+      }
+    }
+
+    $orch-job.put-stash(%results);
+
+    $orch-job.queue({
+      description => "results", 
+      tags => %(
+        rakudo-version => tags()<rakudo-version>,
+      ),
+    });
+  }
+
+}
+
+
+Pipeline.new.run;
