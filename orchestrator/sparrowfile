@@ -1,0 +1,97 @@
+#!raku
+
+use Sparky::JobApi;
+
+class Pipeline
+
+does Sparky::JobApi::Role
+
+{
+
+  method stage-main {
+
+    "list.txt".IO.spurt(config()<list><>.join("\n"));
+
+    Sparky::JobApi.new(:mine).put-file("list.txt","list.txt");
+
+    my @list = config()<list><>;
+
+    my $agents-queue = Sparky::JobApi.new(:project<browny.queue>);
+
+    my $j = 0;
+
+    while ($j <= 200) {
+
+      my @eff-list;
+      for @list -> $l {
+        if "/tmp/brownie/versions/2025.10/{$l}.OK".IO ~~ :f  ||
+           "/tmp/brownie/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
+              next;
+        }
+        push @eff-list, $l;
+      }        
+      my $chunk = 0;
+      my @agents;
+      my $k = 0;
+
+      while @agents.elems < 0 {
+        say "look for available agents ...";    
+        if "/tmp/brownie/agents".IO ~~ :d { 
+          for dir("/tmp/brownie/agents") {
+              push @agents, $_.basename;
+          }
+        }
+        sleep 1;
+        $k++;
+        last if $k > 10;
+      }
+
+      # remove agents that don't respond more then 10 minutes
+      
+      if "/tmp/brownie/agents".IO ~~ :d {
+        bash "find /tmp/brownie/agents -type f -mmin +10 -delete";
+      }
+      say "{@agents.elems} online agents found";
+      if @agents.elems > 0 {
+        if @list.elems < @agents.elems {
+            $chunk = 1;
+        } else {
+          $chunk = Int(@eff-list.elems/@agents.elems);
+          $chunk = 3 if $chunk > 3;
+        }
+      } 
+
+      if $chunk > 0 {
+
+        my $a = 0;
+
+        say "agents cnt: {@agents.elems}";
+
+        say "chunk: $chunk";
+
+        for 1 .. @agents.elems -> $i {
+
+          my @slice = $i == @agents.elems ?? @eff-list[$a .. *] !! @eff-list[$a .. $a + $chunk - 1];
+
+          @slice = @slice.sort;
+          say "push job to agent {@agents[$i-1]}";
+          $agents-queue.put-stash(
+            %( 
+              version => "2025.10",
+              agent => @agents[$i-1],
+              modules => @slice,
+            )
+          );
+          say "slice: {@slice.raku}";
+          $a = $a + $chunk;
+          say "===";
+        }
+        sleep(10);
+        $j++;
+      }
+    }
+  }
+
+}  
+
+Pipeline.new.run;

@@ -2,8 +2,6 @@
 
 use Sparky::JobApi;
 
-use Sparky::JobApi;
-
 class Pipeline
 
 does Sparky::JobApi::Role
@@ -50,6 +48,7 @@ does Sparky::JobApi::Role
         description => "hello from $agent", 
         tags => %(
           agent => $agent,
+          stage => "ping",
         ),
       });
       
@@ -120,11 +119,36 @@ does Sparky::JobApi::Role
     $orch-job.queue({
       description => "results", 
       tags => %(
-        rakudo-version => tags()<rakudo-version>,
+        version => tags()<rakudo-version>,
+        stage => "results",
       ),
     });
   }
 
+  method stage-ping {
+
+    directory "/tmp/brownie/agents";
+
+    "/tmp//tmp/brownie/agents/{tags()<agent>}".IO.spurt("");
+
+  }
+  method stage-results {
+
+    my $me = Sparky::JobApi.new( :mine );
+
+    my $resutls = $me.get-stash();
+    my $version = tags()<version>;
+    for $resutls.kv -> $k, $v {
+      directory "/tmp/brownie/versions/$version/$k";
+      if $v<status> {
+        "/tmp/brownie/versions/$version/{$k}.OK"
+      } else {
+        "/tmp/brownie/versions/$version/{$k}.FAIL"
+      }
+
+    }
+
+  }
 }
 
 
