@@ -1,0 +1,69 @@
+#!raku
+
+use Sparky::JobApi;
+
+use Sparky::JobApi;
+
+class Pipeline
+
+does Sparky::JobApi::Role
+
+{
+
+  method stage-main {
+
+    bash "raku -V > rakuenv.txt";
+
+    my $my = Sparky::JobApi.new( :mine );
+
+    $my.put-file("rakuenv.txt","rakuenv.txt");
+
+    my $blob = $my.get-file("tasks.tar");
+
+    directory "tasks";
+
+    my $fh = open "tasks/tasks.tar", :w, :bin;
+    $fh.write($blob);
+    $fh.close;
+
+    bash "tar -xf tasks.tar  && ls -l", %(
+      cwd => "{$*CWD}/tasks",
+      description => "unpack tasks.tar",
+    );
+
+    my @list = $my.get-stash()<list><>;
+    my %results;
+
+    my $orch-feed-job = Sparky::JobApi.new(
+      :api<https://sparky.sparrowhub.io>,
+      :project<sync>,
+
+    );
+
+    for @list.sort -> $m {
+      %results{$m} = %( status => "", log => "" );
+      my $s = task-run "tasks/run-test", %(
+        module => $m
+      );
+      if $s<success> == 1 {
+        %results{$m}<status> = True
+      } else {
+        %results{$m}<status> = False;
+        %results{$m}<log> = "log.txt".IO.slurp;
+      }
+    }
+
+    $orch-feed-job.put-stash(%results);
+
+    $orch-feed-job.queue({
+      description => "results", 
+      tags => %(
+        rakudo-version => tags()<rakudo-version>,
+      ),
+    });
+  }
+
+}
+
+
+Pipeline.new.run;
