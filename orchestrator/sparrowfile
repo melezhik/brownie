@@ -41,7 +41,7 @@ does Sparky::JobApi::Role
               push @agents, $_.basename;
           }
         }
-        sleep 1;
+        sleep(1);
         $k++;
         last if $k > 10;
       }
@@ -52,6 +52,7 @@ does Sparky::JobApi::Role
         bash "find /tmp/brownie/agents -type f -mmin +10 -delete";
       }
       say "{@agents.elems} online agents found";
+
       if @agents.elems > 0 {
         if @list.elems < @agents.elems {
             $chunk = 1;
@@ -59,7 +60,9 @@ does Sparky::JobApi::Role
           $chunk = Int(@eff-list.elems/@agents.elems);
           $chunk = 3 if $chunk > 3;
         }
-      } 
+      } else {
+        sleep(10);
+      }
 
       if $chunk > 0 {
 
