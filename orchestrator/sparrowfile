@@ -20,7 +20,7 @@ does Sparky::JobApi::Role
 
     my $j = 0;
 
-    while ($j <= 200 || @eff-list.elems > 0) {
+    while (True) {
       my @_list = [];
       for @eff-list -> $l {
         if "/tmp/brownie/versions/2025.10/{$l}.OK".IO ~~ :f  ||
@@ -29,21 +29,25 @@ does Sparky::JobApi::Role
         }
         push @_list, $l;
       }
-      @eff-list = @_list;        
+      @eff-list = @_list;
+      last if @eff-list.elems == 0;
+
       my $chunk = 0;
       my @agents;
-      my $k = 0;
+      my $k = 1;
 
-      while ($k < 10 or @agents.elems == 0) {
+      while (True) {
         say "look for available agents ...";    
         if "/tmp/brownie/agents".IO ~~ :d { 
           for dir("/tmp/brownie/agents") {
               push @agents, $_.basename;
           }
         }
-        say " ... $k";
+        say " try number ... $k";
         sleep(1);
         $k++;
+        last if $k > 4;
+        last if @agents.elems > 0;
       }
 
       # remove agents that don't respond more then 10 minutes
@@ -62,8 +66,6 @@ does Sparky::JobApi::Role
           $chunk = Int(@eff-list.elems/@agents.elems);
           $chunk = 3 if $chunk > 3;
         }
-      } else {
-        sleep(10);
       }
 
       if @agents > 0 && @eff-list.elems > 0 {
@@ -91,10 +93,15 @@ does Sparky::JobApi::Role
           $a = $a + $chunk;
           say "===";
         }
-        sleep(10);
-        $j++;
       }
+
+      sleep(10);
+      $j++;
+      last if $j > 60;
+
     }
+
+    say "done";
   }
 
 }  
