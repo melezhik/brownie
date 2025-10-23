@@ -1,8 +1,6 @@
-# How to agent to pool
+# How to add agent to pool
 
 ## Build docker container
-
-Build image
 
 ```bash
 docker build . -t  agent
@@ -16,7 +14,7 @@ Run agent server
 docker run --rm -it --name agent -p 4000:4000 agent
 ```
 
-Add agent to pool
+## Add agent to pool
 
 Go to http://127.0.0.1 
 
