@@ -85,6 +85,7 @@ does Sparky::JobApi::Role
             tags => %(
               rakudo-version => $version,
               stage => "test",
+              agent => $agent,
             ),
           });
           directory "{self.base-dir}/jobs/{$q<run-id>}";
@@ -144,7 +145,7 @@ does Sparky::JobApi::Role
     $orch-job.put-stash(%results);
 
     $orch-job.queue({
-      description => "results", 
+      description => "results from {tags()<agent>}", 
       tags => %(
         version => tags()<rakudo-version>,
         stage => "results",
