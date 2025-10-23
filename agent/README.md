@@ -16,7 +16,7 @@ docker run --rm -it --name agent -p 4000:4000 agent
 
 ## Add agent to pool
 
-Go to http://127.0.0.1 
+Go to http://127.0.0.1:4000 
 
 - login admin/admin
 
