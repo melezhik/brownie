@@ -112,6 +112,7 @@ does Sparky::JobApi::Role
     );
 
     "list.txt".IO.spurt(@list.join("\n"));
+    
     $my.put-file("list.txt","list.txt");
 
     my $status = True;
@@ -127,7 +128,7 @@ does Sparky::JobApi::Role
         %results{$m}<status> = False;
         $status = False;
         %results{$m}<log> = "log.txt".IO.slurp;
-        $my.put-file("log.txt","log.txt");
+        $my.put-file("log.txt","{$m}.log.txt");
       }
     }
 
@@ -137,7 +138,7 @@ does Sparky::JobApi::Role
       description => "results", 
       tags => %(
         version => tags()<rakudo-version>,
-        stage => "save results",
+        stage => "results",
       ),
     });
 

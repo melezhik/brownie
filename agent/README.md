@@ -24,6 +24,9 @@ Go to http://127.0.0.1
 
 - run `agent` project job
 
+See workload. Once agent has recieved any workload from orchestaror it starts execute it,
+you'll jobs named `brownie.test`
+
 # FAQ
 
 > How to change agent name visible in pool

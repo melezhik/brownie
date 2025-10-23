@@ -41,7 +41,7 @@ does Sparky::JobApi::Role
               push @agents, $_.basename;
           }
         }
-        say " try number ... $k";
+        say " \\ try number ... $k";
         sleep(1);
         $k++;
         last if $k > 4;
