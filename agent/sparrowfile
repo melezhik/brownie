@@ -12,10 +12,12 @@ does Sparky::JobApi::Role
 
     my $random-string = ("a".."z","A".."Z",0..9).flat.roll(18);
 
-    my $agent-id = "/tmp/agent".IO ~~ :f ?? "/tmp/agent".IO.slurp !! $random-string;
+    my $agent-id = "{config()<base-dir>}/agent-id".IO ~~ :f 
+    ?? "{config()<base-dir>}/agent-id".IO.slurp 
+    !! $random-string;
 
-    unless  "/tmp/agent".IO ~~ :f {
-      "/tmp/agent".IO.spurt($random-string);
+    unless  "{config()<base-dir>}/agent-id".IO ~~ :f {
+      "{config()<base-dir>}/agent-id".IO.spurt($random-string);
     }
 
     my $agent = ( %*ENV<BRW_AGENT_NAME_PREFIX> || "agent" ) ~ "-" ~ $agent-id;
