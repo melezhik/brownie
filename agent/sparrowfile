@@ -12,6 +12,8 @@ does Sparky::JobApi::Role
 
     my $random-string = ("a".."z","A".."Z",0..9).flat.roll(18);
 
+    directory config()<base-dir> unless config()<base-dir>.IO ~~ :d;
+
     my $agent-id = "{config()<base-dir>}/agent-id".IO ~~ :f 
     ?? "{config()<base-dir>}/agent-id".IO.slurp 
     !! $random-string;
