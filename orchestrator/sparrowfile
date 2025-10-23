@@ -16,11 +16,6 @@ does Sparky::JobApi::Role
 
     my @eff-list = config()<list><>;
     
-    my $agents-queue = Sparky::JobApi.new(
-      :project<browny.queue>,
-      :job-id<agents>,
-    );
-
     my $j = 0;
 
     while (True) {
@@ -85,22 +80,30 @@ does Sparky::JobApi::Role
 
           @slice = @slice.sort;
           say "push job to agent {@agents[$i-1]}";
+
+          my $agents-queue = Sparky::JobApi.new(
+            :project<browny.queue>,
+            :job-id(@agents[$i-1]),
+          );
+
           $agents-queue.put-stash(
             %( 
               version => "2025.10",
               agent => @agents[$i-1],
               modules => @slice,
+              run-id => time, 
             )
           );
           say "slice: {@slice.raku}";
           $a = $a + $chunk;
-          say "===";
+          say "...";
         }
       }
 
       sleep(10);
       $j++;
-      last if $j > 60;
+      # stop after 2 minutes
+      last if $j > 120;
 
     }
 

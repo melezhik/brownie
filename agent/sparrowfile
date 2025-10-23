@@ -10,6 +10,16 @@ does Sparky::JobApi::Role
 
   method stage-main {
 
+    my $random-string = ("a".."z","A".."Z",0..9).flat.roll(18);
+
+    my $agent = "/tmp/agent".IO ~~ :f ?? "/tmp/agent".IO.slurp !! $random-string;
+
+    unless  "/tmp/agent".IO ~~ :f {
+      "/tmp/agent".IO.spurt("agent-" ~ $random-string);
+    }
+
+    say "agent: $agent";
+
     bash "raku -V > rakuenv.txt";
 
     my $my = Sparky::JobApi.new( :mine );
@@ -25,21 +35,13 @@ does Sparky::JobApi::Role
     my $orch-job = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
       :project<browny.queue>,
-      :job-id<agents>,
+      :job-id($agent),
     );
 
     my $orch-job2 = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
       :project<browny.agents>,
     );
-
-    my $random-string = ("a".."z","A".."Z",0..9).flat.roll(18);
-
-    my $agent = "/tmp/agent".IO ~~ :f ?? "/tmp/agent".IO.slurp !! $random-string;
-
-    unless  "/tmp/agent".IO ~~ :f {
-      "/tmp/agent".IO.spurt("agent-" ~ $random-string);
-    }
 
     while True {
 
@@ -55,23 +57,27 @@ does Sparky::JobApi::Role
 
       say "load requests from orchestrator queue";
       
-      if $q && $q<list> {
+      if $q {
         my $version = $q<version>;
-        for $q<list><> -> $i {
-          next unless $i<agent> eq $agent;
+        if "/tmp/brownie/jobs/{$q<run-id>}".IO ~~ :d {
+            say "skip job: {$q<run-id>}, already taken";
+        } else {
           my $j = Sparky::JobApi.new(
             :project<test>,
           );
-          $j.put-stash(%(list => $i<modules>));
+          $j.put-stash(%(list => $q<modules><>));
+          $j.put-file("tasks.tar","tasks.tar");
           $j.queue({
-            description => "test job: {$i<job_id>}", 
+            description => "test job: {$q<run-id>}", 
             tags => %(
               rakudo-version => $version,
+              stage => "test",
             ),
           });
+          directory "/tmp/brownie/jobs/{$q<run-id>}";
         }
       }
-      sleep(10);
+      sleep(60);
     }
   }
 
@@ -131,6 +137,7 @@ does Sparky::JobApi::Role
     "/tmp/brownie/agents/{tags()<agent>}".IO.spurt("");
 
   }
+
   method stage-results {
 
     my $me = Sparky::JobApi.new( :mine );
