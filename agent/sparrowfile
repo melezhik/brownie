@@ -62,6 +62,9 @@ does Sparky::JobApi::Role
         if "/tmp/brownie/jobs/{$q<run-id>}".IO ~~ :d {
             say "skip job: {$q<run-id>}, already taken";
         } else {
+          say "///";
+          say "run tests for job: {$q<run-id>}";
+          say "///";
           my $j = Sparky::JobApi.new(
             :project<test>,
           );
