@@ -67,7 +67,7 @@ does Sparky::JobApi::Role
           say "run tests for job: {$q<run-id>}";
           say "///";
           my $j = Sparky::JobApi.new(
-            :project<test>,
+            :project<brownie.test>,
           );
           $j.put-stash(%(list => $q<modules><>));
           $j.put-file("tasks.tar","tasks.tar");
@@ -136,7 +136,7 @@ does Sparky::JobApi::Role
       description => "results", 
       tags => %(
         version => tags()<rakudo-version>,
-        stage => "results",
+        stage => "save results",
       ),
     });
 
