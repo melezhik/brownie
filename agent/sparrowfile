@@ -100,6 +100,10 @@ does Sparky::JobApi::Role
 
     my $my = Sparky::JobApi.new( :mine );
 
+    bash "raku -V > rakuenv.txt";
+
+    $my.put-file("rakuenv.txt","rakuenv.txt");
+
     my $blob = $my.get-file("tasks.tar");
 
     directory "tasks";
