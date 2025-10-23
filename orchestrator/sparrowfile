@@ -21,8 +21,8 @@ does Sparky::JobApi::Role
     while (True) {
       my @_list = [];
       for @eff-list -> $l {
-        if "/tmp/brownie/versions/2025.10/{$l}.OK".IO ~~ :f  ||
-           "/tmp/brownie/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
+        if "{config()<base-dir>}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
+           "{config()<base-dir>}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
               next;
         }
         push @_list, $l;
@@ -36,8 +36,8 @@ does Sparky::JobApi::Role
 
       while (True) {
         say "look for available agents ...";    
-        if "/tmp/brownie/agents".IO ~~ :d { 
-          for dir("/tmp/brownie/agents") {
+        if "{config()<base-dir>}/agents".IO ~~ :d { 
+          for dir("{config()<base-dir>}/agents") {
               push @agents, $_.basename;
           }
         }
@@ -50,8 +50,8 @@ does Sparky::JobApi::Role
 
       # remove agents that don't respond more then 10 minutes
       
-      if "/tmp/brownie/agents".IO ~~ :d {
-        bash "find /tmp/brownie/agents -type f -mmin +10 -delete";
+      if "{config()<base-dir>}/agents".IO ~~ :d {
+        bash "find {config()<base-dir>}/agents -type f -mmin +10 -delete";
       }
 
       say "{@agents.elems} online agents found";
@@ -99,6 +99,10 @@ does Sparky::JobApi::Role
           say "...";
         }
       }
+
+      say "///";
+      say "[{@eff-list.elems}] tests out of [{config()<list>.elems}] left";
+      say "///";
 
       sleep(10);
       $j++;

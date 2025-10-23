@@ -60,7 +60,7 @@ does Sparky::JobApi::Role
       
       if $q {
         my $version = $q<version>;
-        if "/tmp/brownie/jobs/{$q<run-id>}".IO ~~ :d {
+        if "{config()<base-dir>}/jobs/{$q<run-id>}".IO ~~ :d {
             say "skip job: {$q<run-id>}, already taken";
         } else {
           say "///";
@@ -78,7 +78,7 @@ does Sparky::JobApi::Role
               stage => "test",
             ),
           });
-          directory "/tmp/brownie/jobs/{$q<run-id>}";
+          directory "{config()<base-dir>}/jobs/{$q<run-id>}";
         }
       }
       sleep(60);
@@ -146,9 +146,9 @@ does Sparky::JobApi::Role
 
   method stage-ping {
 
-    directory "/tmp/brownie/agents";
+    directory "{config()<base-dir>}/agents";
 
-    "/tmp/brownie/agents/{tags()<agent>}".IO.spurt("");
+    "{config()<base-dir>}/agents/{tags()<agent>}".IO.spurt("");
 
   }
 
@@ -159,15 +159,15 @@ does Sparky::JobApi::Role
     my $resutls = $me.get-stash();
     my $version = tags()<version>;
     for $resutls.kv -> $k, $v {
-      directory "/tmp/brownie/versions/$version/$k";
+      directory "{config()<base-dir>}/versions/$version/$k";
       if $v<status> {
-        "/tmp/brownie/versions/$version/{$k}.OK"
+        "{config()<base-dir>}/versions/$version/{$k}.OK".IO.spurt("");
       } else {
-        "/tmp/brownie/versions/$version/{$k}.FAIL"
+        "{config()<base-dir>}/versions/$version/{$k}.FAIL".IO.spurt("");
       }
       if $v<log> {
-        "/tmp/brownie/versions/$version/{$k}.log".IO.spurt($v<log>);
-        $me.put-file("/tmp/brownie/versions/$version/{$k}.log","{$k}.log");
+        "{config()<base-dir>}/versions/$version/{$k}.log".IO.spurt($v<log>);
+        $me.put-file("{config()<base-dir>}/versions/$version/{$k}.log","{$k}.log");
       }
 
     }

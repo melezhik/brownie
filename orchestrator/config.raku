@@ -1,4 +1,5 @@
 %(
+  base-dir => "{%*ENV<HOME>}/.brownie",
   list => qw[
     Tie::Hash
     ASTQuery
