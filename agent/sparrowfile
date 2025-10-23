@@ -42,7 +42,7 @@ does Sparky::JobApi::Role
 
     my $orch-job2 = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
-      :project<browny.agents>,
+      :project<agent.ping>,
     );
 
     while True {
@@ -68,7 +68,7 @@ does Sparky::JobApi::Role
           say "run tests for job: {$q<run-id>}";
           say "///";
           my $j = Sparky::JobApi.new(
-            :project<brownie.test>,
+            :project<agent.job>,
           );
           $j.put-stash(%(list => $q<modules><>));
           $j.put-file("tasks.tar","tasks.tar");
@@ -82,6 +82,7 @@ does Sparky::JobApi::Role
           directory "{config()<base-dir>}/jobs/{$q<run-id>}";
         }
       }
+      say "<<< sleep for 60 seconds";
       sleep(60);
     }
   }
@@ -108,11 +109,11 @@ does Sparky::JobApi::Role
 
     my $orch-job = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
-      :project<browny.results>,
+      :project<agent.report>,
     );
 
     "list.txt".IO.spurt(@list.join("\n"));
-    
+
     $my.put-file("list.txt","list.txt");
 
     my $status = True;

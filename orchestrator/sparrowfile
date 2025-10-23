@@ -42,7 +42,8 @@ does Sparky::JobApi::Role
           }
         }
         say " \\ try number ... $k";
-        sleep(1);
+        say "<<< sleep for 5 seconds";
+        sleep(5);
         $k++;
         last if $k > 4;
         last if @agents.elems > 0;
@@ -104,8 +105,10 @@ does Sparky::JobApi::Role
       say "[{@eff-list.elems}] tests out of [{config()<list>.elems}] left";
       say "///";
 
+      say "<<< sleep for 10 seconds";
       sleep(10);
       $j++;
+      
       # stop after 2 minutes
       last if $j > 120;
 
