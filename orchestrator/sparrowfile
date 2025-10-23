@@ -8,6 +8,10 @@ does Sparky::JobApi::Role
 
 {
 
+  method base-dir {
+    "{%*ENV<HOME>}/.brownie"
+  }
+
   method stage-main {
 
     "list.txt".IO.spurt(config()<list><>.join("\n"));
@@ -21,8 +25,8 @@ does Sparky::JobApi::Role
     while (True) {
       my @_list = [];
       for @eff-list -> $l {
-        if "{config()<base-dir>}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
-           "{config()<base-dir>}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
+        if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
+           "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
               next;
         }
         push @_list, $l;
@@ -36,8 +40,8 @@ does Sparky::JobApi::Role
 
       while (True) {
         say "look for available agents ...";    
-        if "{config()<base-dir>}/agents".IO ~~ :d { 
-          for dir("{config()<base-dir>}/agents") {
+        if "{self.base-dir}/agents".IO ~~ :d { 
+          for dir("{self.base-dir}/agents") {
               push @agents, $_.basename;
           }
         }
@@ -51,8 +55,8 @@ does Sparky::JobApi::Role
 
       # remove agents that don't respond more then 10 minutes
       
-      if "{config()<base-dir>}/agents".IO ~~ :d {
-        bash "find {config()<base-dir>}/agents -type f -mmin +10 -delete";
+      if "{self.base-dir}/agents".IO ~~ :d {
+        bash "find {self.base-dir}/agents -type f -mmin +10 -delete";
       }
 
       say "{@agents.elems} online agents found";

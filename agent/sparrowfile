@@ -8,18 +8,22 @@ does Sparky::JobApi::Role
 
 {
 
+  method base-dir {
+    "{%*ENV<HOME>}/.brownie"
+  }
+  
   method stage-main {
 
     my $random-string = ("a".."z","A".."Z",0..9).flat.roll(10).join("");
 
-    directory config()<base-dir> unless config()<base-dir>.IO ~~ :d;
+    directory self.base-dir unless self.base-dir.IO ~~ :d;
 
-    my $agent-id = "{config()<base-dir>}/agent-id".IO ~~ :f 
-    ?? "{config()<base-dir>}/agent-id".IO.slurp 
+    my $agent-id = "{self.base-dir}/agent-id".IO ~~ :f 
+    ?? "{self.base-dir}/agent-id".IO.slurp 
     !! $random-string;
 
-    unless  "{config()<base-dir>}/agent-id".IO ~~ :f {
-      "{config()<base-dir>}/agent-id".IO.spurt($random-string);
+    unless  "{self.base-dir}/agent-id".IO ~~ :f {
+      "{self.base-dir}/agent-id".IO.spurt($random-string);
     }
 
     my $agent = ( %*ENV<BRW_AGENT_NAME_PREFIX> || "agent" ) ~ "-" ~ $agent-id;
@@ -65,7 +69,7 @@ does Sparky::JobApi::Role
       
       if $q {
         my $version = $q<version>;
-        if "{config()<base-dir>}/jobs/{$q<run-id>}".IO ~~ :d {
+        if "{self.base-dir}/jobs/{$q<run-id>}".IO ~~ :d {
             say "skip job: {$q<run-id>}, already taken";
         } else {
           say "///";
@@ -83,7 +87,7 @@ does Sparky::JobApi::Role
               stage => "test",
             ),
           });
-          directory "{config()<base-dir>}/jobs/{$q<run-id>}";
+          directory "{self.base-dir}/jobs/{$q<run-id>}";
         }
       }
       say "<<< sleep for 60 seconds";
@@ -153,9 +157,9 @@ does Sparky::JobApi::Role
 
   method stage-ping {
 
-    directory "{config()<base-dir>}/agents";
+    directory "{self.base-dir}/agents";
 
-    "{config()<base-dir>}/agents/{tags()<agent>}".IO.spurt("");
+    "{self.base-dir}/agents/{tags()<agent>}".IO.spurt("");
 
   }
 
@@ -166,15 +170,15 @@ does Sparky::JobApi::Role
     my $resutls = $me.get-stash();
     my $version = tags()<version>;
     for $resutls.kv -> $k, $v {
-      directory "{config()<base-dir>}/versions/$version/$k";
+      directory "{self.base-dir}/versions/$version/$k";
       if $v<status> {
-        "{config()<base-dir>}/versions/$version/{$k}.OK".IO.spurt("");
+        "{self.base-dir}/versions/$version/{$k}.OK".IO.spurt("");
       } else {
-        "{config()<base-dir>}/versions/$version/{$k}.FAIL".IO.spurt("");
+        "{self.base-dir}/versions/$version/{$k}.FAIL".IO.spurt("");
       }
       if $v<log> {
-        "{config()<base-dir>}/versions/$version/{$k}.log".IO.spurt($v<log>);
-        $me.put-file("{config()<base-dir>}/versions/$version/{$k}.log","{$k}.log");
+        "{self.base-dir}/versions/$version/{$k}.log".IO.spurt($v<log>);
+        $me.put-file("{self.base-dir}/versions/$version/{$k}.log","{$k}.log");
       }
 
     }
