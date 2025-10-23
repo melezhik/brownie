@@ -15,7 +15,8 @@ does Sparky::JobApi::Role
     my $agent = "/tmp/agent".IO ~~ :f ?? "/tmp/agent".IO.slurp !! $random-string;
 
     unless  "/tmp/agent".IO ~~ :f {
-      "/tmp/agent".IO.spurt("agent-" ~ $random-string);
+      my $agent-name-prefix = %*ENV<BRW_AGENT_NAME_PREFIX> || "agent";
+      "/tmp/agent".IO.spurt( $agent-name-prefix ~ '-' ~ $random-string);
     }
 
     say "agent: $agent";
@@ -109,7 +110,12 @@ does Sparky::JobApi::Role
       :project<browny.results>,
     );
 
-    for @list.sort -> $m {
+    "list.txt".IO.spurt(@list.join("\n"));
+    $my.put-file("list.txt","list.txt");
+
+    my $status = True;
+
+    for @list -> $m {
       %results{$m} = %( status => "", log => "" );
       my $s = task-run "tasks/run-test", %(
         module => $m
@@ -118,7 +124,9 @@ does Sparky::JobApi::Role
         %results{$m}<status> = True
       } else {
         %results{$m}<status> = False;
+        $status = False;
         %results{$m}<log> = "log.txt".IO.slurp;
+        $my.put-file("log.txt","log.txt");
       }
     }
 
@@ -131,6 +139,9 @@ does Sparky::JobApi::Role
         stage => "results",
       ),
     });
+
+    die "some tests failed" unless $status;
+
   }
 
   method stage-ping {
@@ -153,6 +164,10 @@ does Sparky::JobApi::Role
         "/tmp/brownie/versions/$version/{$k}.OK"
       } else {
         "/tmp/brownie/versions/$version/{$k}.FAIL"
+      }
+      if $v<log> {
+        "/tmp/brownie/versions/$version/{$k}.log".IO.spurt($v<log>);
+        $me.put-file("/tmp/brownie/versions/$version/{$k}.log","{$k}.log");
       }
 
     }
