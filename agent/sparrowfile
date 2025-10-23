@@ -73,7 +73,7 @@ does Sparky::JobApi::Role
           $j.put-stash(%(list => $q<modules><>));
           $j.put-file("tasks.tar","tasks.tar");
           $j.queue({
-            description => "test job: {$q<run-id>}", 
+            description => "job: {$q<run-id>}", 
             tags => %(
               rakudo-version => $version,
               stage => "test",

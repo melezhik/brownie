@@ -23,7 +23,7 @@ Go to http://127.0.0.1:4000
 - run `agent` project job
 
 See workload. Once agent has recieved any workload from orchestaror it starts execute it,
-you'll see jobs named `agent.job`
+you'll see `agent.job` jobs
 
 # FAQ
 
