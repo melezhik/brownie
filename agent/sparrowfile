@@ -25,6 +25,7 @@ does Sparky::JobApi::Role
     my $orch-job = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
       :project<browny.queue>,
+      :job-id<agents>,
     );
 
     my $orch-job2 = Sparky::JobApi.new(

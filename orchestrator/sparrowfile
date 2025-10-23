@@ -16,7 +16,10 @@ does Sparky::JobApi::Role
 
     my @eff-list = config()<list><>;
     
-    my $agents-queue = Sparky::JobApi.new(:project<browny.queue>);
+    my $agents-queue = Sparky::JobApi.new(
+      :project<browny.queue>,
+      :job-id<agents>,
+    );
 
     my $j = 0;
 
