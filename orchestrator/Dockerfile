@@ -18,7 +18,7 @@ RUN cd /opt/ && git clone https://github.com/melezhik/sparky.git
 
 RUN cd /opt/sparky && raku db-init.raku
 
-COPY config.raku tasks sparrowfile sparky.yaml /root/.sparky/projects/agent/
+COPY config.raku sparrowfile sparky.yaml /root/.sparky/projects/brw-orch
 
 RUN echo "SPARKY_API_TOKEN: blin20" > /root/sparky.yaml
 
