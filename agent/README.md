@@ -22,7 +22,7 @@ Go to http://127.0.0.1:4000
 
 - run `agent` project job
 
-See workload. Once agent has recieved any workload from orchestaror it starts execute it,
+See workload. Once agent has received any workload from orchestrator it starts execute it,
 you'll see `agent.job` jobs
 
 ## Orchestrator endpoint
@@ -37,6 +37,13 @@ Run agent server with `BRW_AGENT_NAME_PREFIX` variable:
 
 ```bash
 docker run --rm -it --name agent -p 4000:4000 -e BRW_AGENT_NAME_PREFIX=cool-boy agent
+```
+
+> How to clear agent queue
+
+```bash
+docker exec -it agent /bin/bash
+rm -rf ~/.sparky/projects/agent.job/.triggers/*
 ```
 
 
