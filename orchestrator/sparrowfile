@@ -141,10 +141,6 @@ does Sparky::JobApi::Role
 
       $summary ~= "$m ... \t $status\n";
 
-      if "{self.base-dir}/versions/2025.10/{$m}.log".IO ~~ :f {
-          $me.put-file("{self.base-dir}/versions/2025.10/{$m}.log","$m.log");
-      }
-
     }
 
     "summary.txt".IO.spurt($summary);
