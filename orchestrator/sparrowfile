@@ -149,9 +149,16 @@ does Sparky::JobApi::Role
 
     "summary.txt".IO.spurt($summary);
     
-    $me.put-file("summary.txt","summary.txt");
-  }
 
+    for config()<list><> -> $m {
+      if "{self.base-dir}/versions/2025.10/{$m}.log".IO ~~ :f {
+        $me.put-file("{self.base-dir}/versions/2025.10/{$m}.log","$m.log");
+      }
+    }
+
+    $me.put-file("summary.txt","summary.txt");
+
+  }
 }  
 
 Pipeline.new.run;
