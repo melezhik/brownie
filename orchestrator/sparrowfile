@@ -33,7 +33,11 @@ does Sparky::JobApi::Role
         }
         push @_list, $l;
       }
+
       @eff-list = @_list;
+
+      @eff-list.=pick(@eff-list);
+
       last if @eff-list.elems == 0;
 
       my $chunk = 0;
@@ -86,6 +90,7 @@ does Sparky::JobApi::Role
           my @slice = @eff-list[$a .. $a + $chunk - 1];
 
           @slice = @slice.sort;
+
           say "push job to agent {@agents[$i-1]}";
 
           my $agents-queue = Sparky::JobApi.new(
