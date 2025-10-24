@@ -16,7 +16,9 @@ does Sparky::JobApi::Role
 
     "list.txt".IO.spurt(config()<list><>.join("\n"));
 
-    Sparky::JobApi.new(:mine).put-file("list.txt","list.txt");
+    my $me = Sparky::JobApi.new(:mine);
+
+    $me.put-file("list.txt","list.txt");
 
     my @eff-list = config()<list><>;
     
@@ -119,6 +121,30 @@ does Sparky::JobApi::Role
     }
 
     say "done";
+
+    say "summary";
+    my $summary = "";
+
+    for config()<list><> -> $m {
+
+      my $status = "?";
+
+      $status = "OK" if "{self.base-dir}/versions/2025.10/{$m}.OK".IO ~~ :f;
+      $status = "FAIL" if "{self.base-dir}/versions/2025.10/{$m}.FAIL".IO ~~ :f;
+
+      say "$m ... \t $status";
+
+      $summary ~= "$m ... \t $status\n";
+
+      if "{self.base-dir}/versions/2025.10/{$m}.log".IO ~~ :f {
+          $me.put-file("{self.base-dir}/versions/2025.10/{$m}.log","$m.log");
+      }
+
+    }
+
+    "summary.txt".IO.spurt($summary);
+    
+    $me.put-file("summary.txt","summary.txt");
   }
 
 }  
