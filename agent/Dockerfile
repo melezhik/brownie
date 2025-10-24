@@ -18,7 +18,13 @@ RUN cd /opt/ && git clone https://github.com/melezhik/sparky.git
 
 RUN cd /opt/sparky && raku db-init.raku
 
-ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log 
+COPY config.raku tasks sparrowfile sparky.yaml /root/.sparky/projects/agent/
+
+COPY tasks /root/.sparky/projects/agent/tasks/
+
+RUN echo "SPARKY_API_TOKEN: blin20" > /root/sparky.yaml
+
+ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log
 
 WORKDIR /app
 
