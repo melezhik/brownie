@@ -24,6 +24,8 @@ COPY tasks /root/.sparky/projects/agent/tasks/
 
 RUN echo "SPARKY_API_TOKEN: blin20" > /root/sparky.yaml
 
+RUN echo 'PATH=$PATH:/usr/share/perl6/core/bin:/usr/share/perl6/site/bin:/usr/share/perl6/vendor/bin' > /root/.bash_profile
+
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log
 
 WORKDIR /app
