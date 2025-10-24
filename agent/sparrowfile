@@ -118,6 +118,14 @@ does Sparky::JobApi::Role
     );
 
     my @list = $my.get-stash()<list><>;
+
+    say ">>>";
+
+    say "list: \n", @list.join("\n");
+
+    say "<<<";
+
+
     my %results;
 
     my $orch-job = Sparky::JobApi.new(
@@ -156,6 +164,12 @@ does Sparky::JobApi::Role
       ),
     });
 
+    say "results:";
+    say "<<<";
+    for %results.kv -> $k, $v {
+        say "$k ... {$v<status>}\t "
+    }  
+    say ">>>";
     die "some tests failed" unless $status;
 
   }
