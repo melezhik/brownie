@@ -188,12 +188,15 @@ does Sparky::JobApi::Role
 
     my $resutls = $me.get-stash();
     my $version = tags()<version>;
+    my @list;
     for $resutls.kv -> $k, $v {
       directory "{self.base-dir}/versions/$version/$k";
       if $v<status> {
         "{self.base-dir}/versions/$version/{$k}.OK".IO.spurt("");
+        push @list, "$k ... \t OK";
       } else {
         "{self.base-dir}/versions/$version/{$k}.FAIL".IO.spurt("");
+        push @list, "$k ... \t FAIL";
       }
       if $v<log> {
         "{self.base-dir}/versions/$version/{$k}.log".IO.spurt($v<log>);
@@ -201,6 +204,9 @@ does Sparky::JobApi::Role
       }
 
     }
+
+    "summary.txt".IO.spurt(@list.join("\n"));
+    $me.put-file("summary.txt","summary.txt");
 
   }
 }
