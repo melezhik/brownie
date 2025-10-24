@@ -25,6 +25,10 @@ Go to http://127.0.0.1:4000
 See workload. Once agent has recieved any workload from orchestaror it starts execute it,
 you'll see `agent.job` jobs
 
+## Orchestrator endpoint
+
+To see results go to http://brw.sparrowhub.io
+
 # FAQ
 
 > How to change agent name visible in pool
