@@ -30,7 +30,7 @@ RUN apt-get install -y nano less
 
 # required for bindings
 
-RUN apt-get install -y unzip g++ python3 libpam0g-dev libxml2-dev libglib2.0-dev
+RUN apt-get install -y unzip g++ python3 libpam0g-dev libxml2-dev libglib2.0-dev libharfbuzz0b libfreetype-dev libfreetype6 libfreetype6-dev libpq-dev python3-dev
 
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log
 
