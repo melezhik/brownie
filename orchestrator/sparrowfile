@@ -23,10 +23,13 @@ does Sparky::JobApi::Role
     my @eff-list = config()<list><>;
     
     my $j = 0;
+    my %seen;
 
     while (True) {
+
       my @_list = [];
       for @eff-list -> $l {
+        next if %seen{$l};
         if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
            "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
               next;
@@ -111,6 +114,9 @@ does Sparky::JobApi::Role
           say "slice: {@slice.raku}";
           $a = $a + $chunk;
           say "...";
+          for @slice -> $s {
+            %seen{$s} = True;
+          }
         }
       }
 
@@ -118,12 +124,12 @@ does Sparky::JobApi::Role
       say "[{@eff-list.elems}] tests out of [{config()<list>.elems}] left";
       say "///";
 
-      say "<<< sleep for 10 seconds";
-      sleep(10);
+      say "<<< sleep for 30 seconds";
+      sleep(30);
       $j++;
       
-      # stop after 2 minutes
-      last if $j > 120;
+      # stop after 240*30 seconds
+      last if $j > 240;
 
     }
 
