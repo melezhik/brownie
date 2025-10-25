@@ -1,4 +1,4 @@
-docker build . -t  brw-orch
-docker stop -t 1 brw-orch
-docker rm /brw-orch
-docker run -d --rm --name brw-orch -p 4002:4000 brw-orch
+docker build . -t  brw-srv
+docker stop -t 1 brw-srv
+sleep 3
+docker run -d --rm --name brw-srv -p 4001:4000 brw-srv
