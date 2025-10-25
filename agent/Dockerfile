@@ -28,6 +28,10 @@ RUN echo 'PATH=$PATH:/usr/share/perl6/core/bin:/usr/share/perl6/site/bin:/usr/sh
 
 RUN apt-get install -y nano less
 
+# required for bindings
+
+RUN apt-get install -y unzip g++ python3 libpam0g-dev libxml2-dev libglib2.0-dev
+
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log
 
 WORKDIR /app
