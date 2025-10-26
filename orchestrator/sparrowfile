@@ -102,7 +102,7 @@ does Sparky::JobApi::Role
         say "agents cnt: {@agents.elems}";
 
         say "chunk: $chunk";
-
+        my $scnt = 0;
         for 1 .. @agents.elems -> $i {
 
           my @slice = @eff-list[$a .. $a + $chunk - 1];
@@ -127,14 +127,16 @@ does Sparky::JobApi::Role
           say "slice: {@slice.raku}";
           $a = $a + $chunk;
           say "...";
+          
           for @slice -> $s {
             %seen{$s} = True;
+            $scnt++;
           }
         }
       }
 
       say "///";
-      say "[{@eff-list.elems}] tests out of [{config()<list>.elems}] sent for execution";
+      say "[{$scnt}] tests out of [{config()<list>.elems}] sent for execution";
       say "///";
 
       say "<<< sleep for 120 seconds";
