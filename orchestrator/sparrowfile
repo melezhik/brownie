@@ -23,7 +23,10 @@ does Sparky::JobApi::Role
     my @eff-list = config()<list><>;
     
     my $j = 0;
+
     my %seen;
+
+    my $scnt = 0;
 
     while (True) {
 
@@ -42,10 +45,11 @@ does Sparky::JobApi::Role
       @eff-list.=pick(@eff-list);
 
       my $cnt = 0;
+      
       for config()<list><> -> $l {
         if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
            "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
-            $cnt++;;
+            $cnt++;
         }
       }
 
@@ -102,7 +106,6 @@ does Sparky::JobApi::Role
         say "agents cnt: {@agents.elems}";
 
         say "chunk: $chunk";
-        my $scnt = 0;
 
         for 1 .. @agents.elems -> $i {
 
