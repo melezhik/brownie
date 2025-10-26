@@ -26,6 +26,9 @@ RUN echo 'PATH=$PATH:/usr/share/perl6/core/bin:/usr/share/perl6/site/bin:/usr/sh
 
 RUN apt-get install -y less nano
 
+# PDF and friends
+RUN apt-get install -y pkg-config libfreetype6-dev
+
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log
 
 WORKDIR /app
