@@ -41,9 +41,22 @@ does Sparky::JobApi::Role
 
       @eff-list.=pick(@eff-list);
 
-      last if @eff-list.elems == 0;
+      my $cnt = 0;
+      for config()<list><> -> $l {
+        if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
+           "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
+            $cnt++;;
+        }
+      }
+
+      if $cnt == config()<list><>.elems {
+        last;
+      } else {
+        say "$cnt tests out of {config()<list><>.elems} finished"
+      }
 
       my $chunk = 0;
+
       my @agents;
       my $k = 1;
 
@@ -121,15 +134,15 @@ does Sparky::JobApi::Role
       }
 
       say "///";
-      say "[{@eff-list.elems}] tests out of [{config()<list>.elems}] left";
+      say "[{@eff-list.elems}] tests out of [{config()<list>.elems}] sent for execution";
       say "///";
 
-      say "<<< sleep for 30 seconds";
-      sleep(30);
+      say "<<< sleep for 10 seconds";
+      sleep(10);
       $j++;
       
-      # stop after 240*30 seconds
-      last if $j > 240;
+      # stop after 320*10 seconds
+      last if $j > 320;
 
     }
 
