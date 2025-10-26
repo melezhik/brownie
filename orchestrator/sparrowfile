@@ -91,7 +91,7 @@ does Sparky::JobApi::Role
             @agents = @agents[0 .. @eff-list.elems -1];
         } else {
           $chunk = Int(@eff-list.elems/@agents.elems);
-          $chunk = 3 if $chunk > 3;
+          $chunk = 10 if $chunk > 10;
         }
       }
 
