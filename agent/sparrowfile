@@ -91,8 +91,8 @@ does Sparky::JobApi::Role
           directory "{self.base-dir}/jobs/{$q<run-id>}";
         }
       }
-      say "<<< sleep for 60 seconds";
-      sleep(60);
+      say "<<< sleep for 10 seconds";
+      sleep(10);
     }
   }
 

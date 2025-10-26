@@ -134,15 +134,15 @@ does Sparky::JobApi::Role
             $scnt++;
           }
         }
-say "///";
-      say "[{$scnt}] tests out of [{config()<list>.elems}] sent for execution";
-      say "///";
+        say "///";
+        say "[{$scnt}] tests out of [{config()<list>.elems}] sent for execution";
+        say "///";
       }
 
-      
+      say "<<< sleep for 30 seconds";
 
-      say "<<< sleep for 120 seconds";
-      sleep(120);
+      sleep(30);
+
       $j++;
       
       last if $j > 100;
