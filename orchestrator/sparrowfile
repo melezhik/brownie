@@ -62,6 +62,7 @@ does Sparky::JobApi::Role
       my $chunk = 0;
 
       my @agents;
+      
       my $k = 1;
 
       my %seen2;
@@ -72,9 +73,9 @@ does Sparky::JobApi::Role
           my @aa = dir("{self.base-dir}/agents").map({$_.basename});
           @aa .= pick(@aa); # sort randomly
           for @aa -> $aa {
-              next if %seen{$aa};
+              next if %seen2{$aa};
               push @agents, $aa;
-              %seen{$aa} = True;
+              %seen2{$aa} = True;
               say ">>> pick agent $aa";
           }
         }
