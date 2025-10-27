@@ -2,7 +2,7 @@ FROM docker.io/rakudo-star:latest
 
 RUN apt-get update -y && apt-get upgrade -y && apt-get install openssl libssl-dev make gcc -y
 
-RUN zef install --/test Cro::TLS
+RUN zef update && zef install --/test Cro::TLS
 
 RUN zef install --/test Sparrow6
 
