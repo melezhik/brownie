@@ -83,7 +83,7 @@ does Sparky::JobApi::Role
         sleep(5);
         $k++;
         last if $k > 4;
-        last if @agents.elems >= 3;
+        last if @agents.elems >= 10;
       }
 
       # remove agents that don't respond more then 10 minutes
@@ -102,7 +102,7 @@ does Sparky::JobApi::Role
             @agents = @agents[0 .. @eff-list.elems -1];
         } else {
           $chunk = Int(@eff-list.elems/@agents.elems);
-          $chunk = 10 if $chunk > 10;
+          $chunk = 5 if $chunk > 5;
         }
       }
 
