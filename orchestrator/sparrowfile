@@ -67,16 +67,17 @@ does Sparky::JobApi::Role
       my %seen2;
 
       while (True) {
-        say "look for available agents ...";    
+        say "look for available agents ...";
         if "{self.base-dir}/agents".IO ~~ :d { 
-          for dir("{self.base-dir}/agents") -> $aa {
-              next if %seen{$aa.basename};
-              push @agents, $aa.basename;
-              %seen{$aa.basename} = True;
+          my @aa = dir("{self.base-dir}/agents").map({$_.basename});
+          @aa .= pick(@aa); # sort randomly
+          for @aa -> $aa {
+              next if %seen{$aa};
+              push @agents, $aa;
+              %seen{$aa} = True;
+              say ">>> pick agent $aa";
           }
         }
-
-        say " \\ try number ... $k";
         say "<<< sleep for 5 seconds";
         sleep(5);
         $k++;
