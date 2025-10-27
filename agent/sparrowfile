@@ -53,16 +53,19 @@ does Sparky::JobApi::Role
       :project<agent.ping>,
     );
 
+    # register agent
+    $orch-job2.queue({
+      description => "hello from $agent", 
+      tags => %(
+        agent => $agent,
+        stage => "ping",
+      ),
+    });
+
+    sleep(10);
+
     while True {
 
-      $orch-job2.queue({
-        description => "hello from $agent", 
-        tags => %(
-          agent => $agent,
-          stage => "ping",
-        ),
-      });
-      
       my $q = $orch-job.get-stash();
 
       say "load requests from orchestrator queue";
