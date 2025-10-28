@@ -2,6 +2,8 @@
 
 use Sparky::JobApi;
 
+use Random::Names;
+
 class Pipeline
 
 does Sparky::JobApi::Role
@@ -14,19 +16,19 @@ does Sparky::JobApi::Role
   
   method stage-main {
 
-    my $random-string = ("a".."z","A".."Z",0..9).flat.roll(10).join("");
+    my $random-int = (0..9).flat.roll(8).join("");
 
     directory self.base-dir unless self.base-dir.IO ~~ :d;
 
     my $agent-id = "{self.base-dir}/agent-id".IO ~~ :f 
     ?? "{self.base-dir}/agent-id".IO.slurp 
-    !! $random-string;
+    !! $random-int;
 
     unless  "{self.base-dir}/agent-id".IO ~~ :f {
-      "{self.base-dir}/agent-id".IO.spurt($random-string);
+      "{self.base-dir}/agent-id".IO.spurt($random-int);
     }
 
-    my $agent = ( %*ENV<BRW_AGENT_NAME_PREFIX> || "agent" ) ~ "-" ~ $agent-id;
+    my $agent = ( %*ENV<BRW_AGENT_NAME_PREFIX> || Random::Names.new.docker-name ) ~ "-" ~ $agent-id;
 
     say "agent: $agent";
 
