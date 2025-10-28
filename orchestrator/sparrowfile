@@ -114,7 +114,7 @@ does Sparky::JobApi::Role
         }
       }
 
-      if @agents > 0 && @eff-list.elems > 0 {
+      if @agents.elems > 0 && @eff-list.elems > 0 {
 
         my $a = 0;
 
