@@ -151,9 +151,7 @@ does Sparky::JobApi::Role
         }
         say "///";
         say "[{$scnt}] tests out of [@d.elems}] sent for execution";
-        say "///";
-      }
-    }
+        say "///"
     
       say "<<< sleep for 30 seconds";
 
@@ -162,7 +160,7 @@ does Sparky::JobApi::Role
       $j++;
       
       last if $j > 100;
-
+      
     }
 
     say "done";
@@ -180,7 +178,7 @@ does Sparky::JobApi::Role
       say "$m ... \t $status";
 
       $summary ~= "$m ... \t $status\n";
-
+     
     }
 
     "summary.txt".IO.spurt($summary);
