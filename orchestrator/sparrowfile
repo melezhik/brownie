@@ -27,6 +27,7 @@ does Sparky::JobApi::Role
     say "Testing top 100 modules on the Raku Ecosystem River:";
     for $eco.river.sort(-*.value.elems).map(*.key).head(100) -> $d {
         push @d, $d;
+        say $d;
     }
 
     "list.txt".IO.spurt(@d.join("\n"));
