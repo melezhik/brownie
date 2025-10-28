@@ -91,6 +91,7 @@ does Sparky::JobApi::Role
               rakudo-version => $version,
               stage => "test",
               agent => $agent,
+              zef_install_to => %*ENV<ZEF_INSTALL_TO>,
             ),
           });
           directory "{self.base-dir}/jobs/{$q<run-id>}";
@@ -147,7 +148,8 @@ does Sparky::JobApi::Role
     for @list -> $m {
       %results{$m} = %( status => "", log => "" );
       my $s = task-run "tasks/run-test", %(
-        module => $m
+        module => $m,
+        zef_install_to => tags()<zef_install_to>,
       );
       if $s<success> == 1 {
         %results{$m}<status> = True
