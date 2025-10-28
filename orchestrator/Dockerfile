@@ -30,7 +30,7 @@ RUN apt-get install -y less nano
 
 RUN apt-get install -y pkg-config libfreetype6-dev
 
-RUN zef install --/test Random::Names
+RUN zef install --/test Random::Names Ecosystem
 
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log
 
