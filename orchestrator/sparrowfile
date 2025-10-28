@@ -62,7 +62,7 @@ does Sparky::JobApi::Role
 
       my $cnt = 0;
       
-      for config()<list><> -> $l {
+      for @d -> $l {
         if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
            "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
             $cnt++;
