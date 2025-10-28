@@ -4,6 +4,7 @@ rm -rf log.txt
 
 export ZEF_INSTALL_TO=$(config zef_install_to)
 
+export RAKULIB="inst#$ZEF_INSTALL_TO"
 
 if zef install $module 1>log.txt 2>&1; then
   echo "installation succeed"

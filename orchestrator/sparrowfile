@@ -25,6 +25,7 @@ does Sparky::JobApi::Role
     my $eco = Ecosystem.new;
 
     say "Testing top 1000 modules on the Raku Ecosystem River:";
+    
     for $eco.river.sort(-*.value.elems).map(*.key).head(1000) -> $d {
         push @d, $d;
         say $d;

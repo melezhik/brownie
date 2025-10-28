@@ -32,6 +32,8 @@ RUN apt-get install -y pkg-config libfreetype6-dev
 
 RUN zef install --/test Random::Names Ecosystem
 
+RUN zef install https://github.com/melezhik/sparky.git --/test --force-install
+
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log
 
 WORKDIR /app
