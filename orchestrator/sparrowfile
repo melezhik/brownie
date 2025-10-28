@@ -14,9 +14,9 @@ does Sparky::JobApi::Role
 
   method stage-main {
 
-    bash "rm -rf {self.base-dir}/agents/*", %(
-      description => "remove old registered agents"
-    );
+    #bash "rm -rf {self.base-dir}/agents/*", %(
+      #description => "remove old registered agents"
+    #);
 
     "list.txt".IO.spurt(config()<list><>.join("\n"));
 
