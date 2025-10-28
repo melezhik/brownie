@@ -153,7 +153,7 @@ does Sparky::JobApi::Role
 
       say "///";
       say "[{$scnt}] tests out of [@d.elems}] sent for execution";
-      say "///"
+      say "///";
     
       say "<<< sleep for 30 seconds";
 
