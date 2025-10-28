@@ -149,9 +149,11 @@ does Sparky::JobApi::Role
             $scnt++;
           }
         }
-        say "///";
-        say "[{$scnt}] tests out of [@d.elems}] sent for execution";
-        say "///"
+      }
+
+      say "///";
+      say "[{$scnt}] tests out of [@d.elems}] sent for execution";
+      say "///"
     
       say "<<< sleep for 30 seconds";
 
