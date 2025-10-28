@@ -112,10 +112,7 @@ does Sparky::JobApi::Role
           $chunk = Int(@eff-list.elems/@agents.elems);
           $chunk = 5 if $chunk > 5;
         }
-      }
-
-      if @agents.elems > 0 && @eff-list.elems > 0 {
-
+      
         my $a = 0;
 
         say "agents cnt: {@agents.elems}";
@@ -156,7 +153,8 @@ does Sparky::JobApi::Role
         say "[{$scnt}] tests out of [@d.elems}] sent for execution";
         say "///";
       }
-
+    }
+    
       say "<<< sleep for 30 seconds";
 
       sleep(30);
