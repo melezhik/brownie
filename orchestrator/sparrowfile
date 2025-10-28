@@ -2,6 +2,8 @@
 
 use Sparky::JobApi;
 
+use Ecosystem;
+
 class Pipeline
 
 does Sparky::JobApi::Role
@@ -18,13 +20,22 @@ does Sparky::JobApi::Role
       #description => "remove old registered agents"
     #);
 
-    "list.txt".IO.spurt(config()<list><>.join("\n"));
+    my @d;
+
+    my $eco = Ecosystem.new;
+
+    say "Testing top 100 modules on the Raku Ecosystem River:";
+    for $eco.river.sort(-*.value.elems).map(*.key).head(100) -> $d {
+        push @d, $d;
+    }
+
+    "list.txt".IO.spurt(@d.join("\n"));
 
     my $me = Sparky::JobApi.new(:mine);
 
     $me.put-file("list.txt","list.txt");
 
-    my @eff-list = config()<list><>;
+    my @eff-list = @d;
     
     my $j = 0;
 
@@ -46,7 +57,7 @@ does Sparky::JobApi::Role
 
       @eff-list = @_list;
 
-      @eff-list.=pick(@eff-list);
+      #@eff-list.=pick(@eff-list);
 
       my $cnt = 0;
       
@@ -57,10 +68,10 @@ does Sparky::JobApi::Role
         }
       }
 
-      if $cnt == config()<list><>.elems {
+      if $cnt == @d.elems {
         last;
       } else {
-        say "$cnt tests out of {config()<list><>.elems} finished"
+        say "$cnt tests out of {@d.elems} finished"
       }
 
       my $chunk = 0;
@@ -141,7 +152,7 @@ does Sparky::JobApi::Role
           }
         }
         say "///";
-        say "[{$scnt}] tests out of [{config()<list>.elems}] sent for execution";
+        say "[{$scnt}] tests out of [@d.elems}] sent for execution";
         say "///";
       }
 
@@ -160,7 +171,7 @@ does Sparky::JobApi::Role
     say "summary";
     my $summary = "";
 
-    for config()<list><> -> $m {
+    for @d -> $m {
 
       my $status = "?";
 
@@ -176,7 +187,7 @@ does Sparky::JobApi::Role
     "summary.txt".IO.spurt($summary);
     
 
-    for config()<list><> -> $m {
+    for @d -> $m {
       if "{self.base-dir}/versions/2025.10/{$m}.log".IO ~~ :f {
         $me.put-file("{self.base-dir}/versions/2025.10/{$m}.log","$m.log");
       }
