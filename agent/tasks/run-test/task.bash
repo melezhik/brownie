@@ -6,14 +6,17 @@ export ZEF_INSTALL_TO=$(config zef_install_to)
 
 export RAKULIB="inst#$ZEF_INSTALL_TO"
 
+echo "dump env vars" > dump.txt
 
-echo "dump env vars"
+env | grep ZEF_INSTALL_TO >> dump.txt
 
-env | grep ZEF_INSTALL_TO
+env | grep RAKULIB >> dump.txt
 
-env | grep RAKULIB
+cat dump.txt
 
-if zef install $module 1>log.txt 2>&1; then
+cat dump.txt > log.txt
+
+if zef install $module 1>>log.txt 2>&1; then
   echo "installation succeed"
   update_state success 1
  else
