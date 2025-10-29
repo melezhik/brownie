@@ -23,7 +23,7 @@ sub gen-volumes($path, Bool :$volume) {
 }
 
 sub gen-services($prefix, $count, $cpus, $mem, $degree, :$volume) {
-    my $services = "services:";
+    my $services = "services:\n";
     $services = $services ~ gen-container($prefix, $_,  $cpus, $mem, $degree, :$volume) for 1..$count;
     $services
 }
