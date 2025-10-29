@@ -92,6 +92,8 @@ does Sparky::JobApi::Role
               stage => "test",
               agent => $agent,
               zef_install_to => %*ENV<ZEF_INSTALL_TO>,
+              zef_test_degree => %*ENV<ZEF_FETCH_DEGREE>,
+              zef_fetch_degree => %*ENV<ZEF_TEST_DEGREE>,
             ),
           });
           directory "{self.base-dir}/jobs/{$q<run-id>}";
@@ -150,6 +152,8 @@ does Sparky::JobApi::Role
       my $s = task-run "tasks/run-test", %(
         module => $m,
         zef_install_to => tags()<zef_install_to>,
+        zef_test_degree => tags()<zef_test_degree>,
+        zef_fetch_degree => tags()<zef_fetch_degree>,
       );
       if $s<success> == 1 {
         %results{$m}<status> = True

@@ -9,8 +9,9 @@ echo "install  [$module]" > log.txt
 echo "..." >> log.txt
 
 export ZEF_INSTALL_TO=$(config zef_install_to)
-#export ZEF_FETCH_DEGREE=1
-#export ZEF_TEST_DEGREE=1
+export ZEF_FETCH_DEGREE=$(config zef_fetch_degree)
+export ZEF_TEST_DEGREE=$(config zef_test_degree)
+
 export RAKULIB="inst#$ZEF_INSTALL_TO"
 
 echo "dump env vars" > dump.txt
