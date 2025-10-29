@@ -4,9 +4,9 @@ echo "install  l [$module]"
 
 echo ">>>"
 
-echo "install  l [$module]" > log.txt
+echo "install  [$module]" > log.txt
 
-echo ">>>" >> log.txt
+echo "..." >> log.txt
 
 export ZEF_INSTALL_TO=$(config zef_install_to)
 
