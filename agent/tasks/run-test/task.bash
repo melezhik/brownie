@@ -1,10 +1,10 @@
 module=$(config module)
 
-echo "install  l [$module]"
+echo "install [$module]"
 
 echo ">>>"
 
-echo "install  [$module]" > log.txt
+echo "install [$module]" > log.txt
 
 echo "..." >> log.txt
 
