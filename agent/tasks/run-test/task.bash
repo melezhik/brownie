@@ -16,7 +16,7 @@ if ! test  "${zef_install_to}" = ""; then
   export RAKULIB="inst#$ZEF_INSTALL_TO"
 else
   echo "zef_install_to is empty, using standard zef path for install"
-  unset $ZEF_INSTALL_TO
+  unset ZEF_INSTALL_TO
 fi
 
 
@@ -26,7 +26,7 @@ export ZEF_TEST_DEGREE=$(config zef_test_degree)
 
 echo "dump env vars" > dump.txt
 
-env | grep ZEF_ >> dump.txt
+env | grep ZEF_ || : >> dump.txt
 
 env | grep RAKULIB || : >> dump.txt
 
