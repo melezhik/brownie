@@ -2,6 +2,14 @@
 
 use v6.*;
 
+class ServiceConfig {
+  has $.agent-prefix is required;
+  has $.cpu is required;
+  has $.memory is required;
+  has $.fetch-degree is required;
+  has $.test-degree is required;
+}
+
 sub gen-volumes($path, Bool :$volume) {
     unless $volume {
       return ''
@@ -22,19 +30,19 @@ sub gen-volumes($path, Bool :$volume) {
     END
 }
 
-sub gen-services($prefix, $count, $cpus, $mem, $degree, :$volume) {
+sub gen-services($config, $count, :$volume) {
     my $services = "services:";
-    $services = $services ~ gen-container($prefix, $_,  $cpus, $mem, $degree, :$volume) for 1..$count;
+    $services = $services ~ gen-container($config, $_, :$volume) for 1..$count;
     $services
 }
 
-sub gen-container($prefix, $idx, $cpus, $mem, $degree, :$volume) {
+sub gen-container($config, $idx, :$volume) {
 
     my $degree-yaml =
     qq:to/END/;
-          - ZEF_FETCH_DEGREE=$degree
-          - ZEF_TEST_DEGREE=$degree
-          - BRW_AGENT_NAME_PREFIX=$prefix
+          - ZEF_FETCH_DEGREE={$config.fetch-degree}
+          - ZEF_TEST_DEGREE={$config.test-degree}
+          - BRW_AGENT_NAME_PREFIX={$config.agent-prefix}
     END
 
     my $env-yaml = $volume
@@ -49,14 +57,17 @@ sub gen-container($prefix, $idx, $cpus, $mem, $degree, :$volume) {
     my $yaml = qq:to/END/;
       sparky-agent-$idx:
         environment:
-$env-yaml
+{$env-yaml.chop}
         build:
           context: ./
           dockerfile: Dockerfile
         ports:
           - 400{$idx-1}:4000
-        cpus: $cpus
-        memory: $mem
+        deploy:
+          resources:
+            limits:
+              cpu: {$config.cpu}
+              memory: {$config.memory}
 
     END
 
@@ -75,14 +86,23 @@ $env-yaml
 sub MAIN(
   :p(:$install-path),
   :a(:$agent-prefix) = "secret-agent",
-  :n(:$container-count) = 4,
-  :c(:$cpus) = 4,
-  :m(:$memory) = '3.2g',
-  :d(:$degree) = $cpus,
+  :n(:$container-count) = 8,
+  :c(:$cpu) = 2,
+  :m(:$memory) = '2.4g',
+  :fd(:$fetch-degree) = 5,
+  :td(:$test-degree) = 1,
   Bool :v(:$volume) = False
 ) {
-    my $yaml = "version: '3'\n"
+    my ServiceConfig $config .= new:
+      :$agent-prefix,
+      :$cpu,
+      :$memory,
+      :$fetch-degree,
+      :$test-degree;
+
+
+    my $yaml = "version: '4'\n"
                   ~ gen-volumes($install-path, :$volume)
-                  ~ gen-services($agent-prefix, $container-count, $cpus, $memory, $degree, :$volume);
+                  ~ gen-services($config, $container-count, :$volume);
     say $yaml
 }
