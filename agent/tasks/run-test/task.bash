@@ -16,6 +16,7 @@ if ! test  "${zef_install_to}" = ""; then
   export RAKULIB="inst#$ZEF_INSTALL_TO"
 else
   echo "zef_install_to is empty, using standard zef path for install"
+  unset $ZEF_INSTALL_TO
 fi
 
 
