@@ -14,8 +14,6 @@ env | grep RAKULIB >> dump.txt
 
 cat dump.txt
 
-cat dump.txt > log.txt
-
 if zef install $module 1>>log.txt 2>&1; then
   echo "installation succeed"
   update_state success 1
@@ -30,3 +28,10 @@ echo "========"
 
 cat log.txt
 
+cp log.txt log2.txt
+
+mv dump.txt log.txt
+
+cat log2.txt >> log.txt
+
+rm -rf log2.txt

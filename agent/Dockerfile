@@ -18,10 +18,6 @@ RUN cd /opt/ && git clone https://github.com/melezhik/sparky.git
 
 RUN cd /opt/sparky && raku db-init.raku
 
-COPY config.raku tasks sparrowfile sparky.yaml /root/.sparky/projects/agent/
-
-COPY tasks /root/.sparky/projects/agent/tasks/
-
 RUN echo "SPARKY_API_TOKEN: blin20" > /root/sparky.yaml
 
 RUN echo 'PATH=$PATH:/usr/share/perl6/core/bin:/usr/share/perl6/site/bin:/usr/share/perl6/vendor/bin' > /root/.bash_profile
@@ -37,6 +33,10 @@ RUN zef install --/test Random::Names
 RUN zef install https://github.com/melezhik/sparky.git --/test --force-install
 
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log
+
+COPY config.raku tasks sparrowfile sparky.yaml /root/.sparky/projects/agent/
+
+COPY tasks /root/.sparky/projects/agent/tasks/
 
 WORKDIR /app
 
