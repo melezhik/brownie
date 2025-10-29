@@ -10,7 +10,7 @@ echo "..." >> log.txt
 
 zef_install_to=$(config zef_install_to)
 
-if ! test  "{$zef_install_to}" = ""; then
+if ! test  "${zef_install_to}" = ""; then
   echo "zef_install_to is set to $zef_install_to, apply it"
   export ZEF_INSTALL_TO=$zef_install_to
   export RAKULIB="inst#$ZEF_INSTALL_TO"

@@ -48,6 +48,7 @@ does Sparky::JobApi::Role
     while (True) {
 
       my @_list = [];
+
       for @eff-list -> $l {
         next if %seen{$l};
         if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
@@ -84,78 +85,82 @@ does Sparky::JobApi::Role
 
       my %seen2;
 
-      while (True) {
-        say "look for available agents ...";
-        if "{self.base-dir}/agents".IO ~~ :d { 
-          my @aa = dir("{self.base-dir}/agents").map({$_.basename});
-          @aa .= pick(@aa); # sort randomly
-          for @aa -> $aa {
-              next if %seen2{$aa};
-              push @agents, $aa;
-              %seen2{$aa} = True;
-              say ">>> pick agent $aa";
+      if $scnt <= @d.elems {
+
+        while (True) {
+          say "look for available agents ...";
+          if "{self.base-dir}/agents".IO ~~ :d { 
+            my @aa = dir("{self.base-dir}/agents").map({$_.basename});
+            @aa .= pick(@aa); # sort randomly
+            for @aa -> $aa {
+                next if %seen2{$aa};
+                push @agents, $aa;
+                %seen2{$aa} = True;
+                say ">>> pick agent $aa";
+            }
+          }
+          say "... sleep for 5 seconds";
+          sleep(5);
+          $k++;
+          last if $k > 4;
+          last if @agents.elems >= 10;
+        }
+
+        say "{@agents.elems} online agents found";
+
+        if @agents.elems > 0 && @eff-list.elems > 0 {
+          if @eff-list.elems < @agents.elems {
+              $chunk = 1;
+              @agents = @agents[0 .. @eff-list.elems -1];
+          } else {
+            $chunk = Int(@eff-list.elems/@agents.elems);
+            $chunk = 5 if $chunk > 5;
+          }
+        
+          my $a = 0;
+
+          say "agents cnt: {@agents.elems}";
+
+          say "chunk: $chunk";
+
+          for 1 .. @agents.elems -> $i {
+
+            my @slice = @eff-list[$a .. $a + $chunk - 1];
+
+            @slice = @slice.sort;
+
+            say "push job to agent {@agents[$i-1]}";
+
+            my $agents-queue = Sparky::JobApi.new(
+              :project<browny.queue>,
+              :job-id(@agents[$i-1]),
+            );
+
+            $agents-queue.put-stash(
+              %( 
+                version => "2025.10",
+                agent => @agents[$i-1],
+                modules => @slice,
+                run-id => time, 
+              )
+            );
+            say "slice: {@slice.raku}";
+            $a = $a + $chunk;
+            say "...";
+            
+            for @slice -> $s {
+              %seen{$s} = True;
+              $scnt++;
+            }
           }
         }
-        say "... sleep for 5 seconds";
-        sleep(5);
-        $k++;
-        last if $k > 4;
-        last if @agents.elems >= 10;
-      }
 
-      say "{@agents.elems} online agents found";
-
-      if @agents.elems > 0 && @eff-list.elems > 0 {
-        if @eff-list.elems < @agents.elems {
-            $chunk = 1;
-            @agents = @agents[0 .. @eff-list.elems -1];
-        } else {
-          $chunk = Int(@eff-list.elems/@agents.elems);
-          $chunk = 5 if $chunk > 5;
-        }
-      
-        my $a = 0;
-
-        say "agents cnt: {@agents.elems}";
-
-        say "chunk: $chunk";
-
-        for 1 .. @agents.elems -> $i {
-
-          my @slice = @eff-list[$a .. $a + $chunk - 1];
-
-          @slice = @slice.sort;
-
-          say "push job to agent {@agents[$i-1]}";
-
-          my $agents-queue = Sparky::JobApi.new(
-            :project<browny.queue>,
-            :job-id(@agents[$i-1]),
-          );
-
-          $agents-queue.put-stash(
-            %( 
-              version => "2025.10",
-              agent => @agents[$i-1],
-              modules => @slice,
-              run-id => time, 
-            )
-          );
-          say "slice: {@slice.raku}";
-          $a = $a + $chunk;
-          say "...";
-          
-          for @slice -> $s {
-            %seen{$s} = True;
-            $scnt++;
-          }
-        }
-      }
-
-      say "///";
-      say "[{$scnt}] tests out of [{@d.elems}] sent for execution";
-      say "///";
+        say "///";
+        say "[{$scnt}] tests out of [{@d.elems}] sent for execution";
+        say "///";
     
+      }
+
       say "<<< sleep for 30 seconds";
 
       sleep(30);
