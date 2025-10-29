@@ -8,17 +8,25 @@ echo "install  [$module]" > log.txt
 
 echo "..." >> log.txt
 
-export ZEF_INSTALL_TO=$(config zef_install_to)
-export ZEF_FETCH_DEGREE=$(config zef_fetch_degree)
-export ZEF_TEST_DEGREE=$(config zef_test_degree)
+zef_install_to=$(config zef_install_to)
 
-export RAKULIB="inst#$ZEF_INSTALL_TO"
+if ! test  "{$zef_install_to}" = ""; then
+  echo "zef_install_to is set to $zef_install_to, apply it"
+  export ZEF_INSTALL_TO=$zef_install_to
+  export RAKULIB="inst#$ZEF_INSTALL_TO"
+else
+fi
+
+
+export ZEF_FETCH_DEGREE=$(config zef_fetch_degree)
+
+export ZEF_TEST_DEGREE=$(config zef_test_degree)
 
 echo "dump env vars" > dump.txt
 
 env | grep ZEF_ >> dump.txt
 
-env | grep RAKULIB >> dump.txt
+env | grep RAKULIB || : >> dump.txt
 
 cat dump.txt
 
