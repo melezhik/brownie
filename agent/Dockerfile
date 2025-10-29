@@ -38,6 +38,8 @@ COPY config.raku tasks sparrowfile sparky.yaml /root/.sparky/projects/agent/
 
 COPY tasks /root/.sparky/projects/agent/tasks/
 
+RUN cd /root/.sparky/projects/agent/ && mkdir -p .triggers && raku -e 'say %( :description<go_go_go> ).raku' > .triggers/go
+
 WORKDIR /app
 
 ENV SP6_FORMAT_COLOR=1
