@@ -85,7 +85,7 @@ does Sparky::JobApi::Role
 
       my %seen2;
 
-      if $scnt <= @d.elems {
+      if $scnt < @d.elems {
 
         while (True) {
           say "look for available agents ...";
