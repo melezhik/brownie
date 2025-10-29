@@ -198,6 +198,7 @@ does Sparky::JobApi::Role
     my $resutls = $me.get-stash();
     my $version = tags()<version>;
     my @list;
+    my $status = True;
     for $resutls.kv -> $k, $v {
       directory "{self.base-dir}/versions/$version/$k";
       if $v<status> {
@@ -211,6 +212,7 @@ does Sparky::JobApi::Role
       } else {
         "{self.base-dir}/versions/$version/{$k}.FAIL".IO.spurt("");
         push @list, "$k ... \t FAIL";
+        $status = False;
         if $v<log> {
           say "log:";
           say ">>>";
@@ -224,6 +226,9 @@ does Sparky::JobApi::Role
 
     "summary.txt".IO.spurt(@list.join("\n"));
     $me.put-file("summary.txt","summary.txt");
+
+    say ">>>";
+    die "some tests failed" unless $status;
 
   }
 }
