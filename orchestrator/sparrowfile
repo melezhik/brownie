@@ -106,8 +106,9 @@ does Sparky::JobApi::Role
                   next if "{self.base-dir}/versions/2025.10/{$m}.OK".IO ~~ :f;
                   next if "{self.base-dir}/versions/2025.10/{$m}.FAIL".IO ~~ :f;
                   %seen{$m}:delete;
-                  say "send $m back to orch queue so that other can pick it up";
+                  #say "send $m back to orch queue so that other can pick it up";
                   $c++;
+                  $scnt--;
                 }
                 %handled-by-agent{$ag.basename} = [];
                 say "{$cnt} modules returned back to orch queue";
