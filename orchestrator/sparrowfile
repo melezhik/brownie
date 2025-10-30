@@ -94,7 +94,7 @@ does Sparky::JobApi::Role
 
           my $age = Int(now - $ag.created.DateTime);
 
-          if $age < 600 { # only use agents with 10 minutes ago at least heartbeat
+          if $age < 900 { # only use agents with 15 minutes ago at least heartbeat
             say "agent {$ag.basename} heartbeat OK - [$age] seconds";
             push @agents, $ag.basename;
             %handled-by-agent{$ag.basename} = [] unless  %handled-by-agent{$ag.basename};
