@@ -94,7 +94,7 @@ does Sparky::JobApi::Role
 
           my $age = Int(now - $ag.created.DateTime);
 
-          if $age < 900 { # only use agents with 15 minutes ago at least heartbeat
+          if $age <= 360 { # only use agents with 6 minutes ago at least heartbeat
             say "agent {$ag.basename} heartbeat OK - [$age] seconds";
             push @agents, $ag.basename;
             %handled-by-agent{$ag.basename} = [] unless  %handled-by-agent{$ag.basename};
@@ -111,7 +111,7 @@ does Sparky::JobApi::Role
                   $scnt--;
                 }
                 %handled-by-agent{$ag.basename} = [];
-                say "{$cnt} modules returned back to orch queue";
+                say "{$c} modules returned back to orch queue";
             }
             say "remove agent {$ag.basename} from registry";
             $ag.unlink; 
