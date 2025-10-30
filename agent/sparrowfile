@@ -201,6 +201,8 @@ does Sparky::JobApi::Role
   method stage-ping {
 
     directory "{self.base-dir}/agents";
+    
+    "{self.base-dir}/agents/{tags()<agent>}".IO.unlink;
 
     "{self.base-dir}/agents/{tags()<agent>}".IO.spurt("");
 
