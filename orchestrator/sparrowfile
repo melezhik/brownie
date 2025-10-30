@@ -84,96 +84,92 @@ does Sparky::JobApi::Role
 
       my @agents;
       
-      #if $scnt < @d.elems {
+      say "look for available agents ...";
 
-        while (True) {
+      @agents = [];
 
-          say "look for available agents ...";
-
-          @agents = [];
-
-          if "{self.base-dir}/agents".IO ~~ :d { 
-            
-            for dir("{self.base-dir}/agents") -> $ag {
-
-              my $age = Int(now - $ag.created.DateTime);
-
-              if $age < 300 { # only use agents with 5 minutes ago at least heartbeat
-                push @agents, $ag.basename;
-                %handled-by-agent{$ag.basename} = [] unless  %handled-by-agent{$ag.basename};
-              } else {
-                say "skip old agent - {$ag.basename}, heartbit -  $age seconds";
-                if %handled-by-agent{$ag.basename} {
-                    for %handled-by-agent{$ag.basename}<> -> $m {
-                      %seen{$m}:delete;
-                      say "send $m back to orch queue so that other can pick it up";
-                    }
-                    %handled-by-agent{$ag.basename} = [];
-                }
-                say "remove agent {$ag.basename} from registry";
-                $ag.unlink; 
-              }
-            };
-          }
-        }
-
-        say "{@agents.elems} online agents found";
-
-        if @agents.elems > 0 && @eff-list.elems > 0 {
-
-          if @eff-list.elems < @agents.elems {
-              $chunk = 1;
-              @agents = @agents[0 .. @eff-list.elems -1];
-          } else {
-            $chunk = Int(@eff-list.elems/@agents.elems);
-            $chunk = 5 if $chunk > 5;
-          }
+      if "{self.base-dir}/agents".IO ~~ :d { 
         
-          my $a = 0;
+        for dir("{self.base-dir}/agents") -> $ag {
 
-          say "agents cnt: {@agents.elems}";
+          my $age = Int(now - $ag.created.DateTime);
 
-          say "chunk: $chunk";
-
-          for 1 .. @agents.elems -> $i {
-
-            my @slice = @eff-list[$a .. $a + $chunk - 1];
-
-            @slice = @slice.sort;
-
-            say "push job to agent {@agents[$i-1]}";
-
-            my $agents-queue = Sparky::JobApi.new(
-              :project<browny.queue>,
-              :job-id(@agents[$i-1]),
-            );
-
-            $agents-queue.put-stash(
-              %( 
-                version => "2025.10",
-                agent => @agents[$i-1],
-                modules => @slice,
-                run-id => time, 
-              )
-            );
-            say "slice: {@slice.raku}";
-            $a = $a + $chunk;
-            say "...";
-            
-            for @slice -> $s {
-              %seen{$s} = True;
-              $scnt++;
-              push %handled-by-agent{$s}, $s;
+          if $age < 300 { # only use agents with 5 minutes ago at least heartbeat
+            push @agents, $ag.basename;
+            %handled-by-agent{$ag.basename} = [] unless  %handled-by-agent{$ag.basename};
+          } else {
+            say "skip old agent - {$ag.basename}, heartbit -  $age seconds";
+            if %handled-by-agent{$ag.basename} {
+                my $c = 0;
+                for %handled-by-agent{$ag.basename}<> -> $m {
+                  %seen{$m}:delete;
+                  say "send $m back to orch queue so that other can pick it up";
+                  $c++;
+                }
+                %handled-by-agent{$ag.basename} = [];
+                say "{$cnt} modules returned back to orch queue";
             }
+            say "remove agent {$ag.basename} from registry";
+            $ag.unlink; 
+          }
+        };
+      }
+
+      say "{@agents.elems} online agents found";
+        
+      if @agents.elems > 0 && @eff-list.elems > 0 {
+
+        if @eff-list.elems < @agents.elems {
+            $chunk = 1;
+            @agents = @agents[0 .. @eff-list.elems -1];
+        } else {
+          $chunk = Int(@eff-list.elems/@agents.elems);
+          $chunk = 5 if $chunk > 5;
+        }
+      
+        my $a = 0;
+
+        say "agents cnt: {@agents.elems}";
+
+        say "chunk: $chunk";
+
+        for 1 .. @agents.elems -> $i {
+
+          my @slice = @eff-list[$a .. $a + $chunk - 1];
+
+          @slice = @slice.sort;
+
+          say "push job to agent {@agents[$i-1]}";
+
+          my $agents-queue = Sparky::JobApi.new(
+            :project<browny.queue>,
+            :job-id(@agents[$i-1]),
+          );
+
+          $agents-queue.put-stash(
+            %( 
+              version => "2025.10",
+              agent => @agents[$i-1],
+              modules => @slice,
+              run-id => time, 
+            )
+          );
+          say "slice: {@slice.raku}";
+          $a = $a + $chunk;
+          say "...";
+          
+          for @slice -> $s {
+            %seen{$s} = True;
+            $scnt++;
+            push %handled-by-agent{@agents[$i-1]}, $s;
           }
         }
+      }
 
-        say "///";
-        say "[{$scnt}] tests out of [{@d.elems}] sent for execution";
-        say "///";
+      say "///";
+      say "[{$scnt}] tests out of [{@d.elems}] sent for execution";
+      say "///";
     
-      #}
-
       say "<<< sleep for 30 seconds";
 
       sleep(30);
