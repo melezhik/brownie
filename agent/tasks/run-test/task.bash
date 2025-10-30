@@ -26,9 +26,9 @@ export ZEF_TEST_DEGREE=$(config zef_test_degree)
 
 echo "dump env vars" > dump.txt
 
-env | grep ZEF_ || : >> dump.txt
+env | grep ZEF_ >> dump.txt || :
 
-env | grep RAKULIB || : >> dump.txt
+env | grep RAKULIB >> dump.txt || :
 
 cat dump.txt
 

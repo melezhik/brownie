@@ -55,18 +55,28 @@ does Sparky::JobApi::Role
       :project<agent.ping>,
     );
 
-    # register agent
-    $orch-job2.queue({
-      description => "hello from $agent", 
-      tags => %(
-        agent => $agent,
-        stage => "ping",
-      ),
-    });
 
-    sleep(10);
+    my $i = 1;
 
     while True {
+
+      if ($i == 1) {
+        # register agent / send agent heartbeat 
+        # every 60 seconds
+        $orch-job2.queue({
+          description => "heartbit from $agent", 
+          tags => %(
+            agent => $agent,
+            stage => "ping",
+          ),
+        });
+         $i++;
+      } elsif ($i == 6) {
+         $i = 1;
+      } else {
+         $i++;
+      }
+      sleep(10);
 
       my $q = $orch-job.get-stash();
 
@@ -101,7 +111,7 @@ does Sparky::JobApi::Role
         }
       }
       say "<<< sleep for 10 seconds";
-      sleep(10);
+
     }
   }
 

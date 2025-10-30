@@ -45,14 +45,17 @@ does Sparky::JobApi::Role
 
     my $scnt = 0;
 
+    my %handled-by-agent;
+
     while (True) {
 
       my @_list = [];
 
       for @eff-list -> $l {
-        next if %seen{$l};
+        next if %seen{$l}; # module is already send to some agent
         if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
            "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
+              # module is already completed
               next;
         }
         push @_list, $l;
@@ -81,34 +84,43 @@ does Sparky::JobApi::Role
 
       my @agents;
       
-      my $k = 1;
-
-      my %seen2;
-
-      if $scnt < @d.elems {
+      #if $scnt < @d.elems {
 
         while (True) {
+
           say "look for available agents ...";
+
+          @agents = [];
+
           if "{self.base-dir}/agents".IO ~~ :d { 
-            my @aa = dir("{self.base-dir}/agents").map({$_.basename});
-            @aa .= pick(@aa); # sort randomly
-            for @aa -> $aa {
-                next if %seen2{$aa};
-                push @agents, $aa;
-                %seen2{$aa} = True;
-                say ">>> pick agent $aa";
-            }
+            
+            for dir("{self.base-dir}/agents") -> $ag {
+
+              my $age = Int(now - $ag.created.DateTime);
+
+              if $age < 300 { # only use agents with 5 minutes ago at least heartbeat
+                push @agents, $ag.basename;
+                %handled-by-agent{$ag.basename} = [] unless  %handled-by-agent{$ag.basename};
+              } else {
+                say "skip old agent - {$ag.basename}, heartbit -  $age seconds";
+                if %handled-by-agent{$ag.basename} {
+                    for %handled-by-agent{$ag.basename}<> -> $m {
+                      %seen{$m}:delete;
+                      say "send $m back to orch queue so that other can pick it up";
+                    }
+                    %handled-by-agent{$ag.basename} = [];
+                }
+                say "remove agent {$ag.basename} from registry";
+                $ag.unlink; 
+              }
+            };
           }
-          say "... sleep for 5 seconds";
-          sleep(5);
-          $k++;
-          last if $k > 4;
-          last if @agents.elems >= 10;
         }
 
         say "{@agents.elems} online agents found";
 
         if @agents.elems > 0 && @eff-list.elems > 0 {
+
           if @eff-list.elems < @agents.elems {
               $chunk = 1;
               @agents = @agents[0 .. @eff-list.elems -1];
@@ -151,6 +163,7 @@ does Sparky::JobApi::Role
             for @slice -> $s {
               %seen{$s} = True;
               $scnt++;
+              push %handled-by-agent{$s}, $s;
             }
           }
         }
@@ -159,7 +172,7 @@ does Sparky::JobApi::Role
         say "[{$scnt}] tests out of [{@d.elems}] sent for execution";
         say "///";
     
-      }
+      #}
 
       say "<<< sleep for 30 seconds";
 
