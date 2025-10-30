@@ -95,13 +95,16 @@ does Sparky::JobApi::Role
           my $age = Int(now - $ag.created.DateTime);
 
           if $age < 600 { # only use agents with 10 minutes ago at least heartbeat
+            say "agent {$ag.basename} heartbeat OK - [$age] seconds";
             push @agents, $ag.basename;
             %handled-by-agent{$ag.basename} = [] unless  %handled-by-agent{$ag.basename};
           } else {
-            say "skip old agent - {$ag.basename}, heartbit -  $age seconds";
+            say "remove agent {$ag.basename} from rotation, BAD heartbit -  $age seconds";
             if %handled-by-agent{$ag.basename} {
                 my $c = 0;
                 for %handled-by-agent{$ag.basename}<> -> $m {
+                  next if "{self.base-dir}/versions/2025.10/{$m}.OK".IO ~~ :f;
+                  next if "{self.base-dir}/versions/2025.10/{$m}.FAIL".IO ~~ :f;
                   %seen{$m}:delete;
                   say "send $m back to orch queue so that other can pick it up";
                   $c++;
