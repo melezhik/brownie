@@ -117,6 +117,8 @@ does Sparky::JobApi::Role
 
   method stage-test {
 
+    my $agent = tags()<agent>;
+
     my $my = Sparky::JobApi.new( :mine );
 
     bash "raku -V > rakuenv.txt";
@@ -144,12 +146,11 @@ does Sparky::JobApi::Role
 
     say "<<<";
 
-
     my %results;
 
     my $orch-job = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
-      :project<agent.report>,
+      :project("{$agent}.report"),
     );
 
     "list.txt".IO.spurt(@list.join("\n"));
@@ -181,7 +182,7 @@ does Sparky::JobApi::Role
     $orch-job.put-stash(%results);
 
     $orch-job.queue({
-      description => "results from {tags()<agent>}", 
+      description => "test report", 
       tags => %(
         version => tags()<rakudo-version>,
         stage => "results",
