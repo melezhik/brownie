@@ -75,8 +75,6 @@ does Sparky::JobApi::Role
 
       say "||| TESTS STAT: already finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems}";
 
-      @_list = [];
-
       #@_list.=pick(@_list);
 
       if $alr-comp == @d.elems {
