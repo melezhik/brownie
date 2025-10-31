@@ -41,8 +41,6 @@ does Sparky::JobApi::Role
 
     my %sent;
 
-    my %handled-by-agent;
-
     while (True) {
 
       my @_list = [];
@@ -62,12 +60,12 @@ does Sparky::JobApi::Role
         }
         if %sent{$l} {
           my $delta = Int(now - %sent{$l});
-          if $delta > 600*6 {
-              say "we have not heard anyting from $l last 1 hour, return it back to orch queue";
+          if $delta > 600*3 {
+              say "we have not heard anyting from $l last 30 minutes, return it back to orch queue";
           } else {
             # module is already send to some agent
             # and have processing time less then
-            # 1 hour
+            # 30 minutes
             # skip it
             next
           }
@@ -102,22 +100,8 @@ does Sparky::JobApi::Role
           if $age <= 360 { # only use agents with 6 minutes ago at least heartbeat
             say "agent {$ag.basename} heartbeat OK - [$age] seconds";
             push @agents, $ag.basename;
-            %handled-by-agent{$ag.basename} = [] unless  %handled-by-agent{$ag.basename};
           } else {
             say "remove agent {$ag.basename} from rotation, BAD heartbit -  $age seconds";
-            if %handled-by-agent{$ag.basename} {
-                my $c = 0;
-                for %handled-by-agent{$ag.basename}<> -> $m {
-                  next if "{self.base-dir}/versions/2025.10/{$m}.OK".IO ~~ :f;
-                  next if "{self.base-dir}/versions/2025.10/{$m}.FAIL".IO ~~ :f;
-                  %sent{$m}:delete;
-                  #say "send $m back to orch queue so that other can pick it up";
-                  $c++;
-                }
-                %handled-by-agent{$ag.basename} = [];
-                say "{$c} modules returned back to orch queue";
-            }
-            say "remove agent {$ag.basename} from registry";
             $ag.unlink; 
           }
         };
@@ -168,7 +152,6 @@ does Sparky::JobApi::Role
           
           for @slice -> $s {
             %sent{$s} = now;
-            push %handled-by-agent{@agents[$i-1]}, $s;
           }
         }
       }
