@@ -71,8 +71,6 @@ does Sparky::JobApi::Role
 
       #@_list.=pick(@_list);
 
-      my $cnt = 0;
-      
       if $alr-comp == @d.elems {
         last;
       }
