@@ -36,8 +36,6 @@ does Sparky::JobApi::Role
     my $me = Sparky::JobApi.new(:mine);
 
     $me.put-file("list.txt","list.txt");
-
-    my @eff-list = @d;
     
     my $j = 0;
 
@@ -50,9 +48,13 @@ does Sparky::JobApi::Role
     while (True) {
 
       my @_list = [];
+      
+      my $alr-snt = 0;
 
-      for @eff-list -> $l {
-        next if %seen{$l}; # module is already send to some agent
+      for @d -> $l {
+        if %seen{$l} { # module is already send to some agent
+          next
+        } 
         if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
            "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
               # module is already completed
@@ -61,9 +63,9 @@ does Sparky::JobApi::Role
         push @_list, $l;
       }
 
-      @eff-list = @_list;
+      @_list;
 
-      #@eff-list.=pick(@eff-list);
+      #@_list.=pick(@_list);
 
       my $cnt = 0;
       
@@ -121,13 +123,13 @@ does Sparky::JobApi::Role
 
       say "{@agents.elems} online agents found";
         
-      if @agents.elems > 0 && @eff-list.elems > 0 {
+      if @agents.elems > 0 && @_list.elems > 0 {
 
-        if @eff-list.elems < @agents.elems {
+        if @_list.elems < @agents.elems {
             $chunk = 1;
-            @agents = @agents[0 .. @eff-list.elems -1];
+            @agents = @agents[0 .. @_list.elems -1];
         } else {
-          $chunk = Int(@eff-list.elems/@agents.elems);
+          $chunk = Int(@_list.elems/@agents.elems);
           $chunk = 5 if $chunk > 5;
         }
       
@@ -139,7 +141,7 @@ does Sparky::JobApi::Role
 
         for 1 .. @agents.elems -> $i {
 
-          my @slice = @eff-list[$a .. $a + $chunk - 1];
+          my @slice = @_list[$a .. $a + $chunk - 1];
 
           @slice = @slice.sort;
 
