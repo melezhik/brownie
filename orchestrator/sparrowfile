@@ -41,45 +41,40 @@ does Sparky::JobApi::Role
 
     my %seen;
 
-    my $scnt = 0;
-
     my %handled-by-agent;
 
     while (True) {
 
       my @_list = [];
       
-      my $alr-snt = 0;
+      my $alr-comp = 0;
 
+      # recalc stat
       for @d -> $l {
-        if %seen{$l} { # module is already send to some agent
-          next
-        } 
         if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
            "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
               # module is already completed
+              $alr-comp++;
+              %seen{$l}:delete;
               next;
         }
+        if %seen{$l} { 
+          # module is already send to some agent
+          next
+        } 
         push @_list, $l;
       }
 
-      @_list;
+      say "||| TESTS STAT: already finished tests: {$alr-comp} | tests in progress: {%seen.keys.elems} | tests total: {@d.elems}";
+
+      @_list = [];
 
       #@_list.=pick(@_list);
 
       my $cnt = 0;
       
-      for @d -> $l {
-        if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
-           "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
-            $cnt++;
-        }
-      }
-
-      if $cnt == @d.elems {
+      if $alr-comp == @d.elems {
         last;
-      } else {
-        say "$cnt tests out of {@d.elems} finished"
       }
 
       my $chunk = 0;
@@ -110,7 +105,6 @@ does Sparky::JobApi::Role
                   %seen{$m}:delete;
                   #say "send $m back to orch queue so that other can pick it up";
                   $c++;
-                  $scnt--;
                 }
                 %handled-by-agent{$ag.basename} = [];
                 say "{$c} modules returned back to orch queue";
@@ -166,16 +160,11 @@ does Sparky::JobApi::Role
           
           for @slice -> $s {
             %seen{$s} = True;
-            $scnt++;
             push %handled-by-agent{@agents[$i-1]}, $s;
           }
         }
       }
 
-      say "///";
-      say "[{$scnt}] tests out of [{@d.elems}] sent for execution";
-      say "///";
-    
       say "<<< sleep for 30 seconds";
 
       sleep(30);
