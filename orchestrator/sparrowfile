@@ -74,7 +74,7 @@ does Sparky::JobApi::Role
         push @_list, $l;
       }
 
-      say "||| TESTS STAT: already finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems}";
+      say "||| TESTS STAT: already finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems} | current queue: {@_list.elems}";
 
       #@_list.=pick(@_list);
 
