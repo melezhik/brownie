@@ -115,7 +115,7 @@ does Sparky::JobApi::Role
             @agents = @agents[0 .. @_list.elems -1];
         } else {
           $chunk = Int(@_list.elems/@agents.elems);
-          $chunk = 5 if $chunk > 5;
+          $chunk = 50 if $chunk > 50;
         }
       
         my $a = 0;
@@ -155,9 +155,9 @@ does Sparky::JobApi::Role
         }
       }
 
-      say "<<< sleep for 30 seconds";
+      #say "<<< sleep for 30 seconds";
 
-      sleep(30);
+      sleep(120);
 
       $j++;
       
