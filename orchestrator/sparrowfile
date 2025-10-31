@@ -39,7 +39,7 @@ does Sparky::JobApi::Role
     
     my $j = 0;
 
-    my %seen;
+    my %sent;
 
     my %handled-by-agent;
 
@@ -49,23 +49,33 @@ does Sparky::JobApi::Role
       
       my $alr-comp = 0;
 
-      # recalc stat
+      # recalc stat and prepare new chunk of tests
+      # to process
+
       for @d -> $l {
         if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
            "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
               # module is already completed
               $alr-comp++;
-              %seen{$l}:delete;
+              %sent{$l}:delete;
               next;
         }
-        if %seen{$l} { 
-          # module is already send to some agent
-          next
+        if %sent{$l} {
+          my $delta = Int(now - %sent{$l});
+          if $delta > 600*6 {
+              say "we have not heard anyting from $l last 1 hour, return it back to orch queue";
+          } else {
+            # module is already send to some agent
+            # and have processing time less then
+            # 1 hour
+            # skip it
+            next
+          }
         } 
         push @_list, $l;
       }
 
-      say "||| TESTS STAT: already finished tests: {$alr-comp} | tests in progress: {%seen.keys.elems} | tests total: {@d.elems}";
+      say "||| TESTS STAT: already finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems}";
 
       @_list = [];
 
@@ -100,7 +110,7 @@ does Sparky::JobApi::Role
                 for %handled-by-agent{$ag.basename}<> -> $m {
                   next if "{self.base-dir}/versions/2025.10/{$m}.OK".IO ~~ :f;
                   next if "{self.base-dir}/versions/2025.10/{$m}.FAIL".IO ~~ :f;
-                  %seen{$m}:delete;
+                  %sent{$m}:delete;
                   #say "send $m back to orch queue so that other can pick it up";
                   $c++;
                 }
@@ -157,7 +167,7 @@ does Sparky::JobApi::Role
           say "...";
           
           for @slice -> $s {
-            %seen{$s} = True;
+            %sent{$s} = now;
             push %handled-by-agent{@agents[$i-1]}, $s;
           }
         }
