@@ -62,6 +62,7 @@ does Sparky::JobApi::Role
           my $delta = Int(now - %sent{$l});
           if $delta > 600*3 {
               say "we have not heard anyting from $l last 30 minutes, return it back to orch queue";
+              %sent{$l}:delete;
           } else {
             # module is already send to some agent
             # and have processing time less then
