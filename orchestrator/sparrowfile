@@ -22,6 +22,8 @@ does Sparky::JobApi::Role
 
     say "Testing top 100 modules on the Raku Ecosystem River:";
 
+    $start_time = time;
+
     for $eco.river.sort(-*.value.elems).map(*.key).head(100) -> $d {
         push @d, $d;
         #say $d;
@@ -71,7 +73,18 @@ does Sparky::JobApi::Role
         push @_list, $l;
       }
 
-      say "||| TESTS STAT: already finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems} | current queue: {@_list.elems} | send back: $sent-back";
+      my $els = Int(time - $start_time);
+      my $elh;
+
+      if $els < 60 {
+         $elh = "<1m";
+      } elsif $els < 60*60 {
+         $elh = Int($els/60) ~ "m";
+      } elsif $els < 60*60*24 {
+         $elh = Int($els/60) ~ "h";
+      }
+   
+      say "||| TESTS STAT: time: $elh | finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems} | current queue: {@_list.elems} | send back: $sent-back";
 
       #@_list.=pick(@_list);
 
