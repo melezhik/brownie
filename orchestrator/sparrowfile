@@ -39,6 +39,8 @@ does Sparky::JobApi::Role
 
     my %sent;
 
+    my @agents;
+
     while (True) {
 
       my @_list = [];
@@ -84,7 +86,7 @@ does Sparky::JobApi::Role
          $elh = sprintf("%.3dh", Int($els/60));
       }
    
-      say "||| TESTS STAT: time: {$elh} | finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems} | current queue: {@_list.elems} | send back: $sent-back";
+      say "||| TESTS STAT: time: {$elh} | finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems} | current queue: {@_list.elems} | send back: $sent-back | agents cnt: {@agents.elems}";
 
       #@_list.=pick(@_list);
 
@@ -93,8 +95,6 @@ does Sparky::JobApi::Role
       }
 
       my $chunk = 0;
-
-      my @agents;
       
       say "look for available agents ...";
 
