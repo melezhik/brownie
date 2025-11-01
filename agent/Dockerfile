@@ -32,6 +32,8 @@ RUN zef install --/test Random::Names
 
 RUN zef install https://github.com/melezhik/sparky.git --/test --force-install
 
+RUN zef install https://github.com/melezhik/sparky-job-api.git --/test --force-install
+
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log
 
 COPY config.raku tasks sparrowfile sparky.yaml /root/.sparky/projects/agent/
