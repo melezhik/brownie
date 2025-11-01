@@ -16,10 +16,6 @@ does Sparky::JobApi::Role
 
   method stage-main {
 
-    #bash "rm -rf {self.base-dir}/agents/*", %(
-      #description => "remove old registered agents"
-    #);
-
     my @d;
 
     my $eco = Ecosystem.new;
@@ -98,7 +94,7 @@ does Sparky::JobApi::Role
           my $age = Int(now - $ag.created.DateTime);
 
           if $age <= 360 { # only use agents with 6 minutes ago at least heartbeat
-            print "agent {$ag.basename} heartbeat OK - [$age] seconds | ";
+            say "agent {$ag.basename} heartbeat OK - [$age] seconds";
             push @agents, $ag.basename;
           } else {
             say "remove agent {$ag.basename} from rotation, BAD heartbit -  $age seconds";
@@ -148,6 +144,7 @@ does Sparky::JobApi::Role
               run-id => time, 
             )
           );
+
           say "slice: {@slice.raku}";
           $a = $a + $chunk;
           say "...";
