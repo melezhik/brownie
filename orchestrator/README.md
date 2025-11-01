@@ -18,7 +18,7 @@ docker run --rm -it --name orch-srv -p 4000:4000 orch-srv
 
 ## Setup agents
 
-o10r should have public URL accessible for agents, agents need to set up via config.raku file
+o10r should have public URL accessible for agents, agents need to set up via [agent/config.raku](https://github.com/melezhik/brownie/blob/main/agent/config.raku) file (require agent rebuild)
 
 ## Dashboard
 
