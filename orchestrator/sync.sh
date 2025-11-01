@@ -1,4 +1,4 @@
 set -e
 echo "sync orchestrator"
 echo "==="
-cp -rv . ~/.sparky/projects/orchestrator/
+cp -rv . ~/.sparky/projects/brw-srv/
