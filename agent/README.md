@@ -14,20 +14,15 @@ Run agent server
 docker run --rm -it --name agent -p 4000:4000 agent
 ```
 
-## Add agent to pool
+## Workloads
 
-Go to http://127.0.0.1:4000 
+Once agent is registered in orchestrator, it starts receiving workload and starts execute it, you'll see `agent.job` jobs in agent UI:
 
-- login admin/admin
-
-- run `agent` project job
-
-See workload. Once agent has received any workload from orchestrator it starts execute it,
-you'll see `agent.job` jobs
+http://127.0.0.1:4000
 
 ## Orchestrator endpoint
 
-To see results go to http://brw.sparrowhub.io
+To see test results from other agents go to http://brw.sparrowhub.io
 
 # FAQ
 
