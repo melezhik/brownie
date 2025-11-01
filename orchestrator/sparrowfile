@@ -79,12 +79,12 @@ does Sparky::JobApi::Role
       if $els < 60 {
          $elh = "<1m";
       } elsif $els < 60*60 {
-         $elh = Int($els/60) ~ "m";
+         $elh = sprintf("%.2dm", Int($els/60));
       } elsif $els < 60*60*24 {
-         $elh = Int($els/60) ~ "h";
+         $elh = sprintf("%.3dh", Int($els/60));
       }
    
-      say "||| TESTS STAT: time: $elh | finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems} | current queue: {@_list.elems} | send back: $sent-back";
+      say "||| TESTS STAT: time: {$elh} | finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems} | current queue: {@_list.elems} | send back: $sent-back";
 
       #@_list.=pick(@_list);
 
