@@ -22,7 +22,7 @@ does Sparky::JobApi::Role
 
     say "Testing top 100 modules on the Raku Ecosystem River:";
 
-    $start_time = time;
+    my $start_time = time;
 
     for $eco.river.sort(-*.value.elems).map(*.key).head(100) -> $d {
         push @d, $d;
