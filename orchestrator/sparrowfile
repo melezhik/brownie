@@ -84,18 +84,22 @@ does Sparky::JobApi::Role
 
   method stage-main {
 
-    my @d;
-
     my $eco = Ecosystem.new;
 
     #say "Testing 100 randome modules on the Raku Ecosystem River:";
 
     my $start_time = time;
 
-    for $eco.river.map(*.key).sort.head(100) -> $d {
-        push @d, $d;
-        #say $d;
-    }
+    my @d = $eco.identities.keys; 
+    @d.=pick(@d);
+    @d = @d[0 .. 100];
+
+    directory-delete("{self.base-dir}/versions/2025.10/");
+
+    # for $eco.river.map(*.key).sort.head(100) -> $d {
+    #     push @d, $d;
+    #     #say $d;
+    # }
 
     "list.txt".IO.spurt(@d.join("\n"));
 
