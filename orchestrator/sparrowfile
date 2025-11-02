@@ -24,7 +24,7 @@ does Sparky::JobApi::Role
 
     my $start_time = time;
 
-    for $eco.river(-*.value.elems).map(*.key).head(100) -> $d {
+    for $eco.river.map(*.key).head(100) -> $d {
         push @d, $d;
         #say $d;
     }
