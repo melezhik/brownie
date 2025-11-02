@@ -201,7 +201,7 @@ does Sparky::JobApi::Role
          $elh = sprintf("%.3dh", Int($els/(60*60)));
       }
 
-      say "||| TESTS STAT: time: {$elh} | tests total: {@d.elems} | finished tests: {$done} | current queue: {@rs.elems + @s.elems} | redistributed: {@rs.elems} | agents cnt: {@agents.elems}";
+      say "||| TESTS STAT: time: {$elh} | tests total: {@d.elems} | finished tests: {$done} | sent to queue: dist={@rs.elems} / redist={@s.elems} | redistributed: {@rs.elems} | agents cnt: {@agents.elems}";
 
       sleep(80);
 
