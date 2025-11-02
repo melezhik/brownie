@@ -26,7 +26,7 @@ does Sparky::JobApi::Role
 
     my $chunk = 0;
 
-    say "distribute, sent-back: $sent-back";
+    say "distribute, redistribution: $sent-back";
 
     if @agents.elems > 0 && @_list.elems > 0 {
 
@@ -136,7 +136,7 @@ does Sparky::JobApi::Role
         };
       }
 
-      say "";
+      say "xxx";
 
       say "{@agents.elems} online agents found";
       
@@ -161,30 +161,32 @@ does Sparky::JobApi::Role
         last;
       }
       
-      # distibute jobs on all agents with c-qnt > 0
+      # distibute tests on agents with none zero queue
       my @s = self!distribute(
-        @_list.grep({$_<send-back> == False}).map({$_<module>}),
+        @_list.grep({$_<send-back> == False}).sort({$_<q-cnt>}).map({$_<module>}),
         @agents.grep({ $_<q-cnt> > 0}).map({$_<name>}),
         False
       );
       my @rs;
       if @s.elems {
-      # re-distibute stuck jobs on free agents
-      @rs = self!distribute(
-        @_list.grep({$_<send-back> == True}).map({$_<module>}),
-        @agents.grep({ $_<q-cnt> == 0}).map({$_<name>}),
-        True
-      );
-
-      for @rs -> $s {
-        %sent{$s} = now;
-      };
+        # re-distibute old tests on agents with zero queue
+        @rs = self!distribute(
+          @_list.grep({$_<send-back> == True}).map({$_<module>}),
+          @agents.grep({ $_<q-cnt> == 0}).map({$_<name>}),
+          True
+        );
+        # mark distributed tests
+        for @rs -> $s {
+          %sent{$s} = now;
+        };
       }
+      # mark distributed tests
       for @s -> $s {
         %sent{$s} = now;
       };
 
       my $els = Int(time - $start_time);
+
       my $elh;
 
       if $els < 60 {
@@ -195,11 +197,9 @@ does Sparky::JobApi::Role
          $elh = sprintf("%.3dh", Int($els/(60*60)));
       }
 
-      say "||| TESTS STAT: time: {$elh} | finished tests: {$done} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems} | current queue: {@rs.elems} + {@s.elems} | redistributed: {@rs.elems} | agents cnt: {@agents.elems}";
+      say "||| TESTS STAT: time: {$elh} | finished tests: {$done} | tests total: {@d.elems} | current queue: {@rs.elems} + {@s.elems} | redistributed: {@rs.elems} | agents cnt: {@agents.elems}";
 
-      #say "<<< sleep for 30 seconds";
-
-      sleep(120);
+      sleep(80);
 
       $j++;
       
@@ -210,6 +210,7 @@ does Sparky::JobApi::Role
     say "done";
 
     say "summary";
+
     my $summary = "";
 
     for @d -> $m {
