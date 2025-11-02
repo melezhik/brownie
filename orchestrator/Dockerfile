@@ -30,7 +30,7 @@ RUN apt-get install -y pkg-config libfreetype6-dev
 
 RUN zef install --/test Random::Names Ecosystem
 
-RUN zef install https://github.com/melezhik/sparky.git --/test --force-install
+RUN echo OK && zef install https://github.com/melezhik/sparky.git --/test --force-install
 
 RUN zef install https://github.com/melezhik/sparky-job-api.git --/test --force-install
 
