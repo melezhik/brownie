@@ -18,7 +18,7 @@ does Sparky::JobApi::Role
 
   method !distribute ($list,$agents,$sent-back) {
 
-    say "distribute, redistribution: {$sent-back}, {$list.elems}, {$agents.elems}";
+    #say "distribute, redistribution: {$sent-back}, {$list.elems}, {$agents.elems}";
 
     my @sent;
 
@@ -28,7 +28,7 @@ does Sparky::JobApi::Role
 
     my $chunk = 0;
 
-    say "distribute, redistribution: $sent-back";
+    #say "distribute, redistribution: $sent-back";
 
     if $agents.elems > 0 && $list.elems > 0 {
 
