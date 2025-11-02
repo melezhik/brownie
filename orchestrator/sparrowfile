@@ -20,11 +20,11 @@ does Sparky::JobApi::Role
 
     my $eco = Ecosystem.new;
 
-    say "Testing top 100 modules on the Raku Ecosystem River:";
+    say "Testing 100 randome modules on the Raku Ecosystem River:";
 
     my $start_time = time;
 
-    for $eco.river.map(*.key).head(100) -> $d {
+    for $eco.river.map(*.key).sort(*, random => True).head(100) -> $d {
         push @d, $d;
         #say $d;
     }
