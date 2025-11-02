@@ -105,66 +105,15 @@ does Sparky::JobApi::Role
 
     my %sent;
 
-    my @agents;
-
     while (True) {
 
-      my @_list = [];
+      my @_list = []; # tests to distribute
       
-      my $alr-comp = 0;
+      my $done = 0; # finished tests
 
-      # recalc stat and prepare new chunk of tests
-      # to process
-      my $sent-back = 0;
-      for @d -> $l {
-        if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
-           "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
-              # module is already completed
-              $alr-comp++;
-              %sent{$l}:delete;
-              next;
-        }
-        if %sent{$l} {
-          my $delta = Int(now - %sent{$l});
-          if $delta > 600*3 {
-              #say "we have not heard anyting from $l last 30 minutes, return it back to orch queue";
-              %sent{$l}:delete;
-              $sent-back++;
-              push @_list, %( module => $l, send-back => True );
-          } else {
-            # module is already send to some agent
-            # and have processing time less then
-            # 30 minutes
-            # skip it
-            next
-          }
-        } else {
-          push @_list, %( module => $l, send-back => False );
-        }
-      }
+      my @agents; # online agents
 
-      my $els = Int(time - $start_time);
-      my $elh;
-
-      if $els < 60 {
-         $elh = "<1m";
-      } elsif $els < 60*60 {
-         $elh = sprintf("%.2dm", Int($els/60));
-      } elsif $els < 60*60*24 {
-         $elh = sprintf("%.3dh", Int($els/(60*60)));
-      }
-   
-      say "||| TESTS STAT: time: {$elh} | finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems} | current queue: {@_list.elems} | send back: $sent-back | agents cnt: {@agents.elems}";
-
-      #@_list.=pick(@_list);
-
-      if $alr-comp == @d.elems {
-        last;
-      }
-      
       say "look for available agents ...";
-
-      @agents = [];
 
       if "{self.base-dir}/agents".IO ~~ :d { 
         
@@ -178,7 +127,7 @@ does Sparky::JobApi::Role
               my %meta = from-json("{self.base-dir}/agents-meta/{$ag.basename}.json".IO.slurp);
               $q-cnt = %meta<q-cnt>;
             }
-            say "agent {$ag.basename} heartbeat OK - [$age] seconds | q-cnt - {$q-cnt}";
+            say "agent {$ag.basename} heartbeat OK - [$age] seconds | q-cnt - [{$q-cnt}]";
             push @agents, %( name => $ag.basename, q-cnt => $q-cnt);
           } else {
             say "remove agent {$ag.basename} from rotation, BAD heartbit -  $age seconds";
@@ -190,28 +139,63 @@ does Sparky::JobApi::Role
       say "";
 
       say "{@agents.elems} online agents found";
-        
+      
+      # prepare tests for 
+      # distribution
+
+      for @d -> $l {
+        if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
+           "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
+              # module is already completed
+              $done++;
+              next;
+        }
+        if %sent{$l} {
+          push @_list, %( module => $l, send-back => False );
+        }
+      }
+   
+      #@_list.=pick(@_list);
+
+      if $done == @d.elems {
+        last;
+      }
+      
       # distibute jobs on all agents with c-qnt > 0
       my @s = self!distribute(
         @_list.grep({$_<send-back> == False}).map({$_<module>}),
         @agents.grep({ $_<q-cnt> > 0}).map({$_<name>}),
         False
       );
-
-      for @s -> $s {
-        %sent{$s} = now;
-      };
-
-      # re-distibute stuck jobs on fresh agents
-      @s = self!distribute(
+      my @rs;
+      if @s.elems {
+      # re-distibute stuck jobs on free agents
+      @rs = self!distribute(
         @_list.grep({$_<send-back> == True}).map({$_<module>}),
         @agents.grep({ $_<q-cnt> == 0}).map({$_<name>}),
         True
       );
 
+      for @rs -> $s {
+        %sent{$s} = now;
+      };
+      }
       for @s -> $s {
         %sent{$s} = now;
       };
+
+      my $els = Int(time - $start_time);
+      my $elh;
+
+      if $els < 60 {
+         $elh = "<1m";
+      } elsif $els < 60*60 {
+         $elh = sprintf("%.2dm", Int($els/60));
+      } elsif $els < 60*60*24 {
+         $elh = sprintf("%.3dh", Int($els/(60*60)));
+      }
+
+      say "||| TESTS STAT: time: {$elh} | finished tests: {$done} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems} | current queue: {@rs.elems} + {@s.elems} | redistributed: {@rs.elems} | agents cnt: {@agents.elems}";
 
       #say "<<< sleep for 30 seconds";
 
