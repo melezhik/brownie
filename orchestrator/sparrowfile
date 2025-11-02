@@ -203,7 +203,7 @@ does Sparky::JobApi::Role
       };
 
       # re-distibute stuck jobs on fresh agents
-      @s = self!destrubute(
+      @s = self!distribute(
         @_list.grep({$_<send-back> == True}).map({$_<module>}),
         @agents.grep({ $_<q-cnt> == 0}).map({$_<name>}),
         True
