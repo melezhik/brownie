@@ -24,10 +24,12 @@ does Sparky::JobApi::Role
 
     my $start_time = time;
 
-    for $eco.river.sort(-*.value.elems).map(*.key).head(100) -> $d {
+    for $eco.river.sort(-*.value.elems).map(*.key).head(2000) -> $d {
         push @d, $d;
         #say $d;
     }
+
+    @d.=pick(@d)[0 .. 99];
 
     "list.txt".IO.spurt(@d.join("\n"));
 
