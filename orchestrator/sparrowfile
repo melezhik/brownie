@@ -88,7 +88,7 @@ does Sparky::JobApi::Role
 
     my $eco = Ecosystem.new;
 
-    say "Testing 100 randome modules on the Raku Ecosystem River:";
+    #say "Testing 100 randome modules on the Raku Ecosystem River:";
 
     my $start_time = time;
 
@@ -165,14 +165,14 @@ does Sparky::JobApi::Role
         last;
       }
       
-      # distibute tests on agents with none zero queue
+      # distibute tests on all agents
       my @s = self!distribute(
         [@_list.grep({$_<send-back> == False}).sort({$_<q-cnt>}).map({$_<module>})],
-        [@agents.grep({ $_<q-cnt> > 0}).map({$_<name>})],
+        [@agents.map({$_<name>})],
         False
       );
       my @rs;
-      if @s.elems {
+      if @s.elems == 0 {
         # re-distibute old tests on agents with zero queue
         @rs = self!distribute(
           [@_list.grep({$_<send-back> == True}).map({$_<module>})],
