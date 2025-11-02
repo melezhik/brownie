@@ -174,7 +174,7 @@ does Sparky::JobApi::Role
 
           if $age <= 360 { # only use agents with 6 minutes ago at least heartbeat
             my $q-cnt = 1000;
-            if "{self.base-dir}/agents-meta/{$ag.basename}.json" ~~ :f {
+            if "{self.base-dir}/agents-meta/{$ag.basename}.json".IO ~~ :f {
               my %meta = from-json("{self.base-dir}/agents-meta/{$ag.basename}.json".IO.slurp);
               $q-cnt = %meta<q-cnt>;
             }
