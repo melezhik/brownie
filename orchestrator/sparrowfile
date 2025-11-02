@@ -18,8 +18,6 @@ does Sparky::JobApi::Role
 
   method !distribute ($list,$agents,$sent-back) {
 
-    #say "distribute, redistribution: {$sent-back}, {$list.elems}, {$agents.elems}";
-
     my @sent;
 
     return @sent unless $list.elems;
@@ -77,6 +75,8 @@ does Sparky::JobApi::Role
         }
       }
     }
+
+    say "debug: distribute, redistribution: {$sent-back}, {$list.elems}, {$agents.elems} ==> {@sent.elems}";
 
     push @sent;
 
@@ -201,7 +201,7 @@ does Sparky::JobApi::Role
          $elh = sprintf("%.3dh", Int($els/(60*60)));
       }
 
-      say "||| TESTS STAT: time: {$elh} | finished tests: {$done} | tests total: {@d.elems} | current queue: {@rs.elems + @s.elems} | redistributed: {@rs.elems} | agents cnt: {@agents.elems}";
+      say "||| TESTS STAT: time: {$elh} | tests total: {@d.elems} | finished tests: {$done} | current queue: {@rs.elems + @s.elems} | redistributed: {@rs.elems} | agents cnt: {@agents.elems}";
 
       sleep(80);
 
