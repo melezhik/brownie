@@ -16,7 +16,7 @@ does Sparky::JobApi::Role
     "{%*ENV<HOME>}/.brownie"
   }
 
-  method !distribute ($list,$agents,$sent-back) {
+  method !distribute ($list,$agents is rw,$sent-back) {
 
     my @sent;
 
