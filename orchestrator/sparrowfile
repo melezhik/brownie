@@ -18,7 +18,7 @@ does Sparky::JobApi::Role
 
   method !distribute ($list,$agents,$sent-back) {
 
-    say "HHH distribute, redistribution: {$list}, {$agents}, {$sent-back}";
+    say "distribute, redistribution: {$sent-back}, {$list}, {$agents}";
 
     my @sent;
 
