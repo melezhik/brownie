@@ -192,7 +192,7 @@ does Sparky::JobApi::Role
     $orch-job.put-stash(%results);
 
     $orch-job.queue({
-      description => "test report", 
+      description => "test report from $agent", 
       tags => %(
         version => tags()<rakudo-version>,
         stage => "results",
