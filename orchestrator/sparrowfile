@@ -4,6 +4,8 @@ use Sparky::JobApi;
 
 use Ecosystem;
 
+use JSON::Fast;
+
 class Pipeline
 
 does Sparky::JobApi::Role
@@ -12,6 +14,70 @@ does Sparky::JobApi::Role
 
   method base-dir {
     "{%*ENV<HOME>}/.brownie"
+  }
+
+  method !distribute (@_list,@agents,$sent-back) {
+
+    my @sent;
+
+    return @sent unless @_list.elems;
+
+    return @sent unless @agents.elems;
+
+    my $chunk = 0;
+
+    say "distribute, sent-back: $sent-back";
+
+    if @agents.elems > 0 && @_list.elems > 0 {
+
+      if @_list.elems < @agents.elems {
+          $chunk = 1;
+          @agents = @agents[0 .. @_list.elems -1];
+      } else {
+        $chunk = Int(@_list.elems/@agents.elems);
+        $chunk = 10 if $chunk > 10;
+      }
+    
+      my $a = 0;
+
+      say "agents used: {@agents.elems}";
+
+      say "chunk: $chunk";
+
+      for 1 .. @agents.elems -> $i {
+
+        my @slice = @_list[$a .. $a + $chunk - 1];
+
+        @slice = @slice.sort;
+
+        say "push job to agent {@agents[$i-1]}";
+
+        my $agents-queue = Sparky::JobApi.new(
+          :project<browny.queue>,
+          :job-id(@agents[$i-1]),
+        );
+
+        $agents-queue.put-stash(
+          %( 
+            version => "2025.10",
+            agent => @agents[$i-1],
+            modules => @slice,
+            run-id => time, 
+          )
+        );
+
+        say "slice: {@slice.raku}";
+        $a = $a + $chunk;
+        say "...";
+        
+        for @slice -> $s {
+          push @sent, $s;
+        }
+      }
+    }
+
+    push @sent;
+
   }
 
   method stage-main {
@@ -64,6 +130,7 @@ does Sparky::JobApi::Role
               #say "we have not heard anyting from $l last 30 minutes, return it back to orch queue";
               %sent{$l}:delete;
               $sent-back++;
+              push @_list, %( module => $l, send-back => True );
           } else {
             # module is already send to some agent
             # and have processing time less then
@@ -71,8 +138,9 @@ does Sparky::JobApi::Role
             # skip it
             next
           }
-        } 
-        push @_list, $l;
+        } else {
+          push @_list, %( module => $l, send-back => False );
+        }
       }
 
       my $els = Int(time - $start_time);
@@ -83,7 +151,7 @@ does Sparky::JobApi::Role
       } elsif $els < 60*60 {
          $elh = sprintf("%.2dm", Int($els/60));
       } elsif $els < 60*60*24 {
-         $elh = sprintf("%.3dh", Int($els/60));
+         $elh = sprintf("%.3dh", Int($els/(60*60)));
       }
    
       say "||| TESTS STAT: time: {$elh} | finished tests: {$alr-comp} | tests in progress: {%sent.keys.elems} | tests total: {@d.elems} | current queue: {@_list.elems} | send back: $sent-back | agents cnt: {@agents.elems}";
@@ -93,8 +161,6 @@ does Sparky::JobApi::Role
       if $alr-comp == @d.elems {
         last;
       }
-
-      my $chunk = 0;
       
       say "look for available agents ...";
 
@@ -107,8 +173,13 @@ does Sparky::JobApi::Role
           my $age = Int(now - $ag.created.DateTime);
 
           if $age <= 360 { # only use agents with 6 minutes ago at least heartbeat
-            say "agent {$ag.basename} heartbeat OK - [$age] seconds";
-            push @agents, $ag.basename;
+            my $q-cnt = 1000;
+            if "{self.base-dir}/agents-meta/{$ag.basename}.json" ~~ :f {
+              my %meta = from-json("{self.base-dir}/agents-meta/{$ag.basename}.json".IO.slurp);
+              $q-cnt = %meta<q-cnt>;
+            }
+            say "agent {$ag.basename} heartbeat OK - [$age] seconds | q-cnt - {$q-cnt}";
+            push @agents, %( name => $ag.basename, q-cnt => $q-cnt);
           } else {
             say "remove agent {$ag.basename} from rotation, BAD heartbit -  $age seconds";
             $ag.unlink; 
@@ -120,53 +191,27 @@ does Sparky::JobApi::Role
 
       say "{@agents.elems} online agents found";
         
-      if @agents.elems > 0 && @_list.elems > 0 {
+      # distibute jobs on all agents with c-qnt > 0
+      my @s = self!distribute(
+        @_list.grep({$_<send-back> == False}).map({$_<module>}),
+        @agents.grep({ $_<q-cnt> > 0}).map({$_<name>}),
+        False
+      );
 
-        if @_list.elems < @agents.elems {
-            $chunk = 1;
-            @agents = @agents[0 .. @_list.elems -1];
-        } else {
-          $chunk = Int(@_list.elems/@agents.elems);
-          $chunk = 10 if $chunk > 10;
-        }
-      
-        my $a = 0;
+      for @s -> $s {
+        %sent{$s} = now;
+      };
 
-        say "agents used: {@agents.elems}";
+      # re-distibute stuck jobs on fresh agents
+      @s = self!destrubute(
+        @_list.grep({$_<send-back> == True}).map({$_<module>}),
+        @agents.grep({ $_<q-cnt> == 0}).map({$_<name>}),
+        True
+      );
 
-        say "chunk: $chunk";
-
-        for 1 .. @agents.elems -> $i {
-
-          my @slice = @_list[$a .. $a + $chunk - 1];
-
-          @slice = @slice.sort;
-
-          say "push job to agent {@agents[$i-1]}";
-
-          my $agents-queue = Sparky::JobApi.new(
-            :project<browny.queue>,
-            :job-id(@agents[$i-1]),
-          );
-
-          $agents-queue.put-stash(
-            %( 
-              version => "2025.10",
-              agent => @agents[$i-1],
-              modules => @slice,
-              run-id => time, 
-            )
-          );
-
-          say "slice: {@slice.raku}";
-          $a = $a + $chunk;
-          say "...";
-          
-          for @slice -> $s {
-            %sent{$s} = now;
-          }
-        }
-      }
+      for @s -> $s {
+        %sent{$s} = now;
+      };
 
       #say "<<< sleep for 30 seconds";
 

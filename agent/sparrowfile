@@ -4,6 +4,8 @@ use Sparky::JobApi;
 
 use Random::Names;
 
+use JSON::Fast;
+
 class Pipeline
 
 does Sparky::JobApi::Role
@@ -63,11 +65,18 @@ does Sparky::JobApi::Role
       if ($i == 1) {
         # register agent / send agent heartbeat 
         # every 60 seconds
+        my $q-cnt = 0;
+        if "{%*ENV<HOME>}/.sparky/projects/agent.job/.triggers".IO ~~ :d {
+          for dir("{%*ENV<HOME>}/.sparky/projects/agent.job/.triggers") -> $t {
+            $q-cnt++;
+          }
+        }  
         $orch-job2.queue({
           description => "heartbit from $agent", 
           tags => %(
             agent => $agent,
             stage => "ping",
+            q-cnt => $q-cnt,
           ),
         });
          $i++;
@@ -76,6 +85,7 @@ does Sparky::JobApi::Role
       } else {
          $i++;
       }
+
       sleep(10);
 
       my $q = $orch-job.get-stash();
@@ -202,10 +212,19 @@ does Sparky::JobApi::Role
   method stage-ping {
 
     directory "{self.base-dir}/agents";
+    directory "{self.base-dir}/agents-meta";
     
     "{self.base-dir}/agents/{tags()<agent>}".IO.unlink;
 
     "{self.base-dir}/agents/{tags()<agent>}".IO.spurt("");
+
+    my $q-cnt = tags()<q-cnt> || 0;
+
+    "{self.base-dir}/agents-meta/{tags()<agent>}.json".IO.spurt(
+      to-json(
+        %( q-cnt => $q-cnt )
+      )
+    );
 
   }
 
