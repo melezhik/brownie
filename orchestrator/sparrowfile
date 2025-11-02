@@ -153,6 +153,8 @@ does Sparky::JobApi::Role
               next;
         }
         if %sent{$l} {
+          push @_list, %( module => $l, send-back => True );
+        } else {
           push @_list, %( module => $l, send-back => False );
         }
       }
