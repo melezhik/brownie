@@ -16,53 +16,53 @@ does Sparky::JobApi::Role
     "{%*ENV<HOME>}/.brownie"
   }
 
-  method !distribute (@_list,@agents,$sent-back) {
+  method !distribute ($list,$agents,$sent-back) {
 
-    say "HHH distribute, redistribution: {@_list}, {@agents}, {$sent-back}";
+    say "HHH distribute, redistribution: {$list}, {$agents}, {$sent-back}";
 
     my @sent;
 
-    return @sent unless @_list.elems;
+    return @sent unless $list.elems;
 
-    return @sent unless @agents.elems;
+    return @sent unless $agents.elems;
 
     my $chunk = 0;
 
     say "distribute, redistribution: $sent-back";
 
-    if @agents.elems > 0 && @_list.elems > 0 {
+    if $agents.elems > 0 && $list.elems > 0 {
 
-      if @_list.elems < @agents.elems {
+      if $list.elems < $agents.elems {
           $chunk = 1;
-          @agents = @agents[0 .. @_list.elems -1];
+          $agents = $agents[0 .. $list.elems -1];
       } else {
-        $chunk = Int(@_list.elems/@agents.elems);
+        $chunk = Int($list.elems/$agents.elems);
         $chunk = 10 if $chunk > 10;
       }
     
       my $a = 0;
 
-      say "agents used: {@agents.elems}";
+      say "agents used: {$agents.elems}";
 
       say "chunk: $chunk";
 
-      for 1 .. @agents.elems -> $i {
+      for 1 .. $agents.elems -> $i {
 
-        my @slice = @_list[$a .. $a + $chunk - 1];
+        my @slice = $list[$a .. $a + $chunk - 1];
 
         @slice = @slice.sort;
 
-        say "push job to agent {@agents[$i-1]}";
+        say "push job to agent {$agents[$i-1]}";
 
         my $agents-queue = Sparky::JobApi.new(
           :project<browny.queue>,
-          :job-id(@agents[$i-1]),
+          :job-id($agents[$i-1]),
         );
 
         $agents-queue.put-stash(
           %( 
             version => "2025.10",
-            agent => @agents[$i-1],
+            agent => $agents[$i-1],
             modules => @slice,
             run-id => time, 
           )
@@ -165,16 +165,16 @@ does Sparky::JobApi::Role
       
       # distibute tests on agents with none zero queue
       my @s = self!distribute(
-        @_list.grep({$_<send-back> == False}).sort({$_<q-cnt>}).map({$_<module>}),
-        @agents.grep({ $_<q-cnt> > 0}).map({$_<name>}),
+        [@_list.grep({$_<send-back> == False}).sort({$_<q-cnt>}).map({$_<module>})],
+        [@agents.grep({ $_<q-cnt> > 0}).map({$_<name>})],
         False
       );
       my @rs;
       if @s.elems {
         # re-distibute old tests on agents with zero queue
         @rs = self!distribute(
-          @_list.grep({$_<send-back> == True}).map({$_<module>}),
-          @agents.grep({ $_<q-cnt> == 0}).map({$_<name>}),
+          [@_list.grep({$_<send-back> == True}).map({$_<module>})],
+          [@agents.grep({ $_<q-cnt> == 0}).map({$_<name>})],
           True
         );
         # mark distributed tests
