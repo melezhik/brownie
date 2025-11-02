@@ -16,51 +16,53 @@ does Sparky::JobApi::Role
     "{%*ENV<HOME>}/.brownie"
   }
 
-  method !distribute ($list,$agents is rw,$sent-back) {
+  method !distribute ($list,$agents, $sent-back) {
 
     my @sent;
 
+    my @agents = $agents<>;
+
     return @sent unless $list.elems;
 
-    return @sent unless $agents.elems;
+    return @sent unless @agents.elems;
 
     my $chunk = 0;
 
     #say "distribute, redistribution: $sent-back";
 
-    if $agents.elems > 0 && $list.elems > 0 {
+    if @agents.elems > 0 && $list.elems > 0 {
 
-      if $list.elems < $agents.elems {
+      if $list.elems < @agents.elems {
           $chunk = 1;
-          $agents = $agents[0 .. $list.elems -1];
+          @agents = @agents[0 .. $list.elems -1];
       } else {
-        $chunk = Int($list.elems/$agents.elems);
+        $chunk = Int($list.elems/@agents.elems);
         $chunk = 10 if $chunk > 10;
       }
     
       my $a = 0;
 
-      say "agents used: {$agents.elems}";
+      say "agents used: {@agents.elems}";
 
       say "chunk: $chunk";
 
-      for 1 .. $agents.elems -> $i {
+      for 1 .. @agents.elems -> $i {
 
         my @slice = $list[$a .. $a + $chunk - 1];
 
         @slice = @slice.sort;
 
-        say "push job to agent {$agents[$i-1]}";
+        say "push job to agent {@agents[$i-1]}";
 
         my $agents-queue = Sparky::JobApi.new(
           :project<browny.queue>,
-          :job-id($agents[$i-1]),
+          :job-id(@agents[$i-1]),
         );
 
         $agents-queue.put-stash(
           %( 
             version => "2025.10",
-            agent => $agents[$i-1],
+            agent => @agents[$i-1],
             modules => @slice,
             run-id => time, 
           )
@@ -76,7 +78,7 @@ does Sparky::JobApi::Role
       }
     }
 
-    say "debug: distribute, redistribution: {$sent-back}, {$list.elems}, {$agents.elems} ==> {@sent.elems}";
+    say "debug: distribute, redistribution: {$sent-back}, {$list.elems}, {@agents.elems} ==> {@sent.elems}";
 
     push @sent;
 
