@@ -90,7 +90,7 @@ does Sparky::JobApi::Role
 
     my $start_time = time;
 
-    my @d = $eco.distro-names.keys; 
+    my @d = $eco.identities.keys;
     @d.=pick(@d);
     @d = @d[0 .. 100];
 
