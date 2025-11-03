@@ -247,6 +247,13 @@ does Sparky::JobApi::Role
 
     $me.put-file("summary.txt","summary.txt");
 
+    my $brw-orch = Sparky::JobApi.new(
+      :project<brw-orch>,
+    );
+
+    $brw-orch.queue({
+      description => "go_go_go", 
+    });
   }
 }  
 
