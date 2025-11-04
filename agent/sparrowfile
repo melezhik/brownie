@@ -66,11 +66,14 @@ does Sparky::JobApi::Role
         # register agent / send agent heartbeat 
         # every 60 seconds
         my $q-cnt = 0;
-        if "{%*ENV<HOME>}/.sparky/projects/agent.job/.triggers".IO ~~ :d {
-          for dir("{%*ENV<HOME>}/.sparky/projects/agent.job/.triggers") -> $t {
+        for 1 .. 7 -> $k {
+        my $pr = "agent.job_{$k}";
+        if "{%*ENV<HOME>}/.sparky/projects/{$pr}/.triggers".IO ~~ :d {
+          for dir("{%*ENV<HOME>}/.sparky/projects/{$pr}/.triggers") -> $t {
             $q-cnt++;
           }
-        }  
+        }
+        }
         $orch-job2.queue({
           description => "heartbit from $agent", 
           tags => %(
