@@ -70,11 +70,18 @@ does Sparky::JobApi::Role
         my $q-cnt = 0;
         for 1 .. $max-threads -> $k {
         my $pr = "agent.job_{$k}";
-        if "{%*ENV<HOME>}/.sparky/projects/{$pr}/.triggers".IO ~~ :d {
-          for dir("{%*ENV<HOME>}/.sparky/projects/{$pr}/.triggers") -> $t {
-            $q-cnt++;
+          if "{%*ENV<HOME>}/.sparky/projects/{$pr}/.triggers".IO ~~ :d {
+            for dir("{%*ENV<HOME>}/.sparky/projects/{$pr}/.triggers") -> $t {
+              $q-cnt++;
+            }
           }
         }
+        file-delete "jobs.cnt";
+
+        bash "ps uax|grep sparky-run |grep 'marker=agent.job' | grep -v grep | wc -l > jobs.cnt";
+        my $jobs-run-cnt = 0;
+        if "jobs.cnt".IO ~~ :f {
+          $jobs-run-cnt = "jobs.cnt".IO.slurp().chomp;
         }
         $orch-job2.queue({
           description => "heartbit from $agent", 
@@ -82,6 +89,7 @@ does Sparky::JobApi::Role
             agent => $agent,
             stage => "ping",
             q-cnt => $q-cnt,
+            jobs-run-cnt => $jobs-run-cnt,
           ),
         });
          $i++;
@@ -225,10 +233,14 @@ does Sparky::JobApi::Role
     "{self.base-dir}/agents/{tags()<agent>}".IO.spurt("");
 
     my $q-cnt = tags()<q-cnt> || 0;
+    my $jobs-run-cnt = tags()<jobs-run-cnt> || 0;
 
     "{self.base-dir}/agents-meta/{tags()<agent>}.json".IO.spurt(
       to-json(
-        %( q-cnt => $q-cnt )
+        %( 
+          q-cnt => $q-cnt, 
+          jobs-run-cnt => $jobs-run-cnt,
+        ),
       )
     );
 
