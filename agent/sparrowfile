@@ -100,7 +100,7 @@ does Sparky::JobApi::Role
           say "///";
           say "run tests for job: {$q<run-id>}";
           say "///";
-          my $rint = (1..7).rand.Int;
+          my $rint = (1..5).rand.Int;
           my $j = Sparky::JobApi.new(
             project => "agent.job_{$rint}",
           );
