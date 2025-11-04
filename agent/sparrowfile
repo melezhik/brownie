@@ -18,7 +18,7 @@ does Sparky::JobApi::Role
   
   method stage-main {
 
-    my $max-threads = %*ENV<BRW_AGENT_MAX_THREADS> || 7;
+    my $max-threads = %*ENV<BRW_AGENT_MAX_THREADS> || 3;
 
     my $random-int = (0..9).flat.roll(8).join("");
 
@@ -61,7 +61,7 @@ does Sparky::JobApi::Role
 
 
     my $i = 1;
-
+    my $job-num = 1;
     while True {
 
       if ($i == 1) {
@@ -90,6 +90,7 @@ does Sparky::JobApi::Role
             stage => "ping",
             q-cnt => $q-cnt,
             jobs-run-cnt => $jobs-run-cnt,
+            max-threads => $max-threads,
           ),
         });
          $i++;
@@ -98,8 +99,6 @@ does Sparky::JobApi::Role
       } else {
          $i++;
       }
-
-      sleep(10);
 
       my $q = $orch-job.get-stash();
 
@@ -113,9 +112,8 @@ does Sparky::JobApi::Role
           say "///";
           say "run tests for job: {$q<run-id>}";
           say "///";
-          my $rint = (1..Int($max-threads)).rand.Int;
           my $j = Sparky::JobApi.new(
-            project => "agent.job_{$rint}",
+            project => "agent.job_{$job-num}",
           );
           $j.put-stash(%(list => $q<modules><>));
           $j.put-file("tasks.tar","tasks.tar");
@@ -134,8 +132,13 @@ does Sparky::JobApi::Role
           directory "{self.base-dir}/jobs/{$q<run-id>}";
         }
       }
+      if $job-num > $max-threads {
+        $job-num = 1
+      } else {
+        $job-num++;
+      }
+      sleep(10);
       say "<<< sleep for 10 seconds";
-
     }
   }
 
@@ -234,12 +237,14 @@ does Sparky::JobApi::Role
 
     my $q-cnt = tags()<q-cnt> || 0;
     my $jobs-run-cnt = tags()<jobs-run-cnt> || 0;
+    my $max-threads = tags()<max-threads> || 1;
 
     "{self.base-dir}/agents-meta/{tags()<agent>}.json".IO.spurt(
       to-json(
         %( 
           q-cnt => $q-cnt, 
           jobs-run-cnt => $jobs-run-cnt,
+          max-threads => $max-threads,
         ),
       )
     );

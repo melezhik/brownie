@@ -132,12 +132,14 @@ does Sparky::JobApi::Role
           if $age <= 360 { # only use agents with 6 minutes ago at least heartbeat
             my $q-cnt = 1000;
             my $jobs-run-cnt = 0;
+            my $max-threads;
             if "{self.base-dir}/agents-meta/{$ag.basename}.json".IO ~~ :f {
               my %meta = from-json("{self.base-dir}/agents-meta/{$ag.basename}.json".IO.slurp);
               $q-cnt = %meta<q-cnt>;
               $jobs-run-cnt = %meta<jobs-run-cnt> || 0;
+              $max-threads = %meta<max-threads> || "?"
             }
-            say "agent {$ag.basename} heartbeat OK - [$age] seconds | job runs cnt - [$jobs-run-cnt] / queue cnt - [{$q-cnt}]";
+            say "agent {$ag.basename} heartbeat OK - [$age] seconds | job runs cnt - [$jobs-run-cnt] / queue cnt - [{$q-cnt}] / max-threads - [$max-threads]";
             push @agents, %( name => $ag.basename, q-cnt => $q-cnt);
           } else {
             say "remove agent {$ag.basename} from rotation, BAD heartbit -  $age seconds";
@@ -211,7 +213,7 @@ does Sparky::JobApi::Role
 
       say "||| TESTS STAT: time: {$elh} | tests total: {@d.elems} | finished tests: {$done} | sent to queue: dist={@s.elems} / redist={@rs.elems} | agents cnt: {@agents.elems}";
 
-      sleep(80);
+      sleep(20);
 
       $j++;
       
