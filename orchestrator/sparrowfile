@@ -37,7 +37,7 @@ does Sparky::JobApi::Role
           @agents = @agents[0 .. $list.elems -1];
       } else {
         $chunk = Int($list.elems/@agents.elems);
-        $chunk = 10 if $chunk > 10;
+        $chunk = 5 if $chunk > 5;
       }
     
       my $a = 0;
@@ -88,13 +88,13 @@ does Sparky::JobApi::Role
 
     my $eco = Ecosystem.new;
 
-    #say "Testing 100 randome modules on the Raku Ecosystem River:";
+    #say "Testing 200 randome modules on the Raku Ecosystem River:";
 
     my $start_time = time;
 
     my @d = $eco.identities.keys;
     @d.=pick(@d);
-    @d = @d[0 .. 100];
+    @d = @d[0 .. 200];
 
     directory-delete("{self.base-dir}/versions/2025.10/");
 

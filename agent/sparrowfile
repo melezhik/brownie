@@ -123,6 +123,7 @@ does Sparky::JobApi::Role
               agent => $agent,
               zef_test_degree => %*ENV<ZEF_FETCH_DEGREE>,
               zef_fetch_degree => %*ENV<ZEF_TEST_DEGREE>,
+              job-num => $job-num,
           );
           %tags<zef_install_to> = True if %*ENV<ZEF_INSTALL_TO>;
           $j.queue({
@@ -132,7 +133,7 @@ does Sparky::JobApi::Role
           directory "{self.base-dir}/jobs/{$q<run-id>}";
         }
       }
-      if $job-num > $max-threads {
+      if $job-num >= $max-threads {
         $job-num = 1
       } else {
         $job-num++;
@@ -177,7 +178,7 @@ does Sparky::JobApi::Role
 
     my $orch-job = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
-      :project("{$agent}.report"),
+      :project("{$agent}.job_{tags()<$job-num>}.report"),
     );
 
     "list.txt".IO.spurt(@list.join("\n"));
