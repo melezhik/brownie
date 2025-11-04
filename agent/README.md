@@ -41,4 +41,11 @@ docker exec -it agent /bin/bash
 rm -rf ~/.sparky/projects/agent.job/.triggers/*
 ```
 
+> How to override number of parallel jobs executed on my agent?
+
+set BRW_AGENT_MAX_THREADS variable:
+
+```bash
+docker run -e BRW_AGENT_MAX_THREADS=4
+```
 

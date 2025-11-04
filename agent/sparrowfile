@@ -18,6 +18,8 @@ does Sparky::JobApi::Role
   
   method stage-main {
 
+    my $max-threads = %*ENV<BRW_AGENT_MAX_THREADS> || 7;
+
     my $random-int = (0..9).flat.roll(8).join("");
 
     directory self.base-dir unless self.base-dir.IO ~~ :d;
@@ -32,7 +34,7 @@ does Sparky::JobApi::Role
 
     my $agent = ( %*ENV<BRW_AGENT_NAME_PREFIX> || Random::Names.new.docker-name ) ~ "-" ~ $agent-id;
 
-    say "agent: $agent";
+    say "agent: $agent, max threads: $random-int";
 
     bash "raku -V > rakuenv.txt";
 
@@ -64,9 +66,9 @@ does Sparky::JobApi::Role
 
       if ($i == 1) {
         # register agent / send agent heartbeat 
-        # every 60 seconds
+        # every 90 seconds
         my $q-cnt = 0;
-        for 1 .. 7 -> $k {
+        for 1 .. $max-threads -> $k {
         my $pr = "agent.job_{$k}";
         if "{%*ENV<HOME>}/.sparky/projects/{$pr}/.triggers".IO ~~ :d {
           for dir("{%*ENV<HOME>}/.sparky/projects/{$pr}/.triggers") -> $t {
@@ -83,7 +85,7 @@ does Sparky::JobApi::Role
           ),
         });
          $i++;
-      } elsif ($i == 6) {
+      } elsif ($i == 9) {
          $i = 1;
       } else {
          $i++;
@@ -103,7 +105,7 @@ does Sparky::JobApi::Role
           say "///";
           say "run tests for job: {$q<run-id>}";
           say "///";
-          my $rint = (1..7).rand.Int;
+          my $rint = (1..Int($max-threads)).rand.Int;
           my $j = Sparky::JobApi.new(
             project => "agent.job_{$rint}",
           );
