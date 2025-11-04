@@ -32,7 +32,7 @@ RUN zef install --/test Random::Names Ecosystem
 
 RUN echo OK2 && zef install https://github.com/melezhik/sparky.git --/test --force-install
 
-RUN zef install https://github.com/melezhik/sparky-job-api.git --/test --force-install
+RUN  echo OK3 && zef install https://github.com/melezhik/sparky-job-api.git --/test --force-install
 
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log
 
