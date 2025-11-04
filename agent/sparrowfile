@@ -34,7 +34,7 @@ does Sparky::JobApi::Role
 
     my $agent = ( %*ENV<BRW_AGENT_NAME_PREFIX> || Random::Names.new.docker-name ) ~ "-" ~ $agent-id;
 
-    say "agent: $agent, max threads: $random-int";
+    say "agent: $agent, max threads: $max-threads";
 
     bash "raku -V > rakuenv.txt";
 
