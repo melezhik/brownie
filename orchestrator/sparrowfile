@@ -88,7 +88,7 @@ does Sparky::JobApi::Role
 
     my $eco = Ecosystem.new;
 
-    #say "Testing 200 randome modules on the Raku Ecosystem River:";
+    #say "Testing 200 random modules on the Raku Ecosystem River:";
 
     my $start_time = time;
 

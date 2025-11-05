@@ -34,7 +34,7 @@ RUN echo OK2 && zef install https://github.com/melezhik/sparky.git --/test --for
 
 RUN  echo OK3 && zef install https://github.com/melezhik/sparky-job-api.git --/test --force-install
 
-ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman worker start &&  tail -f ~/.sparky/sparkyd.log
+ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman --env SPARKY_TIMEOUT=10 worker start &&  tail -f ~/.sparky/sparkyd.log
 
 COPY config.raku sparrowfile sparky.yaml /root/.sparky/projects/brw-orch/
 
