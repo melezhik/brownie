@@ -84,6 +84,7 @@ does Sparky::JobApi::Role
             stage => "ping",
             jobs-run-cnt => $jobs-run-cnt,
             max-threads => $max-threads,
+            agent-version => %*ENV<BRW_AGENT_VERSION> || "0.0.0",
           ),
         });
          $i++;
@@ -230,12 +231,16 @@ does Sparky::JobApi::Role
 
     my $jobs-run-cnt = tags()<jobs-run-cnt> || 0;
     my $max-threads = tags()<max-threads> || 1;
+    my $agent-version = tags()<agent-version> || "0.0.0";
+
+    say "ping from agent: {tags()<agent>}, version: {$agent-version}";
 
     "{self.base-dir}/agents-meta/{tags()<agent>}.json".IO.spurt(
       to-json(
         %( 
           jobs-run-cnt => $jobs-run-cnt,
           max-threads => $max-threads,
+          agent-version => $agent-version,
         ),
       )
     );
