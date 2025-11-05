@@ -175,8 +175,8 @@ does Sparky::JobApi::Role
       
       # distibute tests on agents with enough capacity
       my @s = self!distribute(
-        [@_list.grep({$_<send-back> == False}).sort({$_<max-threads> >= $_<jobs-run-cnt>}).map({$_<module>})],
-        [@agents.map({$_<name>})],
+        [@_list.grep({$_<send-back> == False}).map({$_<module>})],
+        [@agents.grep({$_<max-threads> >= $_<jobs-run-cnt>}).map({$_<name>})],
         False
       );
       my @rs;
