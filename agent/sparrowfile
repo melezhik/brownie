@@ -252,9 +252,10 @@ does Sparky::JobApi::Role
     my $status = True;
     for $resutls.kv -> $k, $v {
       directory "{self.base-dir}/versions/$version/$k";
+      my $time = $v<time> || "?";
       if $v<status> {
         "{self.base-dir}/versions/$version/{$k}.OK".IO.spurt("");
-        push @list, "$k ... \t OK";
+        push @list, "$k ... \t OK \t {$time} sec";
         if $v<log> {
           say "log:";
           say ">>>";
@@ -262,7 +263,7 @@ does Sparky::JobApi::Role
         }
       } else {
         "{self.base-dir}/versions/$version/{$k}.FAIL".IO.spurt("");
-        push @list, "$k ... \t FAIL";
+        push @list, "$k ... \t FAIL \t {$time} sec";
         $status = False;
         if $v<log> {
           say "log:";
