@@ -178,7 +178,7 @@ does Sparky::JobApi::Role
 
     my $orch-job = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
-      :project("{$agent}.job_{tags()<$job-num>}.report"),
+      :project("{$agent}.job_{tags()<job-num>}.report"),
     );
 
     "list.txt".IO.spurt(@list.join("\n"));
