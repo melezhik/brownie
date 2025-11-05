@@ -130,17 +130,15 @@ does Sparky::JobApi::Role
           my $age = Int(now - $ag.created.DateTime);
 
           if $age <= 360 { # only use agents with 6 minutes ago at least heartbeat
-            my $q-cnt = 1000;
             my $jobs-run-cnt = 0;
-            my $max-threads;
+            my $max-threads = 3;
             if "{self.base-dir}/agents-meta/{$ag.basename}.json".IO ~~ :f {
               my %meta = from-json("{self.base-dir}/agents-meta/{$ag.basename}.json".IO.slurp);
-              $q-cnt = %meta<q-cnt>;
               $jobs-run-cnt = %meta<jobs-run-cnt> || 0;
-              $max-threads = %meta<max-threads> || "?"
+              $max-threads = %meta<max-threads> || 3;
             }
-            say "agent {$ag.basename} heartbeat OK - [$age] seconds | job runs cnt - [$jobs-run-cnt] / queue cnt - [{$q-cnt}] / max-threads - [$max-threads]";
-            push @agents, %( name => $ag.basename, q-cnt => $q-cnt);
+            say "agent {$ag.basename} heartbeat OK - [$age] seconds | job runs cnt - [$jobs-run-cnt] / max-threads - [$max-threads]";
+            push @agents, %( name => $ag.basename, jobs-run-cnt => Int($jobs-run-cnt), max-threads => Int($max-threads) );
           } else {
             say "remove agent {$ag.basename} from rotation, BAD heartbit -  $age seconds";
             $ag.unlink; 
@@ -175,18 +173,19 @@ does Sparky::JobApi::Role
         last;
       }
       
-      # distibute tests on all agents
+      # distibute tests on agents with enough capacity
       my @s = self!distribute(
-        [@_list.grep({$_<send-back> == False}).sort({$_<q-cnt>}).map({$_<module>})],
+        [@_list.grep({$_<send-back> == False}).sort({$_<max-threads> >= $_<jobs-run-cnt>}).map({$_<module>})],
         [@agents.map({$_<name>})],
         False
       );
       my @rs;
       if @s.elems == 0 {
-        # re-distibute old tests on agents with zero queue
+        # if no new tests have been distributed
+        # re-distibute tests on agents with enough capacity
         @rs = self!distribute(
           [@_list.grep({$_<send-back> == True}).map({$_<module>})],
-          [@agents.grep({ $_<q-cnt> == 0}).map({$_<name>})],
+          [@agents.grep({$_<max-threads> >= $_<jobs-run-cnt>}).map({$_<name>})],
           True
         );
         # mark distributed tests

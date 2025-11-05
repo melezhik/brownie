@@ -61,25 +61,19 @@ does Sparky::JobApi::Role
 
 
     my $i = 1;
-    my $job-num = 1;
+
+    my $jobs-run-cnt = 0;
+
     while True {
 
       if ($i == 1) {
+
         # register agent / send agent heartbeat 
         # every 90 seconds
-        my $q-cnt = 0;
-        for 1 .. $max-threads -> $k {
-        my $pr = "agent.job_{$k}";
-          if "{%*ENV<HOME>}/.sparky/projects/{$pr}/.triggers".IO ~~ :d {
-            for dir("{%*ENV<HOME>}/.sparky/projects/{$pr}/.triggers") -> $t {
-              $q-cnt++;
-            }
-          }
-        }
+
         file-delete "jobs.cnt";
 
         bash "ps uax|grep sparky-run |grep 'marker=agent.job' | grep -v grep | wc -l > jobs.cnt";
-        my $jobs-run-cnt = 0;
         if "jobs.cnt".IO ~~ :f {
           $jobs-run-cnt = "jobs.cnt".IO.slurp().chomp;
         }
@@ -88,7 +82,6 @@ does Sparky::JobApi::Role
           tags => %(
             agent => $agent,
             stage => "ping",
-            q-cnt => $q-cnt,
             jobs-run-cnt => $jobs-run-cnt,
             max-threads => $max-threads,
           ),
@@ -108,12 +101,14 @@ does Sparky::JobApi::Role
         my $version = $q<version>;
         if "{self.base-dir}/jobs/{$q<run-id>}".IO ~~ :d {
             say "skip job: {$q<run-id>}, already in agent queue";
+        } elsif ($jobs-run-cnt >= $max-threads) {
+          say "skip job: agent is busy"
         } else {
           say "///";
           say "run tests for job: {$q<run-id>}";
           say "///";
           my $j = Sparky::JobApi.new(
-            project => "agent.job_{$job-num}",
+            project => "agent.job_{time}",
           );
           $j.put-stash(%(list => $q<modules><>));
           $j.put-file("tasks.tar","tasks.tar");
@@ -123,7 +118,6 @@ does Sparky::JobApi::Role
               agent => $agent,
               zef_test_degree => %*ENV<ZEF_FETCH_DEGREE>,
               zef_fetch_degree => %*ENV<ZEF_TEST_DEGREE>,
-              job-num => $job-num,
           );
           %tags<zef_install_to> = True if %*ENV<ZEF_INSTALL_TO>;
           $j.queue({
@@ -132,11 +126,6 @@ does Sparky::JobApi::Role
           });
           directory "{self.base-dir}/jobs/{$q<run-id>}";
         }
-      }
-      if $job-num >= $max-threads {
-        $job-num = 1
-      } else {
-        $job-num++;
       }
       sleep(10);
       say "<<< sleep for 10 seconds";
@@ -178,7 +167,7 @@ does Sparky::JobApi::Role
 
     my $orch-job = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
-      :project("{$agent}.job_{tags()<job-num>}.report"),
+      :project("{$agent}.job_{time}.report"),
     );
 
     "list.txt".IO.spurt(@list.join("\n"));
@@ -236,14 +225,12 @@ does Sparky::JobApi::Role
 
     "{self.base-dir}/agents/{tags()<agent>}".IO.spurt("");
 
-    my $q-cnt = tags()<q-cnt> || 0;
     my $jobs-run-cnt = tags()<jobs-run-cnt> || 0;
     my $max-threads = tags()<max-threads> || 1;
 
     "{self.base-dir}/agents-meta/{tags()<agent>}.json".IO.spurt(
       to-json(
         %( 
-          q-cnt => $q-cnt, 
           jobs-run-cnt => $jobs-run-cnt,
           max-threads => $max-threads,
         ),
