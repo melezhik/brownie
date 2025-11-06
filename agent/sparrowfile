@@ -63,6 +63,8 @@ does Sparky::JobApi::Role
     my $i = 1;
 
     my $jobs-run-cnt = 0;
+    
+    my %jobs;
 
     while True {
 
@@ -71,12 +73,6 @@ does Sparky::JobApi::Role
         # register agent / send agent heartbeat 
         # every 90 seconds
 
-        file-delete "jobs.cnt";
-
-        bash "ps uax|grep sparky-run |grep 'marker=agent.job' | grep -v grep | wc -l > jobs.cnt";
-        if "jobs.cnt".IO ~~ :f {
-          $jobs-run-cnt = Int("jobs.cnt".IO.slurp().chomp);
-        }
         $orch-job2.queue({
           description => "heartbit from $agent", 
           tags => %(
@@ -97,6 +93,7 @@ does Sparky::JobApi::Role
       my $q = $orch-job.get-stash();
 
       say "load requests from orchestrator queue";
+      $jobs-run-cnt = %jobs.keys.elems;
       say "jobs-run-cnt: $jobs-run-cnt, max-threads: $max-threads";
       if $q {
         my $version = $q<version>;
@@ -119,6 +116,7 @@ does Sparky::JobApi::Role
               agent => $agent,
               zef_test_degree => %*ENV<ZEF_FETCH_DEGREE>,
               zef_fetch_degree => %*ENV<ZEF_TEST_DEGREE>,
+              run-id => $q<run-id>,
           );
           %tags<zef_install_to> = True if %*ENV<ZEF_INSTALL_TO>;
           $j.queue({
@@ -126,18 +124,24 @@ does Sparky::JobApi::Role
             tags => %tags,
           });
           directory "{self.base-dir}/jobs/{$q<run-id>}";
-          sleep(20);
+          %jobs{$q<run-id>} = True;
+        }
+        for %jobs.keys -> $jid {
+           if "{self.base-dir}/cnt/{$jid}.done".IO ~~ :f {
+               %jobs{$jid}:delete; 
+              "{self.base-dir}/cnt/{$jid}.done".IO.unlink;
+            }
         }
       }
-      sleep(10);
-      say "<<< sleep for 10 seconds";
+      sleep(5);
+      say "<<< sleep for 5 seconds";
     }
   }
 
   method stage-test {
 
     my $agent = tags()<agent>;
-
+    
     my $my = Sparky::JobApi.new( :mine );
 
     bash "raku -V > rakuenv.txt";
@@ -217,6 +221,10 @@ does Sparky::JobApi::Role
         say "$k ... {$v<status>}\t "
     }  
     say ">>>";
+
+    directory "{self.base-dir}/cnt/";
+    "{self.base-dir}/cnt/{tags()<run-id>}.done".IO.spurt("");
+
     die "some tests failed" unless $status;
 
   }
