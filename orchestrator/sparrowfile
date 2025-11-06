@@ -232,7 +232,7 @@ does Sparky::JobApi::Role
 
       my $meta = from-json("{self.base-dir}/versions/2025.10/$m/meta.json".IO.slurp);
  
-      say "$m ... \t {$meta<status> ?? 'OK' !! 'FAIL' } \t {$m<time>} sec";
+      say "$m ... \t {$meta<status> ?? 'OK' !! 'FAIL' } \t {$meta<time>} sec";
       $meta<name> = $m;
       push @summary, $meta;
      
