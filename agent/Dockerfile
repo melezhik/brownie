@@ -42,6 +42,8 @@ COPY tasks /root/.sparky/projects/agent/tasks/
 
 RUN cd /root/.sparky/projects/agent/ && mkdir -p .triggers && raku -e 'say %( :description<go_go_go> ).raku' > .triggers/go
 
+RUN cd /opt/sparky && git pull && zef install --/test --force-install .
+
 WORKDIR /app
 
 ENV SP6_FORMAT_COLOR=1

@@ -40,6 +40,8 @@ COPY config.raku sparrowfile sparky.yaml /root/.sparky/projects/brw-orch/
 
 RUN cd /root/.sparky/projects/brw-orch/ && mkdir -p .triggers && raku -e 'say %( :description<go_go_go> ).raku' > .triggers/go
 
+RUN cd /opt/sparky && git pull && zef install --/test --force-install .
+
 WORKDIR /app
 
 ENV SP6_FORMAT_COLOR=1
