@@ -256,6 +256,10 @@ does Sparky::JobApi::Role
     my @list;
     my $status = True;
     for $resutls.kv -> $k, $v {
+      if "{self.base-dir}/versions/$version/$k".IO ~~ :d {
+         say "module $k is already processed";
+         next;
+      }
       directory "{self.base-dir}/versions/$version/$k";
       my $time = $v<time> || "?";
       if $v<status> {
@@ -278,6 +282,9 @@ does Sparky::JobApi::Role
           $me.put-file("{self.base-dir}/versions/$version/{$k}.log","{$k}.log");
         }
       }
+      "{self.base-dir}/versions/$version/$k/meta.json".IO.spurt(
+         to-json($v)
+      );
 
     }
 
