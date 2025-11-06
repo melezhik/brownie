@@ -241,7 +241,7 @@ does Sparky::JobApi::Role
     "summary.txt".IO.spurt(
       @summary.sort({ $_<time> }).
       reverse.
-      map({"$_<name> ... \t {$_<status> ?? 'OK' !! 'FAIL' } \t {$_<time>} sec"})
+      map({"$_<name> ... \t {$_<status> ?? 'OK' !! 'FAIL' } \t {$_<time>} sec\n"})
     );
     
     for @d -> $m {
