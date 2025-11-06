@@ -7,3 +7,10 @@ sparrowdo:
 disabled: false
 keep_builds: 100
 allow_manual_run: true
+
+vars:
+  -
+      name: mod_cnt
+      values: [ 2, 10, 100, 200, 1000, 2000 ]
+      type: select
+      default: 2

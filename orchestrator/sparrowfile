@@ -88,13 +88,15 @@ does Sparky::JobApi::Role
 
     my $eco = Ecosystem.new;
 
-    #say "Testing 200 random modules on the Raku Ecosystem River:";
+    my $mod_cnt = Int(tags()<mods_cnt> || 100);
+
+    say "Testing $mod_cnt random modules on the Raku Ecosystem River:";
 
     my $start_time = time;
 
     my @d = $eco.identities.keys;
     @d.=pick(@d);
-    @d = @d[0 .. 200];
+    @d = @d[0 .. $mod_cnt-1];
 
     directory-delete("{self.base-dir}/versions/2025.10/");
 
