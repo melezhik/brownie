@@ -126,7 +126,7 @@ does Sparky::JobApi::Role
             tags => %tags,
           });
           directory "{self.base-dir}/jobs/{$q<run-id>}";
-          sleep(10);
+          sleep(20);
         }
       }
       sleep(10);
