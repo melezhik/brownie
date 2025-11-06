@@ -18,7 +18,7 @@ does Sparky::JobApi::Role
   
   method stage-main {
 
-    my $max-threads = %*ENV<BRW_AGENT_MAX_THREADS> || 3;
+    my $max-threads = Int(%*ENV<BRW_AGENT_MAX_THREADS> || 3);
 
     my $random-int = (0..9).flat.roll(8).join("");
 
@@ -75,7 +75,7 @@ does Sparky::JobApi::Role
 
         bash "ps uax|grep sparky-run |grep 'marker=agent.job' | grep -v grep | wc -l > jobs.cnt";
         if "jobs.cnt".IO ~~ :f {
-          $jobs-run-cnt = "jobs.cnt".IO.slurp().chomp;
+          $jobs-run-cnt = Int("jobs.cnt".IO.slurp().chomp);
         }
         $orch-job2.queue({
           description => "heartbit from $agent", 
@@ -97,7 +97,7 @@ does Sparky::JobApi::Role
       my $q = $orch-job.get-stash();
 
       say "load requests from orchestrator queue";
-      
+      say "jobs-run-cnt: $jobs-run-cnt, max-threads: $max-threads";
       if $q {
         my $version = $q<version>;
         if "{self.base-dir}/jobs/{$q<run-id>}".IO ~~ :d {
