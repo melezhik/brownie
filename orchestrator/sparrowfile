@@ -224,24 +224,24 @@ does Sparky::JobApi::Role
 
     say "summary";
 
-    my $summary = "";
+    my @summary;
 
     for @d -> $m {
 
-      my $status = "?";
-
-      $status = "OK" if "{self.base-dir}/versions/2025.10/{$m}.OK".IO ~~ :f;
-      $status = "FAIL" if "{self.base-dir}/versions/2025.10/{$m}.FAIL".IO ~~ :f;
-
-      say "$m ... \t $status";
-
-      $summary ~= "$m ... \t $status\n";
+      my $meta = from-json("{self.base-dir}/versions/2025.10/$m/meta.json".IO.slurp);
+ 
+      say "$m ... \t {$meta<status> ?? 'OK' !! 'FAIL' } \t {$m<time>} sec";
+      $meta<name> = $m;
+      push @summary, $meta;
      
     }
 
-    "summary.txt".IO.spurt($summary);
+    "summary.txt".IO.spurt(
+      @summary.sort({ $_<time> }).
+      reverse.
+      map({"$_<name> ... \t {$_<status> ?? 'OK' !! 'FAIL' } \t {$_<time>} sec"})
+    );
     
-
     for @d -> $m {
       if "{self.base-dir}/versions/2025.10/{$m}.log".IO ~~ :f {
         $me.put-file("{self.base-dir}/versions/2025.10/{$m}.log","$m.log");

@@ -74,7 +74,7 @@ does Sparky::JobApi::Role
         # every 90 seconds
 
         $orch-job2.queue({
-          description => "heartbit from $agent", 
+          description => "heartbeat from $agent",
           tags => %(
             agent => $agent,
             stage => "ping",
@@ -91,10 +91,12 @@ does Sparky::JobApi::Role
       }
 
       my $q = $orch-job.get-stash();
+      $jobs-run-cnt = %jobs.keys.elems;
 
       say "load requests from orchestrator queue";
-      $jobs-run-cnt = %jobs.keys.elems;
+
       say "jobs-run-cnt: $jobs-run-cnt, max-threads: $max-threads";
+
       if $q {
         my $version = $q<version>;
         if "{self.base-dir}/jobs/{$q<run-id>}".IO ~~ :d {
@@ -173,7 +175,7 @@ does Sparky::JobApi::Role
 
     my $orch-job = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
-      :project("{$agent}.job_{time}.report"),
+      :project("{$agent}.job_{tags()<run-id>}.report"),
     );
 
     "list.txt".IO.spurt(@list.join("\n"));
@@ -223,6 +225,7 @@ does Sparky::JobApi::Role
     say ">>>";
 
     directory "{self.base-dir}/cnt/";
+
     "{self.base-dir}/cnt/{tags()<run-id>}.done".IO.spurt("");
 
     die "some tests failed" unless $status;
@@ -242,7 +245,7 @@ does Sparky::JobApi::Role
     my $max-threads = tags()<max-threads> || 1;
     my $agent-version = tags()<agent-version> || "0.0.0";
 
-    say "ping from agent: {tags()<agent>}, version: {$agent-version}";
+    say "ping from agent: {tags()<agent>}, version: {$agent-version}, jobs-run-cnt: {$jobs-run-cnt}, max-threads: $max-threads";
 
     "{self.base-dir}/agents-meta/{tags()<agent>}.json".IO.spurt(
       to-json(
