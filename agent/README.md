@@ -34,13 +34,6 @@ Run agent server with `BRW_AGENT_NAME_PREFIX` variable:
 docker run --rm -it --name agent -p 4000:4000 -e BRW_AGENT_NAME_PREFIX=cool-boy agent
 ```
 
-> How to clear agent queue
-
-```bash
-docker exec -it agent /bin/bash
-rm -rf ~/.sparky/projects/agent.job/.triggers/*
-```
-
 > How to override number of parallel jobs executed on my agent?
 
 set BRW_AGENT_MAX_THREADS variable:
