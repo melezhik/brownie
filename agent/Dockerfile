@@ -42,7 +42,7 @@ COPY tasks /root/.sparky/projects/agent/tasks/
 
 RUN cd /root/.sparky/projects/agent/ && mkdir -p .triggers && raku -e 'say %( :description<go_go_go> ).raku' > .triggers/go
 
-RUN cd /opt/sparky && git pull && zef install --/test --force-install .
+RUN echo OK && cd /opt/sparky && git pull && zef install --/test --force-install .
 
 WORKDIR /app
 
@@ -58,4 +58,4 @@ ENV ZEF_TEST_DEGREE=1
 
 ENV BRW_AGENT_MAX_THREADS=4
 
-ENV BRW_AGENT_VERSION=0.0.4
+ENV BRW_AGENT_VERSION=0.0.5
