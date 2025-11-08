@@ -30,7 +30,7 @@ RUN apt-get install -y unzip g++ python3 libpam0g-dev libxml2-dev libglib2.0-dev
 
 RUN zef install --/test Random::Names
 
-RUN zef install https://github.com/melezhik/sparky.git --/test --force-install
+RUN cd /opt/sparky && git pull && zef install . --force-install --/test
 
 RUN zef install https://github.com/melezhik/sparky-job-api.git --/test --force-install
 
@@ -58,4 +58,4 @@ ENV ZEF_TEST_DEGREE=1
 
 ENV BRW_AGENT_MAX_THREADS=4
 
-ENV BRW_AGENT_VERSION=0.0.3
+ENV BRW_AGENT_VERSION=0.0.4
