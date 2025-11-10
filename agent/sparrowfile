@@ -38,12 +38,6 @@ does Sparky::JobApi::Role
 
     say "agent: $agent, max threads: $max-threads";
 
-    bash "raku -V > rakuenv.txt";
-
-    my $my = Sparky::JobApi.new( :mine );
-
-    $my.put-file("rakuenv.txt","rakuenv.txt");
-
     file-delete "tasks.tar";
 
     say "archiving tasks/ to tasks.tar";
