@@ -4,8 +4,6 @@ rakudo_version=$(config rakudo_version)
 
 old_path=$PATH
 
-export PATH=/tmp/whateverable/rakudo-moar/$rakudo_version/bin/:/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin:$PATH
-
 echo "///"
 
 raku --version
@@ -50,13 +48,15 @@ env | grep RAKULIB >> dump.txt || :
 
 cat dump.txt
 
-export PATH=$old_path
+export PATH=/tmp/whateverable/rakudo-moar/$rakudo_version/bin/:/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin:$PATH
 
 if zef install $module 1>>log.txt 2>&1; then
   echo "installation succeed"
+  export PATH=$old_path
   update_state success 1
  else
   echo "installation failed"
+  export PATH=$old_path
   update_state success 0
 fi
 
