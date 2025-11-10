@@ -16,7 +16,7 @@ does Sparky::JobApi::Role
     "{%*ENV<HOME>}/.brownie"
   }
 
-  method !distribute ($list,$agents, $sent-back) {
+  method !distribute ($list,$agents, $sent-back,$rakudo-version) {
 
     my @sent;
 
@@ -27,7 +27,7 @@ does Sparky::JobApi::Role
     return @sent unless @agents.elems;
 
     my $chunk = 0;
-
+    
     #say "distribute, redistribution: $sent-back";
 
     if @agents.elems > 0 && $list.elems > 0 {
@@ -61,7 +61,7 @@ does Sparky::JobApi::Role
 
         $agents-queue.put-stash(
           %( 
-            version => "2025.10",
+            version => $rakudo-version,
             agent => @agents[$i-1],
             modules => @slice,
             run-id => time, 
@@ -90,7 +90,9 @@ does Sparky::JobApi::Role
 
     my $mod_cnt = Int(tags()<mods_cnt> || 100);
 
-    say "Testing $mod_cnt random modules on the Raku Ecosystem River:";
+    my $rakudo-version = tags()<rakudo_version> || %*ENV<BRW_RAKUDO_VERSION>;
+
+    say "Testing $mod_cnt random modules against Rakudo version: $rakudo-version";
 
     my $start_time = time;
 
@@ -98,7 +100,7 @@ does Sparky::JobApi::Role
     @d.=pick(@d);
     @d = @d[0 .. $mod_cnt-1];
 
-    directory-delete("{self.base-dir}/versions/2025.10/");
+    directory-delete("{self.base-dir}/versions/$rakudo-version/");
 
     # for $eco.river.map(*.key).sort.head(100) -> $d {
     #     push @d, $d;
@@ -156,8 +158,8 @@ does Sparky::JobApi::Role
       # distribution
 
       for @d -> $l {
-        if "{self.base-dir}/versions/2025.10/{$l}.OK".IO ~~ :f  ||
-           "{self.base-dir}/versions/2025.10/{$l}.FAIL".IO ~~ :f  {
+        if "{self.base-dir}/versions/$rakudo-version/{$l}.OK".IO ~~ :f  ||
+           "{self.base-dir}/versions/$rakudo-version/{$l}.FAIL".IO ~~ :f  {
               # module is already completed
               $done++;
               next;
@@ -179,7 +181,8 @@ does Sparky::JobApi::Role
       my @s = self!distribute(
         [@_list.grep({$_<send-back> == False}).map({$_<module>})],
         [@agents.grep({$_<max-threads> >= $_<jobs-run-cnt>}).map({$_<name>})],
-        False
+        False, 
+        $rakudo-version
       );
       my @rs;
       if @s.elems == 0 {
@@ -188,7 +191,8 @@ does Sparky::JobApi::Role
         @rs = self!distribute(
           [@_list.grep({$_<send-back> == True}).map({$_<module>})],
           [@agents.grep({$_<max-threads> >= $_<jobs-run-cnt>}).map({$_<name>})],
-          True
+          True,
+          $rakudo-version
         );
         # mark distributed tests
         for @rs -> $s {
@@ -230,7 +234,7 @@ does Sparky::JobApi::Role
 
     for @d -> $m {
 
-      my $meta = from-json("{self.base-dir}/versions/2025.10/$m/meta.json".IO.slurp);
+      my $meta = from-json("{self.base-dir}/versions/$rakudo-version/$m/meta.json".IO.slurp);
  
       say "$m ... \t {$meta<status> ?? 'OK' !! 'FAIL' } \t {$meta<time>} sec";
       $meta<name> = $m;
@@ -245,8 +249,8 @@ does Sparky::JobApi::Role
     );
     
     for @d -> $m {
-      if "{self.base-dir}/versions/2025.10/{$m}.log".IO ~~ :f {
-        $me.put-file("{self.base-dir}/versions/2025.10/{$m}.log","$m.log");
+      if "{self.base-dir}/versions/$rakudo-version/{$m}.log".IO ~~ :f {
+        $me.put-file("{self.base-dir}/versions/$rakudo-version/{$m}.log","$m.log");
       }
     }
 

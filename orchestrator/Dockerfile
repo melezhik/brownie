@@ -45,3 +45,5 @@ RUN echo OK2 && cd /opt/sparky && git pull && zef install --/test --force-instal
 WORKDIR /app
 
 ENV SP6_FORMAT_COLOR=1
+
+ENV BRW_RAKUDO_VERSION=3f8de27bcb2ee987a2997de8fe314c460b7e53f9
