@@ -34,6 +34,8 @@ RUN cd /opt/sparky && git pull && zef install . --force-install --/test
 
 RUN zef install https://github.com/melezhik/sparky-job-api.git --/test --force-install
 
+RUN zef install Sparrow6::Rakudo::Install --/test 
+
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman --env SPARKY_TIMEOUT=10 worker start &&  tail -f ~/.sparky/sparkyd.log
 
 COPY config.raku tasks sparrowfile sparky.yaml /root/.sparky/projects/agent/
@@ -59,3 +61,5 @@ ENV ZEF_TEST_DEGREE=1
 ENV BRW_AGENT_MAX_THREADS=4
 
 ENV BRW_AGENT_VERSION=0.0.5
+
+ENV BRW_RAKUDO_VERSION=3f8de27bcb2ee987a2997de8fe314c460b7e53f9

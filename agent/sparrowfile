@@ -18,6 +18,14 @@ does Sparky::JobApi::Role
   
   method stage-main {
 
+    my $rakudo-version = %*ENV<BRW_RAKUDO_VERSION>;
+
+    module-run 'Rakudo::Install', %(
+      :user<root>,
+      :$rakudo-version,
+      :!patch-profile,
+    );
+
     my $max-threads = Int(%*ENV<BRW_AGENT_MAX_THREADS> || 3);
 
     my $random-int = (0..9).flat.roll(8).join("");
@@ -91,6 +99,7 @@ does Sparky::JobApi::Role
       }
 
       my $q = $orch-job.get-stash();
+
       $jobs-run-cnt = %jobs.keys.elems;
 
       say "load requests from orchestrator queue";
@@ -113,7 +122,7 @@ does Sparky::JobApi::Role
           $j.put-stash(%(list => $q<modules><>));
           $j.put-file("tasks.tar","tasks.tar");
           my %tags = %(
-              rakudo-version => $version,
+              rakudo-version => $rakudo-version , # $version,
               stage => "test",
               agent => $agent,
               zef_test_degree => %*ENV<ZEF_FETCH_DEGREE>,
@@ -146,7 +155,9 @@ does Sparky::JobApi::Role
     
     my $my = Sparky::JobApi.new( :mine );
 
-    bash "raku -V > rakuenv.txt";
+    my $rakudo-version = tags()<rakudo-version>;
+
+    bash "export PATH=/tmp/whateverable/rakudo-moar/$rakudo-version/bin/:\$PATH && raku -V > rakuenv.txt";
 
     $my.put-file("rakuenv.txt","rakuenv.txt");
 
@@ -192,6 +203,7 @@ does Sparky::JobApi::Role
         zef_install_to => tags()<zef_install_to>,
         zef_test_degree => tags()<zef_test_degree>,
         zef_fetch_degree => tags()<zef_fetch_degree>,
+        rakudo_version => $rakudo-version,
       );
       my $els = Int(time - $start_time);
       %results{$m}<time> = $els;

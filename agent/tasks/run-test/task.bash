@@ -1,5 +1,23 @@
 module=$(config module)
 
+rakudo_version=$(config rakudo_version)
+
+old_path=$PATH
+
+export PATH=/tmp/whateverable/rakudo-moar/$rakudo_version/bin/:/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin:$PATH
+
+echo "///"
+
+raku --version
+
+zef --version
+
+which raku
+
+which zef
+
+echo "///"
+
 echo "install [$module]"
 
 echo ">>>"
@@ -31,6 +49,8 @@ env | grep ZEF_ >> dump.txt || :
 env | grep RAKULIB >> dump.txt || :
 
 cat dump.txt
+
+export PATH=$old_path
 
 if zef install $module 1>>log.txt 2>&1; then
   echo "installation succeed"
