@@ -92,13 +92,17 @@ does Sparky::JobApi::Role
 
     my $rakudo-version = tags()<rakudo_version> || %*ENV<BRW_RAKUDO_VERSION>;
 
-    say "Testing $mod_cnt random modules against Rakudo version: $rakudo-version";
-
+    if tags()<module> {
+       say "Testing module {tags()<module>} against Rakudo version: $rakudo-version";
+    } else {
+       say "Testing $mod_cnt random modules against Rakudo version: $rakudo-version";
+    }
+ 
     my $start_time = time;
 
-    my @d = $eco.identities.keys;
+    my @d = tags()<module> ?? tags()<module> !! $eco.identities.keys;
     @d.=pick(@d);
-    @d = @d[0 .. $mod_cnt-1];
+    @d = @d[0 .. @d.elems-1];
 
     directory-delete("{self.base-dir}/versions/$rakudo-version/");
 
