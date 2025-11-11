@@ -99,6 +99,8 @@ does Sparky::JobApi::Role
        say "Testing $mod_cnt random modules against Rakudo version: $rakudo-version";
     }
  
+    say "install from source code: ", tags()<source_code> || False;
+    
     my $start_time = time;
 
     my @d = tags()<module> ?? tags()<module> !! $eco.identities.keys;
