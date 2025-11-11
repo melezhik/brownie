@@ -62,6 +62,7 @@ does Sparky::JobApi::Role
         $agents-queue.put-stash(
           %( 
             version => $rakudo-version,
+            source-code => tags()<source_code> || False,
             agent => @agents[$i-1],
             modules => @slice,
             run-id => time, 

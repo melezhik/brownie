@@ -105,7 +105,7 @@ does Sparky::JobApi::Role
           if "{self.base-dir}/rakudos/$rakudo-version".IO ~~ :f {
             say "rakudo version $rakudo-version is already installed, skip installation";
           } else {
-            if tags()<PR> {
+            if $q<source-code> {
                task-run "install-rakudo-from-source", %(
                   version => $rakudo-version,
                ); 

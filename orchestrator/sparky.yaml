@@ -23,3 +23,8 @@ vars:
   -
         name: module
         type: input
+
+  -
+        name: source_code
+        default: false
+        type: checkbox
