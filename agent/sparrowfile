@@ -220,6 +220,7 @@ does Sparky::JobApi::Role
     }
 
     $orch-job.put-stash(%results);
+    $orch-job.put-file("rakuenv.txt","rakuenv.txt");
 
     $orch-job.queue({
       description => "test report from $agent", 
