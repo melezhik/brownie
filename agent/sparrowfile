@@ -105,11 +105,17 @@ does Sparky::JobApi::Role
           if "{self.base-dir}/rakudos/$rakudo-version".IO ~~ :f {
             say "rakudo version $rakudo-version is already installed, skip installation";
           } else {
-            module-run 'Rakudo::Install', %(
-              :user<root>,
-              :$rakudo-version,
-              :!patch-profile,
-            );
+            if tags()<PR> {
+               task-run "install-rakudo-from-source", %(
+                  version => $rakudo-version,
+               ); 
+            } else {
+              module-run 'Rakudo::Install', %(
+                :user<root>,
+                :$rakudo-version,
+                :!patch-profile,
+              );
+            }
             "{self.base-dir}/rakudos/$rakudo-version".IO.spurt("");
           }
 
