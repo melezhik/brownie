@@ -105,7 +105,7 @@ does Sparky::JobApi::Role
             say "rakudo version $rakudo-version is already installed, skip installation";
           } else {
             if $q<source-code> {
-               task-run "install-rakudo-from-source", %(
+               task-run "tasks/install-rakudo-from-source", %(
                   version => $rakudo-version,
                ); 
             } else {
