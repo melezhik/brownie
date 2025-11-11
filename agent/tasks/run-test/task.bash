@@ -12,17 +12,17 @@ old_path=$PATH
 
 export PATH=/tmp/whateverable/rakudo-moar/$rakudo_version/bin/:/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin:$PATH
 
-echo "///"
-
-raku --version
-
-zef --version
+echo ">>>"
 
 which raku
 
+raku --version
+
 which zef
 
-echo "///"
+zef --version
+
+echo "<<<"
 
 echo "install [$module]"
 
@@ -31,6 +31,14 @@ echo ">>>"
 echo "install [$module]" > log.txt
 
 echo "..." >> log.txt
+
+which zef >> log.txt
+
+zef --version >> log.txt
+
+which raku >> log.txt
+
+raku --version >> log.txt
 
 if ! test  "${zef_install_to}" = ""; then
   echo "zef_install_to is set to $zef_install_to, apply it"
