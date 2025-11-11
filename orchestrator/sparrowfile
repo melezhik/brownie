@@ -102,7 +102,10 @@ does Sparky::JobApi::Role
 
     my @d = tags()<module> ?? tags()<module> !! $eco.identities.keys;
     @d.=pick(@d);
-    @d = @d[0 .. @d.elems-1];
+    
+    unless tags()<module> {
+      @d = @d[0 .. $mod_cnt - 1];
+    }
 
     directory-delete("{self.base-dir}/versions/$rakudo-version/");
 
