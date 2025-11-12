@@ -4,7 +4,7 @@ version=$(config version)
 
 mkdir -p /opt/rakudo
 
-test -d /opt/rakudo/.git || git clone https://github.com/rakudo/rakudo.git rakudo
+test -d /opt/rakudo/.git || git clone --progress https://github.com/rakudo/rakudo.git rakudo
 
 cd rakudo
 
