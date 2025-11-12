@@ -124,7 +124,7 @@ does Sparky::JobApi::Role
         } else {
            push @d, $m;
         }
-      });
+      }
       @d.=pick(@d) if tags()<shuffle>;
       @d = @d[0 .. $mod_cnt - 1];
     }
