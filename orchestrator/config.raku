@@ -1,104 +1,19 @@
 %(
-  list => qw[
-YAMLScript
-Physics::Navigation
-Rakuast::RakuDoc::Render
-App::Uni
-ECMA262Regex
-App::Rak
-LLM::Functions
-Font::AFM
-eigenstates
-Text::Utils
-Swedish::TextDates_sv
-Code::Coverable
-LibXML
-Getopt::Long
-fez
-SSH::LibSSH
-Net::DNS
-Test::Mock
-Pygments
-Digest::MurmurHash3
-HarfBuzz
-Raylib::Bindings
-PublicSuffix
-MUGS::UI::CLI
-Ed25519
-NativeHelpers::Callback
-Raku::Pod::Render
-JSON::Unmarshal
-PDF::Font::Loader
-Task::Galaxy
-Path::Router
-Clifford
-Math::Matrix
-Sparrowdo::Cpanm::GitHub
-Hash::Sorted
-UserTimezone
-zef
-Net::XMPP
-Algorithm::Treap
-Terminal::Print
-Cromtit
-LZW::Revolunet
-Net::ZMQ
-LibUSB
-LibXML
-Tuple
-CompUnit::Util
-HarfBuzz
-Date::YearDay
-Text::Homoglyph::Cyrillic
-P5lcfirst
-Module::Does
-Git::Files
-Unix::errno
-X11::libxdo
-BioInfo
-DateTime::US
-Updown
-Font::AFM
-Test::Notice
-Overwatch
-NCurses
-Intl::Format::DateTime
-Notify
-Email::Simple
-Dist::Helper
-Data::Dump::Tree
-Algorithm::SetUnion
-Gnome::Gio
-REPL
-zef
-PDF::Document
-Cromponent
-Math::DistanceFunctions::Edit
-cro
-ML::ROCFunctions
-App::Raku::Log
-DispatchMap
-Collection-Raku-Documentation
-JSON::Path
-App::Crag
-Tomtit
-WWW::CloudHosting::Hetzner
-Map::Ordered
-App::Raku::Log
-Env::Dotenv
-rak
-Crane
-Log::Dispatch
-Auth::PAM::Simple
-Sparrow6::Rakudo::Install
-Gnome::Cairo
-App::Ebread
-DSL::Shared
-Sum
-App::Rak
-App::Ecosystems
-GtkLayerShell
-Object::Delayed
-FixedInt
+  skip-tests => [
+   ‘MoarVM::Remote’, # possibly harmless, but scary anyway
+   ‘November’, # eats memory
+   # These seem to hang and leave some processes behind:
+   ‘IO::Socket::Async::SSL’,
+   ‘IRC::Client’,
+   ‘Perl6::Ecosystem’,           # eats memory
+   # These were ignored by Toaster, but reasons are unknown:
+   ‘HTTP::Server::Async’,
+   ‘HTTP::Server::Threaded’,
+   ‘Log::Minimal’,
+   ‘MeCab’,
+   ‘Time::Duration’,
+   ‘Toaster’,
+   ‘Uzu’,
+   'Russian' # eats memory
   ]
 );
