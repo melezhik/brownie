@@ -116,7 +116,7 @@ does Sparky::JobApi::Role
     if tags()<module> {
       @d = tags()<module>
     } else {
-      bash q{curl https://raw.githubusercontent.com/Raku/REA/main/META.json -sf | jq -r '.[] | .name' > list.txt};
+      bash q{curl https://raw.githubusercontent.com/Raku/REA/main/META.json -sf | jq -r '.[] | .name' | uniq > list.txt};
       # eliminate skip-test modules
       for "list.txt".IO.lines() -> $m {
         if %skip{$m}:exists {
