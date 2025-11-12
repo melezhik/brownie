@@ -1,19 +1,19 @@
 %(
   skip-tests => [
-   ‘MoarVM::Remote’, # possibly harmless, but scary anyway
-   ‘November’, # eats memory
+   "MoarVM::Remote", # possibly harmless, but scary anyway
+   "November", # eats memory
    # These seem to hang and leave some processes behind:
-   ‘IO::Socket::Async::SSL’,
-   ‘IRC::Client’,
-   ‘Perl6::Ecosystem’,           # eats memory
+   "IO::Socket::Async::SSL",
+   "IRC::Client",
+   "Perl6::Ecosystem",           # eats memory
    # These were ignored by Toaster, but reasons are unknown:
-   ‘HTTP::Server::Async’,
-   ‘HTTP::Server::Threaded’,
-   ‘Log::Minimal’,
-   ‘MeCab’,
-   ‘Time::Duration’,
-   ‘Toaster’,
-   ‘Uzu’,
-   'Russian' # eats memory
+   "HTTP::Server::Async",
+   "HTTP::Server::Threaded",
+   "Log::Minimal",
+   "MeCab",
+   "Time::Duration",
+   "Toaster",
+   "Uzu",
+   "Russian" # eats memory
   ]
 );
