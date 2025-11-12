@@ -28,6 +28,8 @@ test -d /opt/zef/.git || git clone https://github.com/ugexe/zef.git
 
 cd zef
 
+unset ZEF_INSTALL_TO
+
 raku -I . bin/zef install . --/test
 
 zef -v
