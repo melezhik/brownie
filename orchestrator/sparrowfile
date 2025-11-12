@@ -121,7 +121,7 @@ does Sparky::JobApi::Role
       @d = "list.txt".IO.lines().grep({
         my $m = $_;
         say "skip module $m due to skip test list";  
-        ! %skip{$m}:exists;
+        not %skip{$m}:exists;
       });
       @d.=pick(@d) if tags()<shuffle>;
       @d = @d[0 .. $mod_cnt - 1];
