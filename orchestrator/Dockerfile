@@ -40,7 +40,7 @@ COPY config.raku sparrowfile sparky.yaml /root/.sparky/projects/brw-orch/
 
 RUN cd /root/.sparky/projects/brw-orch/ && mkdir -p .triggers && raku -e 'say %( :description<go_go_go> ).raku' > .triggers/go
 
-RUN apt-get install jq && echo OK2 && cd /opt/sparky && git pull && zef install --/test --force-install .
+RUN apt-get install -y jq && echo OK2 && cd /opt/sparky && git pull && zef install --/test --force-install .
 
 WORKDIR /app
 
