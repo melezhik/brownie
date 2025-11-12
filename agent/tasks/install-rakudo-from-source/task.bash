@@ -22,11 +22,14 @@ export PATH=/tmp/whateverable/rakudo-moar/$version/bin:$PATH
 
 raku -v
 
-git clone https://github.com/ugexe/zef.git
+cd /opt
+
+test -d /opt/zef/.git || git clone https://github.com/ugexe/zef.git
 
 cd zef
 
 raku -I . bin/zef install . --/test
 
+zef -v
 
 
