@@ -2,7 +2,7 @@
 
 use Sparky::JobApi;
 
-use Ecosystem;
+#use Ecosystem;
 
 use JSON::Fast;
 
@@ -87,7 +87,7 @@ does Sparky::JobApi::Role
 
   method stage-main {
 
-    my $eco = Ecosystem.new;
+    #my $eco = Ecosystem.new;
 
     my $mod_cnt = Int(tags()<mods_cnt> || 100);
 
@@ -99,17 +99,24 @@ does Sparky::JobApi::Role
        say "Testing $mod_cnt random modules against Rakudo version: $rakudo-version";
     }
  
+    say ">>>";
     say "install from source code: ", tags()<source_code> || False;
+    say "use shuffle: ", tags()<shuffle> || False;
+    say "<<<";
     
     my $start_time = time;
 
-    my @d = tags()<module> ?? tags()<module> !! $eco.identities.keys;
-    @d.=pick(@d);
-    
-    unless tags()<module> {
+    my @d;
+
+    if tags()<module> {
+      @d = tags()<module>
+    } else {
+      bash q{curl https://raw.githubusercontent.com/Raku/REA/main/META.json -sf | jq -r '.[] | .name' > list.txt};
+      @d = "list.txt".IO.lines();
+      @d.=pick(@d) if tags()<shuffle>;
       @d = @d[0 .. $mod_cnt - 1];
     }
-
+    
     directory-delete("{self.base-dir}/versions/$rakudo-version/");
 
     # for $eco.river.map(*.key).sort.head(100) -> $d {
