@@ -109,7 +109,7 @@ does Sparky::JobApi::Role
     my @d;
 
     my %skip;
-    for config()<skip-test><> -> $s {
+    for config()<skip-tests><> -> $s {
       %skip{$s} = True;
     }
 
