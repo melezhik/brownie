@@ -118,10 +118,12 @@ does Sparky::JobApi::Role
     } else {
       bash q{curl https://raw.githubusercontent.com/Raku/REA/main/META.json -sf | jq -r '.[] | .name' > list.txt};
       # eliminate skip-test modules
-      @d = "list.txt".IO.lines().grep({
-        my $m = $_;
-        say "skip module $m due to skip test list";  
-        not %skip{$m}:exists;
+      for "list.txt".IO.lines() -> $m {
+        if %skip{$m}:exists {
+           say "skip module $m due to skip test list";
+        } else {
+           push @d, $m;
+        }
       });
       @d.=pick(@d) if tags()<shuffle>;
       @d = @d[0 .. $mod_cnt - 1];
