@@ -162,7 +162,7 @@ does Sparky::JobApi::Role
 
     my $rakudo-version = tags()<rakudo-version>;
 
-    bash "export PATH=/tmp/whateverable/rakudo-moar/$rakudo-version/bin/:\$PATH && raku -V > rakuenv.txt";
+    bash "export PATH=/tmp/whateverable/rakudo-moar/{$rakudo-version}/bin/:/tmp/whateverable/rakudo-moar/{$rakudo-version}/share/perl6/site/bin:\$PATH && which zef > raku.env && zef --version >> raku.env && which raku >> raku.env && raku -V >> rakuenv.txt";
 
     $my.put-file("rakuenv.txt","rakuenv.txt");
 
