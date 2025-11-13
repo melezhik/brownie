@@ -69,16 +69,17 @@ sub gen-container($idx, $config, :$volume) {
           dockerfile: Dockerfile
         ports:
           - 400{$idx-1}:4000
-        deploy:
-          resources:
-            limits:
-              cpus: {$config.cpus}
-              memory: {$config.memory}
-            reservations:
-              cpus: {$config.cpus * 0.75 andthen .Int}
-              memory: {$config.memory * 0.75 andthen .Int}
-
     END
+
+    # TODO: Actually comprehend how podman-compose wants these constraints
+    #        deploy:
+    #          resources:
+    #            limits:
+    #              cpus: {$config.cpus}
+    #              memory: {$config.memory}
+    #            reservations:
+    #              cpus: {$config.cpus * 0.75 andthen .Int}
+    #              memory: {$config.memory * 0.75 andthen .Int}
 
     my $vol-yaml = q:to/END/;
         volumes:
