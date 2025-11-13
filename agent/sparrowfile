@@ -60,8 +60,6 @@ does Sparky::JobApi::Role
 
     my $jobs-run-cnt = 0;
     
-    my %jobs;
-
     while True {
 
       if ($i == 1) {
@@ -87,8 +85,6 @@ does Sparky::JobApi::Role
       }
 
       my $q = $orch-job.get-stash();
-
-      $jobs-run-cnt = %jobs.keys.elems;
 
       say "load requests from orchestrator queue";
 
@@ -140,14 +136,16 @@ does Sparky::JobApi::Role
             tags => %tags,
           });
           directory "{self.base-dir}/jobs/{$q<run-id>}";
-          %jobs{$q<run-id>} = True;
         }
-        for %jobs.keys -> $jid {
-           if "{self.base-dir}/cnt/{$jid}.done".IO ~~ :f {
-               %jobs{$jid}:delete; 
-              "{self.base-dir}/cnt/{$jid}.done".IO.unlink;
-            }
-        }
+
+        # update jobs counter
+        # by taking into account
+        # all active jobs
+        # and all jobs in queue
+        task-run "jobs-cnt";
+        my $r-cnt = Int("r.cnt".IO.slurp.chomp);
+        my $q-cnt = Int("c.cnt".IO.slurp.chomp);
+        $jobs-run-cnt = $r-cnt + $q-cnt;
       }
       sleep(5);
       say "<<< sleep for 5 seconds";
@@ -241,10 +239,6 @@ does Sparky::JobApi::Role
         say "$k ... {$v<status>}\t "
     }  
     say ">>>";
-
-    directory "{self.base-dir}/cnt/";
-
-    "{self.base-dir}/cnt/{tags()<run-id>}.done".IO.spurt("");
 
     die "some tests failed" unless $status;
 
