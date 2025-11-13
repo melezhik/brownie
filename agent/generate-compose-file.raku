@@ -74,7 +74,7 @@ sub gen-container($idx, $config, :$volume) {
             limits:
               cpus: {$config.cpus}
               memory: {$config.memory}
-            request:
+            reservations:
               cpus: {$config.cpus * 0.75 andthen .Int}
               memory: {$config.memory * 0.75 andthen .Int}
 
