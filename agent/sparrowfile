@@ -144,7 +144,7 @@ does Sparky::JobApi::Role
         # and all jobs in queue
         task-run "tasks/jobs-cnt";
         my $r-cnt = Int("r.cnt".IO.slurp.chomp);
-        my $q-cnt = Int("c.cnt".IO.slurp.chomp);
+        my $q-cnt = Int("q.cnt".IO.slurp.chomp);
         $jobs-run-cnt = $r-cnt + $q-cnt;
       }
       sleep(5);
