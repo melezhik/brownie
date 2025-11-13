@@ -18,7 +18,7 @@ make
 
 make install
 
-export PATH=/tmp/whateverable/rakudo-moar/$rakudo_version/bin/:/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin:$PATH
+export PATH=/tmp/whateverable/rakudo-moar/$version/bin/:/tmp/whateverable/rakudo-moar/$version/share/perl6/site/bin:$PATH
 
 which raku
 
