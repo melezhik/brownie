@@ -84,6 +84,15 @@ does Sparky::JobApi::Role
          $i++;
       }
 
+      # update jobs counter
+      # by taking into account
+      # all active jobs
+      # and all jobs in queue
+      task-run "tasks/jobs-cnt";
+      my $r-cnt = Int("r.cnt".IO.slurp.chomp);
+      my $q-cnt = Int("q.cnt".IO.slurp.chomp);
+      $jobs-run-cnt = $r-cnt + $q-cnt;
+
       my $q = $orch-job.get-stash();
 
       say "load requests from orchestrator queue";
@@ -137,15 +146,6 @@ does Sparky::JobApi::Role
           });
           directory "{self.base-dir}/jobs/{$q<run-id>}";
         }
-
-        # update jobs counter
-        # by taking into account
-        # all active jobs
-        # and all jobs in queue
-        task-run "tasks/jobs-cnt";
-        my $r-cnt = Int("r.cnt".IO.slurp.chomp);
-        my $q-cnt = Int("q.cnt".IO.slurp.chomp);
-        $jobs-run-cnt = $r-cnt + $q-cnt;
       }
       sleep(5);
       say "<<< sleep for 5 seconds";
