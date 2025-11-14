@@ -67,6 +67,7 @@ does Sparky::JobApi::Role
         # register agent / send agent heartbeat 
         # every 90 seconds
 
+        task-run "tasks/jobs-cnt";
         $orch-job2.queue({
           description => "heartbeat from $agent",
           tags => %(
@@ -77,7 +78,11 @@ does Sparky::JobApi::Role
             agent-version => %*ENV<BRW_AGENT_VERSION> || "0.0.0",
           ),
         });
-         $i++;
+        # send local queue and running jobs
+        # stat to o10r
+        $orch-job2.put-file("q.data","q.data.txt");
+        $orch-job2.put-file("r.data","r.data.txt");
+        $i++;
       } elsif ($i == 9) {
          $i = 1;
       } else {
@@ -88,6 +93,7 @@ does Sparky::JobApi::Role
       # by taking into account
       # all active jobs
       # and all jobs in queue
+
       task-run "tasks/jobs-cnt";
       my $r-cnt = Int("r.cnt".IO.slurp.chomp);
       my $q-cnt = Int("q.cnt".IO.slurp.chomp);
