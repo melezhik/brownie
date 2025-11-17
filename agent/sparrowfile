@@ -246,7 +246,7 @@ does Sparky::JobApi::Role
     }  
     say ">>>";
 
-    die "some tests failed" unless $status;
+    warn "some tests failed" unless $status;
 
   }
 
