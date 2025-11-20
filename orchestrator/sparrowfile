@@ -129,7 +129,7 @@ does Sparky::JobApi::Role
       @d = @d[0 .. $mod_cnt - 1];
     }
     
-    directory-delete("{self.base-dir}/versions/$rakudo-version/");
+    #directory-delete("{self.base-dir}/versions/$rakudo-version/");
 
     # for $eco.river.map(*.key).sort.head(100) -> $d {
     #     push @d, $d;
