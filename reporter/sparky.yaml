@@ -29,7 +29,7 @@ vars:
   -
         name: old
         # 2025.08
-        default: 0310b2a586e6a80d2cced05675abe76a1ba73e02
+        default: 178bf24439e6376998bc17538cbd5c30067f5c06
         type: input
 
   #-
