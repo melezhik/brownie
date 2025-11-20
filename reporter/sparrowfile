@@ -1,0 +1,7 @@
+my $new = tags()<new>;
+my $old = tags()<old>;
+
+task-run "report", "brownie-report", %(
+  :$new,
+  :$old,
+);
