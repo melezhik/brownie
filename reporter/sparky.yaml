@@ -1,0 +1,36 @@
+sparrowdo:
+  no_sudo: true
+  no_index_update: false
+  bootstrap: false
+  format: default
+  repo: https://sparrowhub.io/repo
+disabled: false
+keep_builds: 1000
+allow_manual_run: true
+
+vars:
+  #-
+      #name: mods_cnt
+      #values: [ 2, 10, 100, 200, 1000, 2000 ]
+      #type: select
+      #default: 2
+
+  #-
+        #name: shuffle
+        #default: false
+        #type: checkbox
+
+  -
+        name: new
+        default: 3f8de27bcb2ee987a2997de8fe314c460b7e53f9
+        type: input
+
+  -
+        name: old
+        default: xxx
+        type: input
+
+  #-
+        #name: source_code
+        #default: false
+        #type: checkbox
