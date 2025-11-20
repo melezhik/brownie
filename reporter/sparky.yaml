@@ -11,11 +11,13 @@ allow_manual_run: true
 vars:
   -
         name: action
+        type: select
         values: [ "list" ]
         group: [ list ]
 
   -
         name: action
+        type: select
         values: [ "compare" ]
         group: [ compare ]
 
