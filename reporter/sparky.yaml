@@ -22,12 +22,14 @@ vars:
 
   -
         name: new
+        # 2025.10
         default: 3f8de27bcb2ee987a2997de8fe314c460b7e53f9
         type: input
 
   -
         name: old
-        default: xxx
+        # 2025.08
+        default: 0310b2a586e6a80d2cced05675abe76a1ba73e02
         type: input
 
   #-
