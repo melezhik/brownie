@@ -1,7 +1,23 @@
-my $new = tags()<new>;
-my $old = tags()<old>;
+my $action = tags()<action>;
 
-task-run "report", "brownie-report", %(
-  :$new,
-  :$old,
-);
+if $action eq "list" {
+
+  task-run "list", "brownie-report", %(
+    :$action,
+  );
+
+} elsif $action eq "compare" {
+
+  my $new = tags()<new>;
+  my $old = tags()<old>;
+
+  task-run "report", "brownie-report", %(
+    :$action,
+    :$new,
+    :$old,
+  );
+
+} else {
+  die "unsupported action: $action"
+}
+

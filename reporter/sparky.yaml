@@ -9,11 +9,15 @@ keep_builds: 1000
 allow_manual_run: true
 
 vars:
-  #-
-      #name: mods_cnt
-      #values: [ 2, 10, 100, 200, 1000, 2000 ]
-      #type: select
-      #default: 2
+  -
+        name: action
+        values: [ "list" ]
+        group: [ list ]
+
+  -
+        name: action
+        values: [ "compare" ]
+        group: [ compare ]
 
   #-
         #name: shuffle
@@ -25,14 +29,20 @@ vars:
         # 2025.10
         default: 3f8de27bcb2ee987a2997de8fe314c460b7e53f9
         type: input
+        group: [ compare ]
 
   -
         name: old
         # 2025.08
         default: 178bf24439e6376998bc17538cbd5c30067f5c06
         type: input
+        group: [ compare ]
 
   #-
         #name: source_code
         #default: false
         #type: checkbox
+
+group_vars:
+  - list
+  - compare
