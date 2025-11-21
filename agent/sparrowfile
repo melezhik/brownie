@@ -112,8 +112,8 @@ does Sparky::JobApi::Role
         } elsif ($jobs-run-cnt >= $max-threads) {
           say "skip job: agent is busy"
         } else {
-          if "{self.base-dir}/rakudos/$rakudo-version".IO ~~ :f {
-            say "rakudo version $rakudo-version is already installed, skip installation";
+          if "/tmp/whateverable/rakudo-moar/{$rakudo-version}/bin/raku".IO ~~ :f {
+            say "rakudo version $rakudo-version is already installed at /tmp/whateverable/rakudo-moar/{$rakudo-version}/bin/raku, skip installation";
           } else {
             if $q<source-code> {
                task-run "tasks/install-rakudo-from-source", %(
@@ -126,10 +126,7 @@ does Sparky::JobApi::Role
                 :!patch-profile,
               );
             }
-            directory "{self.base-dir}/rakudos/$rakudo-version".IO.dirname;
-            "{self.base-dir}/rakudos/$rakudo-version".IO.spurt("");
           }
-
           say "///";
           say "run tests for job: {$q<run-id>}";
           say "///";
