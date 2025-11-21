@@ -126,6 +126,7 @@ does Sparky::JobApi::Role
                 :!patch-profile,
               );
             }
+            directory "{self.base-dir}/rakudos/";
             "{self.base-dir}/rakudos/$rakudo-version".IO.spurt("");
           }
 
