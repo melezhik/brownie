@@ -92,7 +92,9 @@ does Sparky::JobApi::Role
     my $mod_cnt = Int(tags()<mods_cnt> || 100);
 
     my $rakudo-version = tags()<rakudo_version> || %*ENV<BRW_RAKUDO_VERSION>;
-
+    
+    directory "{self.base-dir}/versions.known/{$rakudo-version}";
+    
     if tags()<module> {
        say "Testing module {tags()<module>} against Rakudo version: $rakudo-version";
     } else {
