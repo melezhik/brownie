@@ -95,6 +95,10 @@ does Sparky::JobApi::Role
       "2025.11" => $default-version,
       "2025.10" => "3f8de27bcb2ee987a2997de8fe314c460b7e53f9",
       "2025.08" => "0310b2a586e6a80d2cced05675abe76a1ba73e02",
+      "2025.06.1" => "cf048a948a850ec7e5923021fe9fc9112056199d",
+      "2025.06" => "bc4329b15b5085387189864452cd062222bdfbea",
+      "2025.05" => "c8ffd6dbdd63f6cf90d4832204e0a0d26217bc3e",
+      "2025.04" => "57778e432003df466d8c797070345b81cb1ffdbf",
     );
 
     my $mod_cnt = Int(tags()<mods_cnt> || 100);

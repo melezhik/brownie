@@ -22,7 +22,7 @@ vars:
 
   -
         name: rakudo_version_release
-        values: [ sha, "2025.11", "2025.10", "2025.08" ]
+        values: [ sha, "2025.11", "2025.10", "2025.08", "2025.06.1", "2025.06", "2025.05", "2025.04" ]
         type: select
         default: sha
   -
