@@ -45,5 +45,3 @@ RUN apt-get install -y jq && echo OK2 && cd /opt/sparky && git pull && zef insta
 WORKDIR /app
 
 ENV SP6_FORMAT_COLOR=1
-
-ENV BRW_RAKUDO_VERSION=3f8de27bcb2ee987a2997de8fe314c460b7e53f9
