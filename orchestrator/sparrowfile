@@ -92,9 +92,9 @@ does Sparky::JobApi::Role
     my $default-version = "fe0e20c28859ea709eefad19af452c9d35dff20d";
 
     my %rel-to-sha = %(
-      2025.11 => $default-version,
-      2025.10 => "3f8de27bcb2ee987a2997de8fe314c460b7e53f9",
-      2025.08 => "0310b2a586e6a80d2cced05675abe76a1ba73e02",
+      "2025.11" => $default-version,
+      "2025.10" => "3f8de27bcb2ee987a2997de8fe314c460b7e53f9",
+      "2025.08" => "0310b2a586e6a80d2cced05675abe76a1ba73e02",
     );
 
     my $mod_cnt = Int(tags()<mods_cnt> || 100);
