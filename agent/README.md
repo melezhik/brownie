@@ -42,3 +42,11 @@ set BRW_AGENT_MAX_THREADS variable:
 docker run -e BRW_AGENT_MAX_THREADS=4
 ```
 
+> How to run agent on none x86_64 architecture ?
+
+Use respected env var to force installation from source
+
+```bash
+docker run -e BRW_AGENT_CAP_INSTALL_FROM_SOURCE_FORCE=1
+```
+
