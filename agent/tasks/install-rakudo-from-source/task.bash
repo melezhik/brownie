@@ -10,8 +10,6 @@ cd rakudo
 
 git checkout $version
 
-git pull
-
 git status
 
 perl Configure.pl --backend=moar --gen-moar --gen-nqp --prefix /tmp/whateverable/rakudo-moar/$version
