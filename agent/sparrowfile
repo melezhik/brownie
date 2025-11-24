@@ -50,11 +50,6 @@ does Sparky::JobApi::Role
       :job-id($agent),
     );
 
-    my $orch-job2 = Sparky::JobApi.new(
-      :api(config()<orchestrator-url>),
-      :project("{$agent}.ping"),
-    );
-
 
     my $i = 1;
 
@@ -66,6 +61,11 @@ does Sparky::JobApi::Role
 
         # register agent / send agent heartbeat 
         # every 90 seconds
+
+        my $orch-job2 = Sparky::JobApi.new(
+          :api(config()<orchestrator-url>),
+          :project("{$agent}.ping"),
+        );
 
         task-run "tasks/jobs-cnt";
         $orch-job2.queue({

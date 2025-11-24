@@ -1,3 +1,7 @@
+0.0.23
+------
+Fix ping job, job-id issue
+
 0.0.21
 ------
 BRW_AGENT_CAP_INSTALL_FROM_SOURCE_FORCE
