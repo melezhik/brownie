@@ -34,7 +34,7 @@ RUN cd /opt/sparky && git pull && zef install . --force-install --/test
 
 RUN zef install https://github.com/melezhik/sparky-job-api.git --/test --force-install
 
-RUN echo OK2 && zef install https://github.com/melezhik/sparrow6-rakudo-install.git --/test 
+RUN echo OK2 && zef install https://github.com/melezhik/sparrow6-rakudo-install.git URI::Encode --/test 
 
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman --env SPARKY_TIMEOUT=10 worker start &&  tail -f ~/.sparky/sparkyd.log
 
