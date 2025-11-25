@@ -6,6 +6,8 @@ use Random::Names;
 
 use JSON::Fast;
 
+use URI::Encode;
+
 class Pipeline
 
 does Sparky::JobApi::Role
@@ -222,7 +224,7 @@ does Sparky::JobApi::Role
       }
       if "log.txt".IO ~~ :e {
         %results{$m}<log> = "log.txt".IO.slurp;
-        $my.put-file("log.txt","{$m}.log.txt");
+        $my.put-file("log.txt","{uri_encode_component($m)}.log.txt");
       }
     }
 
@@ -307,7 +309,7 @@ does Sparky::JobApi::Role
           say ">>>";
           say $v<log>;
           "{self.base-dir}/versions/$version/{$k}.log".IO.spurt($v<log>);
-          $me.put-file("{self.base-dir}/versions/$version/{$k}.log","{$k}.log");
+          $me.put-file("{self.base-dir}/versions/$version/{$k}.log","{uri_encode_component($k)}.log");
         }
       }
       "{self.base-dir}/versions/$version/$k/meta.json".IO.spurt(
