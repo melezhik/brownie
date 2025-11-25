@@ -28,7 +28,7 @@ RUN apt-get install -y nano less
 
 RUN apt-get install -y unzip g++ python3 libpam0g-dev libxml2-dev libglib2.0-dev libharfbuzz0b libfreetype-dev libfreetype6 libfreetype6-dev libpq-dev python3-dev libsodium-dev libsodium23 libfann-dev libimage-magick-perl libarchive13 libarchive13 libmp3lame0 libshout3 libogg-dev libvorbis-dev libcairo2-dev libbrotli-dev libsnappy-dev libusb-dev libnotmuch-dev libfreetype6 libgd-dev libgdbm-dev libglfw3 libsdl1.2-dev libgumbo-dev libexif12 libgd-dev libimlib2-dev libperl-dev python3-jupyter-core liblmdb-dev libcurl4 libgit2-dev libyaml-dev libmagickwand-dev libprimesieve-dev libmsgpack-dev libcurl4-openssl-dev libidn11-dev libidn2-dev libzmq3-dev libopencv-dev g++ libsdl1.2-dev libsdl-mixer1.2-dev libsdl-image1.2-dev libssh-dev libssl-dev libtcc-dev golang-toml-dev libtagc0-dev libmarkdown2-dev libtcc-dev libnotify4 fonts-dejavu-core libgtk-3-dev libxml2-dev libxslt-dev libgumbo-dev
 
-RUN zef install --/test Random::Names URI::Encode
+RUN zef install --/test Random::Names
 
 RUN cd /opt/sparky && git pull && zef install . --force-install --/test
 
