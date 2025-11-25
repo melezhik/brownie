@@ -42,6 +42,8 @@ RUN cd /root/.sparky/projects/brw-orch/ && mkdir -p .triggers && raku -e 'say %(
 
 RUN apt-get install -y jq && echo OK2 && cd /opt/sparky && git pull && zef install --/test --force-install .
 
+RUN zef install --/test URI::Encode
+
 WORKDIR /app
 
 ENV SP6_FORMAT_COLOR=1
