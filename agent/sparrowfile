@@ -52,6 +52,11 @@ does Sparky::JobApi::Role
       :job-id($agent),
     );
 
+    my $orch-job3 = Sparky::JobApi.new(
+      :api(config()<orchestrator-url>),
+      :project<browny.done>,
+      :job-id($agent),
+    );
 
     my $i = 1;
 
@@ -103,6 +108,8 @@ does Sparky::JobApi::Role
 
       my $q = $orch-job.get-stash();
 
+      my $done = $orch-job3.get-stash();
+
       say "load requests from orchestrator queue";
 
       say "jobs-run-cnt: $jobs-run-cnt, max-threads: $max-threads";
@@ -135,7 +142,22 @@ does Sparky::JobApi::Role
           my $j = Sparky::JobApi.new(
             project => "agent.job_{time}",
           );
-          $j.put-stash(%(list => $q<modules><>));
+          my @m-list;
+          my %skip-list;
+          if $done {
+            for $done<done><> -> $m {
+              %skip-list{$m} = True;
+            }
+          }
+          for $q<modules><> -> $m {
+            if %skip-list{$m} {
+              say "!!! skip $m - already processed";
+              next
+            }
+            push @m-list, $m;
+          }
+
+          $j.put-stash(%(list => @m-list));
           $j.put-file("tasks.tar","tasks.tar");
           my %tags = %(
               rakudo-version => $rakudo-version,
