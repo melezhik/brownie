@@ -6,6 +6,8 @@ use Sparky::JobApi;
 
 use JSON::Fast;
 
+use URI::Encode;
+
 class Pipeline
 
 does Sparky::JobApi::Role
@@ -294,7 +296,7 @@ does Sparky::JobApi::Role
     
     for @d -> $m {
       if "{self.base-dir}/versions/$rakudo-version/{$m}.log".IO ~~ :f {
-        $me.put-file("{self.base-dir}/versions/$rakudo-version/{$m}.log","$m.log");
+        $me.put-file("{self.base-dir}/versions/$rakudo-version/{uri_encode_component($m)}.log","$m.log");
       }
     }
 
