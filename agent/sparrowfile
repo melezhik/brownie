@@ -156,22 +156,23 @@ does Sparky::JobApi::Role
             }
             push @m-list, $m;
           }
-
-          $j.put-stash(%(list => @m-list));
-          $j.put-file("tasks.tar","tasks.tar");
-          my %tags = %(
-              rakudo-version => $rakudo-version,
-              stage => "test",
-              agent => $agent,
-              zef_test_degree => %*ENV<ZEF_FETCH_DEGREE>,
-              zef_fetch_degree => %*ENV<ZEF_TEST_DEGREE>,
-              run-id => $q<run-id>,
-          );
-          %tags<zef_install_to> = True if %*ENV<ZEF_INSTALL_TO>;
-          $j.queue({
-            description => "job: {$q<run-id>}", 
-            tags => %tags,
-          });
+          if @m-list.elems {
+            $j.put-stash(%(list => @m-list));
+            $j.put-file("tasks.tar","tasks.tar");
+            my %tags = %(
+                rakudo-version => $rakudo-version,
+                stage => "test",
+                agent => $agent,
+                zef_test_degree => %*ENV<ZEF_FETCH_DEGREE>,
+                zef_fetch_degree => %*ENV<ZEF_TEST_DEGREE>,
+                run-id => $q<run-id>,
+            );
+            %tags<zef_install_to> = True if %*ENV<ZEF_INSTALL_TO>;
+            $j.queue({
+              description => "job: {$q<run-id>}", 
+              tags => %tags,
+            });
+          }
           directory "{self.base-dir}/jobs/{$q<run-id>}";
         }
       }
