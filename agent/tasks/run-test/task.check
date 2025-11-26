@@ -2,7 +2,7 @@ source: log.txt
 
 # check for line Installing: Monitor::Monit:ver<0.0.5>:auth<zef:jonathanstowe>:api<1.0>
 
-~regexp: ^^ \s* "Installing:" \s+ (\S+?) ":ver" \S
+~regexp: \s* "Installing:" \s+ (\S+?) ":ver" \S
 
 code: <<RAKU
 !raku
