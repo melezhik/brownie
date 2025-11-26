@@ -237,6 +237,10 @@ does Sparky::JobApi::Role
     my $status = True;
 
     for @list -> $m {
+      if "{self.base-dir}/done/{$m}".IO ~~ :d {
+         say "!!! $m is already processed";
+         next;
+      }
       my $start_time = time;
       %results{$m} = %( status => "", log => "" );
       my $s = task-run "tasks/run-test", %(
