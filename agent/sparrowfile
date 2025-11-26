@@ -115,7 +115,8 @@ does Sparky::JobApi::Role
       if $done {
             for $done<done><> -> $m {
               unless "{self.base-dir}/done/{$done<version>}/{$m}".IO ~~ :d {
-                directory "{self.base-dir}/done/{$done<version>}/{$m}";
+                say "add $m to agent cache as done";
+                mkdir "{self.base-dir}/done/{$done<version>}/{$m}";
               }
             }
       }
@@ -250,7 +251,7 @@ does Sparky::JobApi::Role
         zef_fetch_degree => tags()<zef_fetch_degree>,
         rakudo_version => $rakudo-version,
       );
-      directory "{self.base-dir}/done/$rakudo-version/{$m}";
+      mkdir "{self.base-dir}/done/$rakudo-version/{$m}";
       my $els = Int(time - $start_time);
       %results{$m}<time> = $els;
       if $s<success> == 1 {
