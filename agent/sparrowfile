@@ -52,10 +52,10 @@ does Sparky::JobApi::Role
       :job-id($agent),
     );
 
-    my $orch-job3 = Sparky::JobApi.new(
+    my $orch-feed = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
-      :project<browny.done>,
-      :job-id($agent),
+      :project<browny.feed>,
+      :job-id<done>,
     );
 
     my $i = 1;
@@ -108,14 +108,14 @@ does Sparky::JobApi::Role
 
       my $q = $orch-job.get-stash();
 
-      my $done = $orch-job3.get-stash();
+      my $done = $orch-feed.get-stash();
       # syncronize information
       # about already proccesses
       # modules
       if $done {
             for $done<done><> -> $m {
-              unless "{self.base-dir}/done/{$m}".IO ~~ :d {
-                directory "{self.base-dir}/done/{$m}";
+              unless "{self.base-dir}/done/{$done<version>}/{$m}".IO ~~ :d {
+                directory "{self.base-dir}/done/{$done<version>}/{$m}";
               }
             }
       }
@@ -153,7 +153,7 @@ does Sparky::JobApi::Role
           );
           my @m-list;
           my %skip-list;
-          if $done {
+          if $done && $done<version> eq $rakudo-version {
             for $done<done><> -> $m {
               %skip-list{$m} = True;
             }
@@ -237,7 +237,7 @@ does Sparky::JobApi::Role
     my $status = True;
 
     for @list -> $m {
-      if "{self.base-dir}/done/{$m}".IO ~~ :d {
+      if "{self.base-dir}/done/$rakudo-version/{$m}".IO ~~ :d {
          say "!!! $m is already processed";
          next;
       }
@@ -250,7 +250,7 @@ does Sparky::JobApi::Role
         zef_fetch_degree => tags()<zef_fetch_degree>,
         rakudo_version => $rakudo-version,
       );
-      directory "{self.base-dir}/done/{$m}";
+      directory "{self.base-dir}/done/$rakudo-version/{$m}";
       my $els = Int(time - $start_time);
       %results{$m}<time> = $els;
       if $s<success> == 1 {
