@@ -221,6 +221,8 @@ does Sparky::JobApi::Role
       }
 
       # notify agents about finsihed modules
+      if @done.elems {
+        say "notify agents about {@done.elems} processed modules";
         my $agents-feed = Sparky::JobApi.new(
           :project<browny.feedback>,
           :job-id<done>,
@@ -231,7 +233,7 @@ does Sparky::JobApi::Role
             version => $rakudo-version,
           )
         );
-
+      }
       #@_list.=pick(@_list);
 
       if $done == @d.elems {
