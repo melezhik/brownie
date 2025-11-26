@@ -250,6 +250,7 @@ does Sparky::JobApi::Role
         zef_fetch_degree => tags()<zef_fetch_degree>,
         rakudo_version => $rakudo-version,
       );
+      directory "{self.base-dir}/done/{$m}";
       my $els = Int(time - $start_time);
       %results{$m}<time> = $els;
       if $s<success> == 1 {
