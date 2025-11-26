@@ -109,7 +109,16 @@ does Sparky::JobApi::Role
       my $q = $orch-job.get-stash();
 
       my $done = $orch-job3.get-stash();
-
+      # syncronize information
+      # about already proccesses
+      # modules
+      if $done {
+            for $done<done><> -> $m {
+              unless "{self.base-dir}/done/{$m}".IO ~~ :d {
+                directory "{self.base-dir}/done/{$m}";
+              }
+            }
+      }
       say "load requests from orchestrator queue";
 
       say "jobs-run-cnt: $jobs-run-cnt, max-threads: $max-threads";
