@@ -71,8 +71,7 @@ does Sparky::JobApi::Role
 
         my $orch-job2 = Sparky::JobApi.new(
           :api(config()<orchestrator-url>),
-          :project("agent.ping"),
-          :workers<2>,
+          :project("agent.{2.rand.Int + 1}.ping"),
         );
 
         task-run "tasks/jobs-cnt";
@@ -229,8 +228,7 @@ does Sparky::JobApi::Role
 
     my $orch-job = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
-      :project("job.report"),
-      :workers<4>,
+      :project("job.{3.rand.Int + 1}.report"),
     );
 
     "list.txt".IO.spurt(@list.join("\n"));
