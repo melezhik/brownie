@@ -5,7 +5,7 @@ source: log.txt
 ~regexp: ^^ \s* "Installing:" \s+ (\S+?) ":ver" \S
 
 code: <<RAKU
-!RAKU
+!raku
 my @inst;
 for matched()<> -> $i {
     push @inst, "$i";
