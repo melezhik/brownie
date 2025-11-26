@@ -348,7 +348,8 @@ does Sparky::JobApi::Role
          say "module $k is already processed";
          next;
       }
-      directory "{self.base-dir}/versions/$version/$k";
+      say "add module $k ...";
+      mkdir "{self.base-dir}/versions/$version/$k";
       my $time = $v<time> || "?";
       if $v<status> {
         "{self.base-dir}/versions/$version/{$k}.OK".IO.spurt("");
@@ -357,6 +358,7 @@ does Sparky::JobApi::Role
           say "log:";
           say ">>>";
           say $v<log>;
+          say "<<<";
         }
       } else {
         "{self.base-dir}/versions/$version/{$k}.FAIL".IO.spurt("");
@@ -366,6 +368,7 @@ does Sparky::JobApi::Role
           say "log:";
           say ">>>";
           say $v<log>;
+          say "<<<";
           "{self.base-dir}/versions/$version/{$k}.log".IO.spurt($v<log>);
           $me.put-file("{self.base-dir}/versions/$version/{$k}.log","{uri_encode_component($k)}.log");
         }
