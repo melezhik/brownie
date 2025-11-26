@@ -283,17 +283,19 @@ does Sparky::JobApi::Role
         $my.put-file("log.txt","{uri_encode_component($m)}.log.txt");
       }
     }
+    
+    if %results.keys.elems > 0 {
+      $orch-job.put-stash(%results);
+      $orch-job.put-file("rakuenv.txt","rakuenv.txt");
 
-    $orch-job.put-stash(%results);
-    $orch-job.put-file("rakuenv.txt","rakuenv.txt");
-
-    $orch-job.queue({
-      description => "job report from $agent", 
-      tags => %(
-        version => tags()<rakudo-version>,
-        stage => "results",
-      ),
-    });
+      $orch-job.queue({
+        description => "job report from $agent", 
+        tags => %(
+          version => tags()<rakudo-version>,
+          stage => "results",
+        ),
+      });
+    }
 
     say "results:";
     say "<<<";
