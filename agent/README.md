@@ -56,12 +56,13 @@ docker run -e BRW_AGENT_CAP_INSTALL_FROM_SOURCE_FORCE=1
 docker exec -it agent bash -c 'cd /opt/brownie/agent && git pull && bash sync.sh'
 ```
 
+Then go to agent UI (http://127.0.0.1:4000), find running agent job, and terminate it. Then run it again: projects -> agent -> build now
+
 ## How to get agent version?
 
 ```bash
 docker exec -it agent bash -c 'echo $BRW_AGENT_VERSION'
 ```
-Then go agent UI (http://127.0.0.1:4000), find running agent job, and terminate it. Then run it again: projects -> agent -> build now
 
 ## What is login/password for agent UI
 
