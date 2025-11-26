@@ -71,7 +71,8 @@ does Sparky::JobApi::Role
 
         my $orch-job2 = Sparky::JobApi.new(
           :api(config()<orchestrator-url>),
-          :project("{$agent}.ping"),
+          :project("agent.ping"),
+          :workers<2>,
         );
 
         task-run "tasks/jobs-cnt";
