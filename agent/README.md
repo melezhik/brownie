@@ -26,7 +26,7 @@ To see test results from other agents go to http://brw.sparrowhub.io
 
 # FAQ
 
-> How to change agent name visible in pool
+## How to change agent name visible in pool
 
 Run agent server with `BRW_AGENT_NAME_PREFIX` variable:
 
@@ -34,7 +34,7 @@ Run agent server with `BRW_AGENT_NAME_PREFIX` variable:
 docker run --rm -it --name agent -p 4000:4000 -e BRW_AGENT_NAME_PREFIX=cool-boy agent
 ```
 
-> How to override number of parallel jobs executed on my agent?
+## How to override number of parallel jobs executed on my agent?
 
 set BRW_AGENT_MAX_THREADS variable:
 
@@ -42,7 +42,7 @@ set BRW_AGENT_MAX_THREADS variable:
 docker run -e BRW_AGENT_MAX_THREADS=4
 ```
 
-> How to run agent on none x86_64 architecture ?
+## How to run agent on none x86_64 architecture ?
 
 Use respected env var to force installation from source
 
@@ -50,3 +50,14 @@ Use respected env var to force installation from source
 docker run -e BRW_AGENT_CAP_INSTALL_FROM_SOURCE_FORCE=1
 ```
 
+## How to upgrade agent without restarting it?
+
+```bash
+docker exec -it agent bash -c 'cd /opt/brownie/agent && git pull && bash sync.sh'
+```
+
+## How to get agent version?
+
+```bash
+docker exec -it agent bash -c 'echo $BRW_AGENT_VERSION'
+```

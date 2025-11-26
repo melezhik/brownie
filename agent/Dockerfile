@@ -46,6 +46,8 @@ RUN cd /root/.sparky/projects/agent/ && mkdir -p .triggers && raku -e 'say %( :d
 
 RUN echo OK && cd /opt/sparky && git pull && zef install --/test --force-install .
 
+RUN cd /opt/ && git clone https://github.com/melezhik/brownie.git
+
 WORKDIR /app
 
 ENV SP6_FORMAT_COLOR=1
