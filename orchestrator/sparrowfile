@@ -222,13 +222,14 @@ does Sparky::JobApi::Role
 
       # notify agents about finsihed modules
       for @agents -> $ag {
-        my $agents-queue = Sparky::JobApi.new(
-          :project<browny.done>,
-          :job-id($ag<name>),
+        my $agents-feed = Sparky::JobApi.new(
+          :project<browny.feedback>,
+          :job-id<done>,
         );
-        $agents-queue.put-stash(
+        $agents-feed.put-stash(
           %(
-            done => @done, 
+            done => @done,
+            version => $rakudo-version,
           )
         );
       }
