@@ -50,7 +50,7 @@ Use respected env var to force installation from source
 docker run -e BRW_AGENT_CAP_INSTALL_FROM_SOURCE_FORCE=1
 ```
 
-## How to upgrade agent without restarting it?
+## How to upgrade agent without rebuilding and restarting docker container?
 
 ```bash
 docker exec -it agent bash -c 'cd /opt/brownie/agent && git pull && bash sync.sh'
