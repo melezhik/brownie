@@ -54,7 +54,7 @@ does Sparky::JobApi::Role
 
     my $orch-feed = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
-      :project<browny.feed>,
+      :project<browny.feedback>,
       :job-id<done>,
     );
 
