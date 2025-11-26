@@ -221,7 +221,6 @@ does Sparky::JobApi::Role
       }
 
       # notify agents about finsihed modules
-      for @agents -> $ag {
         my $agents-feed = Sparky::JobApi.new(
           :project<browny.feedback>,
           :job-id<done>,
@@ -232,7 +231,6 @@ does Sparky::JobApi::Role
             version => $rakudo-version,
           )
         );
-      }
 
       #@_list.=pick(@_list);
 
