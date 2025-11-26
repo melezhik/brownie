@@ -1,3 +1,10 @@
+0.0.27
+------
+Limit number of
+concurrent jobs
+send to 010r
+from agents
+
 0.0.25
 ------
 Agent sharing
@@ -15,7 +22,7 @@ Fix ping job, job-id issue
 0.0.21
 ------
 BRW_AGENT_CAP_INSTALL_FROM_SOURCE_FORCE
-will force angent install from source
+will force agent install from source
 
 0.0.19
 ------

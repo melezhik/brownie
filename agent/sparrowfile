@@ -161,7 +161,7 @@ does Sparky::JobApi::Role
           }
           for $q<modules><> -> $m {
             if %skip-list{$m} {
-              say "!!! skip $m - already processed";
+              say "!!! skip module $m - already processed";
               next
             }
             push @m-list, $m;
@@ -228,7 +228,8 @@ does Sparky::JobApi::Role
 
     my $orch-job = Sparky::JobApi.new(
       :api(config()<orchestrator-url>),
-      :project("{$agent}.job_{tags()<run-id>}.report"),
+      :project("job.report"),
+      :workers<4>,
     );
 
     "list.txt".IO.spurt(@list.join("\n"));
@@ -239,7 +240,7 @@ does Sparky::JobApi::Role
 
     for @list -> $m {
       if "{self.base-dir}/done/$rakudo-version/{$m}".IO ~~ :d {
-         say "!!! $m is already processed";
+         say "!!! skip module $m - already processed";
          next;
       }
       my $start_time = time;
@@ -286,7 +287,7 @@ does Sparky::JobApi::Role
     $orch-job.put-file("rakuenv.txt","rakuenv.txt");
 
     $orch-job.queue({
-      description => "test report from $agent", 
+      description => "job report from $agent", 
       tags => %(
         version => tags()<rakudo-version>,
         stage => "results",
