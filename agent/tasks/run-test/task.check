@@ -7,8 +7,8 @@ source: log.txt
 code: <<RAKU
 !raku
 my @inst;
-for matched()<> -> $i {
-    push @inst, "$i";
+for captures()<> -> $i {
+    push @inst, "{$i.head}";
 }
 
 my $s = get_state();
