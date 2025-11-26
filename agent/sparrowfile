@@ -252,6 +252,22 @@ does Sparky::JobApi::Role
         rakudo_version => $rakudo-version,
       );
       mkdir "{self.base-dir}/done/$rakudo-version/{$m}";
+
+      if $s<inst> {
+        say "deps installed during installation of module $m: ", $s<inst>.raku;
+        for $s<inst><> -> $d {
+          next if $d eq $m;
+          %results{$d} = %(
+            time => 0,
+            log => "installed as deps of module $m",
+            status => True,
+          );
+          unless "{self.base-dir}/done/$rakudo-version/{$d}".IO ~~ :d {
+            say "add $d to already processed list";
+            mkdir "{self.base-dir}/done/$rakudo-version/{$d}";
+          }
+        }
+      }
       my $els = Int(time - $start_time);
       %results{$m}<time> = $els;
       if $s<success> == 1 {
