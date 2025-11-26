@@ -61,3 +61,8 @@ docker exec -it agent bash -c 'cd /opt/brownie/agent && git pull && bash sync.sh
 ```bash
 docker exec -it agent bash -c 'echo $BRW_AGENT_VERSION'
 ```
+Then go agent UI (http://127.0.0.1:4000), find running agent job, and terminate it. Then run it again: projects -> agent -> build now
+
+## What is login/password for agent UI
+
+admin/admin
