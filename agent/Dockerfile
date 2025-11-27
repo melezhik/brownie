@@ -38,7 +38,7 @@ RUN echo OK2 && zef install https://github.com/melezhik/sparrow6-rakudo-install.
 
 ENTRYPOINT cd /opt/sparky && sparman --base $PWD worker_ui conf &&  sparman worker_ui start  && sparman --env SPARKY_TIMEOUT=10 worker start &&  tail -f ~/.sparky/sparkyd.log
 
-COPY config.raku tasks sparrowfile sparky.yaml /root/.sparky/projects/agent/
+COPY config.raku tasks sparrowfile sparky.yaml version /root/.sparky/projects/agent/
 
 COPY tasks /root/.sparky/projects/agent/tasks/
 
