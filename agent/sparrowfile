@@ -191,7 +191,7 @@ does Sparky::JobApi::Role
               tags => %tags,
             });
           }
-          directory "{self.base-dir}/jobs/{$q<run-id>}";
+          mkdir "{self.base-dir}/jobs/{$q<run-id>}";
         }
       }
       sleep(5);
@@ -316,8 +316,8 @@ does Sparky::JobApi::Role
 
   method stage-ping {
 
-    directory "{self.base-dir}/agents";
-    directory "{self.base-dir}/agents-meta";
+    mkdir "{self.base-dir}/agents";
+    mkdir "{self.base-dir}/agents-meta";
     
     "{self.base-dir}/agents/{tags()<agent>}".IO.unlink;
 
