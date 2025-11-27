@@ -46,7 +46,7 @@ does Sparky::JobApi::Role
 
     my $agent = ( %*ENV<BRW_AGENT_NAME_PREFIX> || Random::Names.new.docker-name ) ~ "-" ~ $agent-id;
 
-    say "agent: $agent, max threads: $max-threads, version: {self!agent-version}";
+    say "agent: $agent, max threads: $max-threads, version: {self!agent-version}, max threads: {Int(%*ENV<BRW_AGENT_MAX_THREADS> || 3)}";
 
     file-delete "tasks.tar";
 
