@@ -19,8 +19,8 @@ does Sparky::JobApi::Role
   }
   
   method !agent-version {
-    if "{%*ENV<HOME>}/.sparky/projects/agent".IO ~~ :f {
-      return "{%*ENV<HOME>}/.sparky/projects/agent".IO.slurp().chomp;
+    if "{%*ENV<HOME>}/.sparky/projects/agent/version".IO ~~ :f {
+      return "{%*ENV<HOME>}/.sparky/projects/agent/version".IO.slurp().chomp;
     } else {
       "???"
     }
