@@ -15,6 +15,7 @@ if "{%*ENV<HOME>}/.sparky/work/agent/.states".IO ~~ :d {
     for dir "{%*ENV<HOME>}/.sparky/work/agent/.states" -> $i { 
         next if $i.basename ~~ /[".pid" || ".exit-code" || ".terminate"]  $$/; 
         "{$i.path}.terminate".IO.spurt("");
+        next if "{$i.path}.terminate".IO ~~ :f;
         say "send termination request as {$i.path}.terminate"; 
     }
 }
@@ -26,6 +27,8 @@ echo "==================="
 cd /root/.sparky/projects/agent/
 
 mkdir -p .triggers
+
+rm -rf /root/.sparky/work/agent/.states/go.terminate
 
 raku -e 'say %( :description<go_go_go> ).raku' > .triggers/go
 
