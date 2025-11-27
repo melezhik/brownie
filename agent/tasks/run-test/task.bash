@@ -57,7 +57,7 @@ env | grep RAKULIB >> dump.txt || :
 
 cat dump.txt
 
-if zef install $module 1>>log.txt 2>&1; then
+if zef install $module --deps-only 1>>log.txt 2>&1 && zef install $module 1>>log.txt 2>&1; then
   echo "installation succeed"
   export PATH=$old_path
   update_state success 1
