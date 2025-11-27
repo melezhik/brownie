@@ -28,8 +28,9 @@ cd /root/.sparky/projects/agent/
 
 mkdir -p .triggers
 
-rm -rf /root/.sparky/work/agent/.states/go.terminate
+job_id=$(date +%s)
 
-raku -e 'say %( :description<go_go_go> ).raku' > .triggers/go
+
+raku -e 'say %( :description<go_go_go> ).raku' > .triggers/$job_id
 
 
