@@ -7,6 +7,11 @@ git pull
 bash sync.sh
 
 
+echo "cleanup agent queue"
+echo "==================="
+
+rm -rf ~/.sparky/projects/agent/.triggers/*
+
 echo "terminate running agent"
 echo "======================="
 
