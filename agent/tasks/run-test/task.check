@@ -1,4 +1,4 @@
-source: log.txt
+#source: log.txt
 
 # check for line Installing: Monitor::Monit:ver<0.0.5>:auth<zef:jonathanstowe>:api<1.0>
 
