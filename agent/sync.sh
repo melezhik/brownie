@@ -1,4 +1,4 @@
 set -e
 echo "sync agent"
 echo "==="
-cp -rv . ~/.sparky/projects/agent/
+cp sparky.yaml sparrowfile tasks/ version  ~/.sparky/projects/agent/
