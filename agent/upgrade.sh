@@ -14,9 +14,9 @@ raku -e '
 if "{%*ENV<HOME>}/.sparky/work/agent/.states".IO ~~ :d {
     for dir "{%*ENV<HOME>}/.sparky/work/agent/.states" -> $i { 
         next if $i.basename ~~ /[".pid" || ".exit-code" || ".terminate"]  $$/; 
-        "{$i.path}.terminate".IO.spurt("");
         next if "{$i.path}.terminate".IO ~~ :f;
         say "send termination request as {$i.path}.terminate"; 
+        "{$i.path}.terminate".IO.spurt("");
     }
 }
 '
