@@ -1,3 +1,9 @@
+0.0.30
+------
+use zef install
+--deps-only to install 
+at least deps first
+
 0.0.29
 ------
 add upgrade feature
