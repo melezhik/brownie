@@ -56,13 +56,13 @@ docker run -e BRW_AGENT_CAP_INSTALL_FROM_SOURCE_FORCE=1
 docker exec -it agent bash -c 'cat ~/.sparky/projects/agent/version; echo'
 ```
 
-## What is login/password for agent UI
-
-admin/admin
-
 ## How to upgrade agent without rebuilding and restarting docker container?
 
 ```bash
 docker exec -it agent bash /opt/brownie/agent/upgrade.sh
 ```
+
+## What is login/password for agent UI
+
+admin/admin
 
