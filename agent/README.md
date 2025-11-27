@@ -63,14 +63,6 @@ admin/admin
 ## How to upgrade agent without rebuilding and restarting docker container?
 
 ```bash
-docker exec -it agent bash -c 'cd /opt/brownie/agent && git pull && bash sync.sh'
+docker exec -it agent bash /opt/brownie/agent/upgrade.sh
 ```
-
-Then go to agent UI (http://127.0.0.1:4000), find running agent job, and terminate it:
-
-![terminate](images/terminate.jpeg)
-
-Then run it again: projects -> agent -> build now
-
-![run](images/run.jpeg)
 
