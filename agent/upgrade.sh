@@ -12,12 +12,14 @@ echo "======================="
 
 raku -e '
 if "{%*ENV<HOME>}/.sparky/work/agent/.states".IO ~~ :d {
-    for dir "{%*ENV<HOME>}/.sparky/work/agent/.states" -> $i { 
-        next if $i.basename ~~ /[".pid" || ".exit-code" || ".terminate"]  $$/; 
+    for dir "{%*ENV<HOME>}/.sparky/work/agent/.states" -> $i {
+        next if $i.basename ~~ /[".exit-code" || ".terminate" || ".pid"] $$/;
+        next if "{$i.path}.exit-code".IO ~~ :f;
         next if "{$i.path}.terminate".IO ~~ :f;
-        say "send termination request as {$i.path}.terminate"; 
+        say "send termination request as {$i.path}.terminate";
         "{$i.path}.terminate".IO.spurt("");
     }
+
 }
 '
 
