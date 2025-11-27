@@ -18,6 +18,14 @@ does Sparky::JobApi::Role
     "{%*ENV<HOME>}/.brownie"
   }
   
+  method !agent-version {
+    if "{%*ENV<HOME>}/.sparky/projects/agent".IO ~~ :f {
+      return "{%*ENV<HOME>}/.sparky/projects/agent".IO.slurp().chomp;
+    } else {
+      "???"
+    }
+  }
+
   method stage-main {
 
     my $max-threads = Int(%*ENV<BRW_AGENT_MAX_THREADS> || 3);
@@ -82,7 +90,7 @@ does Sparky::JobApi::Role
             stage => "ping",
             jobs-run-cnt => $jobs-run-cnt,
             max-threads => $max-threads,
-            agent-version => %*ENV<BRW_AGENT_VERSION> || "0.0.0",
+            agent-version => self!agent-version(),
           ),
         });
         # send local queue and running jobs

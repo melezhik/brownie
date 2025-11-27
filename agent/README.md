@@ -50,6 +50,16 @@ Use respected env var to force installation from source
 docker run -e BRW_AGENT_CAP_INSTALL_FROM_SOURCE_FORCE=1
 ```
 
+## How to get agent version?
+
+```bash
+docker exec -it agent bash -c 'cat ~/.sparky/projects/agent/version'
+```
+
+## What is login/password for agent UI
+
+admin/admin
+
 ## How to upgrade agent without rebuilding and restarting docker container?
 
 ```bash
@@ -64,13 +74,3 @@ Then run it again: projects -> agent -> build now
 
 ![run](images/run.jpeg)
 
-
-## How to get agent version?
-
-```bash
-docker exec -it agent bash -c 'echo $BRW_AGENT_VERSION'
-```
-
-## What is login/password for agent UI
-
-admin/admin
