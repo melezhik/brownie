@@ -18,7 +18,7 @@ docker run --rm -it --name agent -p 4000:4000 agent
 
 Once agent is registered in orchestrator, it starts receiving workload and starts execute it, you'll see `agent.job` jobs in agent UI:
 
-http://127.0.0.1:4000
+http://127.0.0.1:4000/builds
 
 ## Orchestrator endpoint
 
