@@ -351,10 +351,10 @@ does Sparky::JobApi::Role
     my $status = True;
     for $resutls.kv -> $k, $v {
       if "{self.base-dir}/versions/$version/$k".IO ~~ :d {
-         say "module $k is already processed";
+         say "add module $k ... SKIP - already processed";
          next;
       }
-      say "add module $k ...";
+      say "add module $k ... OK";
       say "==================";
       mkdir "{self.base-dir}/versions/$version/$k";
       my $time = $v<time> || "?";
