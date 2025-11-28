@@ -226,11 +226,11 @@ does Sparky::JobApi::Role
 
     my @list = $my.get-stash()<list><>;
 
-    say ">>>";
+    say "===";
 
     say "list: \n", @list.join("\n");
 
-    say "<<<";
+    say "===";
 
     my %results;
 
@@ -304,11 +304,11 @@ does Sparky::JobApi::Role
     }
 
     say "results:";
-    say "<<<";
+    say "===";
     for %results.kv -> $k, $v {
         say "$k ... {$v<status>}\t "
     }  
-    say ">>>";
+    say "===";
 
     warn "some tests failed" unless $status;
 
