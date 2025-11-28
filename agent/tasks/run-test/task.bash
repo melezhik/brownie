@@ -12,8 +12,6 @@ old_path=$PATH
 
 export PATH=/tmp/whateverable/rakudo-moar/$rakudo_version/bin/:/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin:$PATH
 
-echo "env:"
-
 echo "==="
 
 echo "[raku]"
@@ -32,9 +30,7 @@ echo "==="
 
 echo "install [$module]"
 
-echo "env:" > log.txt
-
-echo "[zef]" >> log.txt
+echo "[zef]" > log.txt
 
 which zef >> log.txt
 
@@ -59,7 +55,7 @@ else
   unset ZEF_INSTALL_TO
 fi
 
-echo "dump env vars" > dump.txt
+echo "[env vars]" > dump.txt
 
 env | grep ZEF_ >> dump.txt || :
 
