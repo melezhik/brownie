@@ -30,17 +30,17 @@ echo "==="
 
 echo "install [$module]"
 
-echo "[zef]" > log.txt
-
-which zef >> log.txt
-
-zef --version >> log.txt
-
-echo "[raku]" >> log.txt
+echo "[raku]" > log.txt
 
 which raku >> log.txt
 
 raku --version >> log.txt
+
+echo "[zef]" >> log.txt
+
+which zef >> log.txt
+
+zef --version >> log.txt
 
 echo "===" >> log.txt
 
