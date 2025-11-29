@@ -303,12 +303,14 @@ does Sparky::JobApi::Role
       });
     }
 
-    say "results:";
-    say "===";
-    for %results.kv -> $k, $v {
-        say "$k ... {$v<status>}\t "
-    }  
-    say "===";
+    if %results.keys.elems > 0 {
+      say "results:";
+      say "===";
+      for %results.kv -> $k, $v {
+          say "$k ... {$v<status>}\t "
+      }  
+      say "===";
+    }
 
     warn "some tests failed" unless $status;
 
