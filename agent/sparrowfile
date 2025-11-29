@@ -128,6 +128,7 @@ does Sparky::JobApi::Role
               }
             }
       }
+
       say "load requests from orchestrator queue";
 
       say "jobs-run-cnt: $jobs-run-cnt, max-threads: $max-threads";
@@ -276,6 +277,23 @@ does Sparky::JobApi::Role
           }
         }
       }
+
+      if $s<fail> {
+        say "deps failed during installation of module $m: ", $s<fail>.raku;
+        for $s<fail><> -> $d {
+          next if $d eq $m;
+          %results{$d} = %(
+            time => 0,
+            log => "failed as deps of module $m",
+            status => False,
+          );
+          unless "{self.base-dir}/done/$rakudo-version/{$d}".IO ~~ :d {
+            say "add $d to already processed list";
+            mkdir "{self.base-dir}/done/$rakudo-version/{$d}";
+          }
+        }
+      }
+
       my $els = Int(time - $start_time);
       %results{$m}<time> = $els;
       if $s<success> == 1 {

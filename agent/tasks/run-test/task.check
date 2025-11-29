@@ -17,3 +17,19 @@ $s<inst> = @inst;
 
 update_state($s);
 RAKU
+
+~regexp: \s* "Testing [FAIL]:" \s+ (\S+?) ":ver" \S
+
+code: <<RAKU
+!raku
+my @fail;
+for captures()<> -> $i {
+    push @fail, "{$i.head}";
+}
+
+my $s = get_state();
+
+$s<fail> = @fail;
+
+update_state($s);
+RAKU
