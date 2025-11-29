@@ -234,7 +234,11 @@ does Sparky::JobApi::Role
           )
         );
       }
-      #@_list.=pick(@_list);
+      
+      # shake list for more
+      # efficient distribution
+      
+      @_list.=pick(@_list);
 
       if $done == @d.elems {
         last;
