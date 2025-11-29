@@ -362,7 +362,6 @@ does Sparky::JobApi::Role
         "{self.base-dir}/versions/$version/{$k}.OK".IO.spurt("");
         push @list, "$k ... \t OK \t {$time} sec";
         if $v<log> {
-          say "log:";
           say $v<log>;
         }
       } else {
@@ -370,7 +369,6 @@ does Sparky::JobApi::Role
         push @list, "$k ... \t FAIL \t {$time} sec";
         $status = False;
         if $v<log> {
-          say "log:";
           say $v<log>;
           "{self.base-dir}/versions/$version/{$k}.log".IO.spurt($v<log>);
           $me.put-file("{self.base-dir}/versions/$version/{$k}.log","{uri_encode_component($k)}.log");
