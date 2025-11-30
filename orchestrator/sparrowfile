@@ -240,7 +240,7 @@ does Sparky::JobApi::Role
 
       @_list.=pick(@_list);
 
-      say "current list: ", @_list.raku;
+      #say "current list: ", @_list.raku;
 
       if $done == @d.elems {
         last;
