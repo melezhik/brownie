@@ -116,18 +116,11 @@ does Sparky::JobApi::Role
 
       my $q = $orch-job.get-stash();
 
-      my $done = $orch-feed.get-stash();
       # syncronize information
       # about already proccesses
       # modules
-      if $done {
-            for $done<done><> -> $m {
-              unless "{self.base-dir}/done/{$done<version>}/{$m}".IO ~~ :d {
-                say "add $m to agent cache as done";
-                mkdir "{self.base-dir}/done/{$done<version>}/{$m}";
-              }
-            }
-      }
+
+      my $done = $orch-feed.get-stash();
 
       say "load requests from orchestrator queue";
 
@@ -292,7 +285,6 @@ does Sparky::JobApi::Role
         for $s<testok><> -> $d {
           next if $d eq $m;
           next if %results{$d};
-          next if "{self.base-dir}/done/$rakudo-version/{$d}".IO ~~ :d;
           %results{$d} = %(
             time => 0,
             log => "tested ok as deps of module $m",

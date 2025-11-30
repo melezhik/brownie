@@ -21,11 +21,6 @@ vars:
         values: [ "compare" ]
         group: [ compare ]
 
-  #-
-        #name: shuffle
-        #default: false
-        #type: checkbox
-
   -
         name: new
         # 2025.10
