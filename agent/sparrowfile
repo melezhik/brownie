@@ -249,7 +249,7 @@ does Sparky::JobApi::Role
     for @list -> $m {
       next if %results{$m};
       my $start_time = time;
-      %results{$m} = %( status => "", log => "" );
+      %results{$m} = %( status => "", log => "", agent => $agent );
       my $s = task-run "tasks/run-test", %(
         module => $m,
         zef_install_to => tags()<zef_install_to>,
@@ -267,6 +267,7 @@ does Sparky::JobApi::Role
             time => 0,
             log => "installed as deps of module $m",
             status => True,
+            agent => $agent,
           );
           say "add $d to already processed list";
         }
@@ -281,6 +282,7 @@ does Sparky::JobApi::Role
             time => 0,
             log => "failed as deps of module $m",
             status => False,
+            agent => $agent,
           );
           say "add $d to already processed list";
         }
@@ -295,6 +297,7 @@ does Sparky::JobApi::Role
             time => 0,
             log => "tested ok as deps of module $m",
             status => True,
+            agent => $agent,
           );
           say "add $d to already processed list";
         }
