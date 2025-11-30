@@ -282,17 +282,33 @@ does Sparky::JobApi::Role
         say "deps failed during installation of module $m: ", $s<fail>.raku;
         for $s<fail><> -> $d {
           next if $d eq $m;
+          next if "{self.base-dir}/done/$rakudo-version/{$d}".IO ~~ :d;
           %results{$d} = %(
             time => 0,
             log => "failed as deps of module $m",
             status => False,
           );
-          unless "{self.base-dir}/done/$rakudo-version/{$d}".IO ~~ :d {
-            say "add $d to already processed list";
-            mkdir "{self.base-dir}/done/$rakudo-version/{$d}";
-          }
+          say "add $d to already processed list";
+          mkdir "{self.base-dir}/done/$rakudo-version/{$d}";
         }
       }
+      if $s<testok> {
+        say "deps tested ok during installation of module $m: ", $s<inst>.raku;
+        for $s<testok><> -> $d {
+          next if $d eq $m;
+          next if "{self.base-dir}/done/$rakudo-version/{$d}".IO ~~ :d;
+          %results{$d} = %(
+            time => 0,
+            log => "tested ok as deps of module $m",
+            status => True,
+          );
+          
+          say "add $d to already processed list";
+          mkdir "{self.base-dir}/done/$rakudo-version/{$d}";
+          
+        }
+      }
+
 
       my $els = Int(time - $start_time);
       %results{$m}<time> = $els;
