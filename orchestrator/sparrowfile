@@ -113,7 +113,7 @@ does Sparky::JobApi::Role
     if tags()<module> {
        say "Testing module {tags()<module>} against Rakudo version: $rakudo-version";
     } else {
-       say "Testing $mod_cnt random modules against Rakudo version: $rakudo-version";
+       say "Testing $mod_cnt modules against Rakudo version: $rakudo-version";
     }
  
     say ">>>";
