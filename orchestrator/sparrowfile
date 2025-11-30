@@ -118,7 +118,7 @@ does Sparky::JobApi::Role
  
     say ">>>";
     say "install from source code: ", tags()<source_code> || False;
-    say "use shuffle: ", tags()<shuffle> || False;
+    #say "use shuffle: ", tags()<shuffle> || False;
     say "<<<";
     
     my $start_time = time;
@@ -142,7 +142,7 @@ does Sparky::JobApi::Role
            push @d, $m;
         }
       }
-      @d.=pick(@d) if tags()<shuffle>;
+      #@d.=pick(@d) if tags()<shuffle>;
       @d = @d[0 .. $mod_cnt - 1];
     }
     
@@ -237,8 +237,10 @@ does Sparky::JobApi::Role
       
       # shake list for more
       # efficient distribution
-      
+
       @_list.=pick(@_list);
+
+      say "current list: ", @_list.raku;
 
       if $done == @d.elems {
         last;
