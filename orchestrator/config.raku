@@ -14,6 +14,7 @@
    "Time::Duration",
    "Toaster",
    "Uzu",
-   "Russian" # eats memory
+   "Russian", # eats memory
+   "Sway::Config", # too verbose output, does not fit POST request, 413 Request Entity Too Large
   ]
 );
