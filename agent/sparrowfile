@@ -381,7 +381,7 @@ does Sparky::JobApi::Role
          say "add module $k ... SKIP - already processed";
          next;
       }
-      say "add module $k ... OK, agent: {$v<agent>||'?'}";
+      say "add module $k ... OK, status: {$v<status> ?? 'OK' !! 'FAIL' }, agent: {$v<agent>||'?'}";
       say "==================";
       mkdir "{self.base-dir}/versions/$version/$k";
       my $time = $v<time> || "?";

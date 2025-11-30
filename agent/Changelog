@@ -1,6 +1,11 @@
+0.0.35
+------
+minor improvements
+in reports
+
 0.0.34
 ------
-fix proccessed
+fix processed
 logic to avoid
 dead locks
 
