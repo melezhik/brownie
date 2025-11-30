@@ -245,9 +245,9 @@ does Sparky::JobApi::Role
     $my.put-file("list.txt","list.txt");
 
     my $status = True;
-    my %proccessed;
+
     for @list -> $m {
-      next if %proccessed{$m};
+      next if %results{$m};
       my $start_time = time;
       %results{$m} = %( status => "", log => "" );
       my $s = task-run "tasks/run-test", %(
@@ -258,19 +258,17 @@ does Sparky::JobApi::Role
         rakudo_version => $rakudo-version,
       );
       say "add $m to already processed list";
-      %proccessed{$m} = True;
       if $s<inst> {
         say "deps installed during installation of module $m: ", $s<inst>.raku;
         for $s<inst><> -> $d {
           next if $d eq $m;
-          next if %proccessed{$d};
+          next if %results{$d};
           %results{$d} = %(
             time => 0,
             log => "installed as deps of module $m",
             status => True,
           );
           say "add $d to already processed list";
-          %proccessed{$d} = True;
         }
       }
 
@@ -278,21 +276,20 @@ does Sparky::JobApi::Role
         say "deps failed during installation of module $m: ", $s<fail>.raku;
         for $s<fail><> -> $d {
           next if $d eq $m;
-          next if %proccessed{$d};
+          next if %results{$d};
           %results{$d} = %(
             time => 0,
             log => "failed as deps of module $m",
             status => False,
           );
           say "add $d to already processed list";
-          %proccessed{$d} = True;
         }
       }
       if $s<testok> {
         say "deps tested ok during installation of module $m: ", $s<inst>.raku;
         for $s<testok><> -> $d {
           next if $d eq $m;
-          next if %proccessed{$d};
+          next if %results{$d};
           next if "{self.base-dir}/done/$rakudo-version/{$d}".IO ~~ :d;
           %results{$d} = %(
             time => 0,
@@ -300,7 +297,6 @@ does Sparky::JobApi::Role
             status => True,
           );
           say "add $d to already processed list";
-          %proccessed{$d} = True;
         }
       }      
       my $els = Int(time - $start_time);
@@ -338,11 +334,6 @@ does Sparky::JobApi::Role
       say "===";
     }
 
-    for %proccessed.keys -> $m {
-      unless "{self.base-dir}/done/$rakudo-version/{$m}".IO {
-        mkdir "{self.base-dir}/done/$rakudo-version/{$m}"
-      }
-    }
     warn "some tests failed" unless $status;
 
   }
