@@ -33,3 +33,23 @@ $s<fail> = @fail;
 
 update_state($s);
 RAKU
+
+
+# search for line
+# Testing [OK] for UUID::V4:ver<1.0.0>:auth<zef:masukomi>:api<1>
+
+~regexp: \s* "Testing [OK]" \s+ "for" \s+ (\S+?) ":ver" \S
+
+code: <<RAKU
+!raku
+my @testok;
+for captures()<> -> $i {
+    push @testok, "{$i.head}";
+}
+
+my $s = get_state();
+
+$s<testok> = @testok;
+
+update_state($s);
+RAKU
