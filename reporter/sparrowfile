@@ -1,3 +1,5 @@
+use Sparky::JobApi;
+
 my $action = tags()<action>;
 
 if $action eq "list" {
@@ -18,7 +20,6 @@ if $action eq "list" {
   );
 
   my $me = Sparky::JobApi.new(:mine);
-
 
   for $s<list><> -> $m {
     my $module = $m;
