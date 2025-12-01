@@ -17,12 +17,16 @@ if $action eq "list" {
     :$old,
   );
 
+  my $me = Sparky::JobApi.new(:mine);
+
+
   for $s<list><> -> $m {
     my $module = $m;
-    task-run "logs", "brownie-logs", %(
+    task-run "$m log", "brownie-logs", %(
       :$module,
       :path("{%*ENV<HOME>}/.sparky/projects/.reports/"),
     );
+    $me.put-file("$module.log","$module.log");
   }
 } else {
   die "unsupported action: $action"
