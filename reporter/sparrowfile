@@ -27,7 +27,7 @@ if $action eq "list" {
       :$module,
       :path("{%*ENV<HOME>}/.sparky/projects/.reports/"),
     );
-    $me.put-file("$module.log","$module.log");
+    $me.put-file("{%*ENV<HOME>}/.brownie/logs/$module.log","$module.log");
   }
 } else {
   die "unsupported action: $action"
