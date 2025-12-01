@@ -11,12 +11,19 @@ if $action eq "list" {
   my $new = tags()<new>;
   my $old = tags()<old>;
 
-  task-run "report", "brownie-report", %(
+  my $s = task-run "report", "brownie-report", %(
     :$action,
     :$new,
     :$old,
   );
 
+  for $s<list><> -> $m {
+    my $module = $m;
+    task-run "logs", "brownie-logs", %(
+      :$module,
+      :path("{%*ENV<HOME>}/.sparky/projects/.reports/"),
+    );
+  }
 } else {
   die "unsupported action: $action"
 }
