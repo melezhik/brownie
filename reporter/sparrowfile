@@ -20,10 +20,10 @@ if $action eq "list" {
   );
 
   my $me = Sparky::JobApi.new(:mine);
-
   for $s<list><> -> $m {
     my $module = $m<module>;
     "report.txt".IO.spurt($m<report>);
+    say $m;
     $me.put-file("report.txt","$module.log");
   }
 } else {
