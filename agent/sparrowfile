@@ -271,9 +271,18 @@ does Sparky::JobApi::Role
         for $s<fail><> -> $d {
           next if $d eq $m;
           next if %results{$d};
+          # re-run zef test to
+          # collect test report
+          task-run "tasks/zef-test", %(
+            module => $m,
+            zef_install_to => tags()<zef_install_to>,
+            zef_test_degree => tags()<zef_test_degree>,
+            zef_fetch_degree => tags()<zef_fetch_degree>,
+            rakudo_version => $rakudo-version,
+          );
           %results{$d} = %(
             time => 0,
-            log => "failed as deps of module $m",
+            log => "log.txt".IO.slurp,
             status => False,
             agent => $agent,
           );
@@ -285,10 +294,19 @@ does Sparky::JobApi::Role
         for $s<testok><> -> $d {
           next if $d eq $m;
           next if %results{$d};
+          # re-run zef test to
+          # collect test report
+          task-run "tasks/zef-test", %(
+            module => $m,
+            zef_install_to => tags()<zef_install_to>,
+            zef_test_degree => tags()<zef_test_degree>,
+            zef_fetch_degree => tags()<zef_fetch_degree>,
+            rakudo_version => $rakudo-version,
+          );
           %results{$d} = %(
             time => 0,
-            log => "tested ok as deps of module $m",
-            status => True,
+            log => "log.txt".IO.slurp,
+            status => True
             agent => $agent,
           );
           say "add $d to already processed list";
