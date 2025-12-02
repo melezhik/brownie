@@ -16,25 +16,20 @@ vars:
         group: [ list ]
 
   -
-        name: action
-        type: select
-        values: [ "compare" ]
-        group: [ compare ]
-
-  -
         name: new
-        # 2025.11
-        default: fe0e20c28859ea709eefad19af452c9d35dff20d
-        type: input
+        values: [ "2025.11", "2025.10", "2025.08", "2025.06.1", "2025.06", "2025.05", "2025.04" ]
+        type: select
+        default: "2025.11"
         group: [ compare ]
 
   -
         name: old
-        # 2025.10
-        default: 3f8de27bcb2ee987a2997de8fe314c460b7e53f9
-        type: input
+        values: [ "2025.11", "2025.10", "2025.08", "2025.06.1", "2025.06", "2025.05", "2025.04" ]
+        type: select
+        default: "2025.11"
         group: [ compare ]
 
+  
   #-
         #name: source_code
         #default: false
