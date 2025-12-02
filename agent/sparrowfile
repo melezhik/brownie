@@ -285,6 +285,7 @@ does Sparky::JobApi::Role
             log => "report.txt".IO.slurp,
             status => False,
             agent => $agent,
+            testfail => True,
           );
           say "add $d to already processed list";
         }
