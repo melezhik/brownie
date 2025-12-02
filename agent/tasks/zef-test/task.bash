@@ -35,7 +35,7 @@ else
   unset ZEF_INSTALL_TO
 fi
 
-zef test $module 1>>log.txt 2>&1 || :;
+zef test $module 1>>log.txt 2>&1 || :
 
 echo "test log"
 
