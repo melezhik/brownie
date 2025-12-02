@@ -23,15 +23,15 @@ vars:
 
   -
         name: new
-        # 2025.10
-        default: 3f8de27bcb2ee987a2997de8fe314c460b7e53f9
+        # 2025.11
+        default: fe0e20c28859ea709eefad19af452c9d35dff20d
         type: input
         group: [ compare ]
 
   -
         name: old
-        # 2025.08
-        default: 178bf24439e6376998bc17538cbd5c30067f5c06
+        # 2025.10
+        default: 3f8de27bcb2ee987a2997de8fe314c460b7e53f9
         type: input
         group: [ compare ]
 
