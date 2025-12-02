@@ -84,7 +84,7 @@ does Sparky::JobApi::Role
 
         task-run "tasks/jobs-cnt";
         $orch-job2.queue({
-          description => "heartbeat from $agent, version: {self!agent-version}, max threads: {Int(%*ENV<BRW_AGENT_MAX_THREADS> || 3)}",
+          description => "heartbeat from $agent, version: {self!agent-version}, max threads: {Int(%*ENV<BRW_AGENT_MAX_THREADS> || 3)}, jobs run cnt: $jobs-run-cnt",
           tags => %(
             agent => $agent,
             stage => "ping",
