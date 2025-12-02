@@ -22,12 +22,9 @@ if $action eq "list" {
   my $me = Sparky::JobApi.new(:mine);
 
   for $s<list><> -> $m {
-    my $module = $m;
-    task-run "$m log", "brownie-logs", %(
-      :$module,
-      :path("{%*ENV<HOME>}/.sparky/projects/.reports/"),
-    );
-    $me.put-file("{%*ENV<HOME>}/.brownie/logs/$module.log","$module.log");
+    my $module = $m<module>;
+    "report.txt".IO.spurt($m<report>);
+    $me.put-file("report.txt","$module.log");
   }
 } else {
   die "unsupported action: $action"
