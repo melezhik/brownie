@@ -24,7 +24,7 @@ zef --version >> report.txt
 
 echo "===" >> report.txt
 
-echo "zef test $module" >> report.txt
+echo "zef install $module --/deps --verbose" >> report.txt
 
 if ! test  "${zef_install_to}" = ""; then
   #echo "zef_install_to is set to $zef_install_to, apply it"
