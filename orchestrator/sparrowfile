@@ -233,6 +233,18 @@ does Sparky::JobApi::Role
             version => $rakudo-version,
           )
         );
+      } else {
+        say "notify agents about 0 processed modules";
+        my $agents-feed = Sparky::JobApi.new(
+          :project<browny.feedback>,
+          :job-id<done>,
+        );
+        $agents-feed.put-stash(
+          %(
+            done => [],
+            version => $rakudo-version,
+          )
+        );        
       }
       
       # shake list for more
