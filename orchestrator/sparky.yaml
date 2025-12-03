@@ -15,10 +15,10 @@ vars:
       type: select
       default: 2
 
-#   -
-#         name: shuffle
-#         default: false
-#         type: checkbox
+  -
+        name: shuffle
+        default: false
+        type: checkbox
 
   -
         name: rakudo_version_release
