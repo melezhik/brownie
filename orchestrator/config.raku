@@ -16,6 +16,7 @@
    "Uzu",
    "Russian", # eats memory
    "Sway::Config", # too verbose output, does not fit POST request, 413 Request Entity Too Large
-    "Mint", # Install just hang 
+   "Mint", # Install just hang 
+   "ParaSeq", # Hangs on at least Rakudo 2025.10
   ]
 );
