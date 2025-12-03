@@ -44,6 +44,8 @@ RUN apt-get install -y jq && echo OK2 && cd /opt/sparky && git pull && zef insta
 
 RUN zef install --/test URI::Encode
 
+RUN cd /opt/ && git clone https://github.com/melezhik/brownie.git
+
 WORKDIR /app
 
 ENV SP6_FORMAT_COLOR=1
