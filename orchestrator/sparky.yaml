@@ -4,6 +4,7 @@ sparrowdo:
   bootstrap: false
   format: default
   repo: https://sparrowhub.io/repo
+  tags: rakudo_version_release=2025.11
 disabled: false
 keep_builds: 100
 allow_manual_run: true
