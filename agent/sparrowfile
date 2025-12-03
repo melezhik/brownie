@@ -249,7 +249,7 @@ does Sparky::JobApi::Role
         rakudo_version => $rakudo-version,
       );
       if $s<inst> {
-        say "modules installed during installation of module $m: ", $s<inst>.raku;
+        say "modules installed ok during installation of module $m: ", $s<inst>.raku;
         for $s<inst><> -> $d {
           next if $d eq $m;
           %results{$d} = %(
@@ -262,7 +262,7 @@ does Sparky::JobApi::Role
         }
       }
       if $s<fail> {
-        say "modules tested fail during installation of module $m: ", $s<fail>.raku;
+        say "modules tests fail during installation of module $m: ", $s<fail>.raku;
         for $s<fail><> -> $d {
           next if $d eq $m;
           # re-run zef test to
@@ -285,7 +285,7 @@ does Sparky::JobApi::Role
         }
       }
       if $s<testok> {
-        say "modules tested ok during installation of module $m: ", $s<inst>.raku;
+        say "modules tests ok during installation of module $m: ", $s<inst>.raku;
         for $s<testok><> -> $d {
           next if $d eq $m;
           %results{$d} = %(
