@@ -298,6 +298,7 @@ does Sparky::JobApi::Role
         }
       }      
       next if %results{$m};
+      say "add $m to already processed list";
       %results{$m}<agent> = $agent;
       %results{$m}<time> = 0;
       %results{$m}<log> = "";
