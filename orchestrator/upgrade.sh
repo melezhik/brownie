@@ -2,7 +2,7 @@ set -e
 
 echo "upgrade 010r"
 echo "============="
-cd /opt/brownie/agent
+cd /opt/brownie/orchestrator
 git pull
 bash sync.sh
 
