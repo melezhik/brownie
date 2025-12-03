@@ -267,13 +267,22 @@ does Sparky::JobApi::Role
           next if $d eq $m;
           # re-run zef test to
           # collect test report
-          task-run "tasks/zef-test", %(
-            module => $d,
-            zef_install_to => tags()<zef_install_to>,
-            zef_test_degree => tags()<zef_test_degree>,
-            zef_fetch_degree => tags()<zef_fetch_degree>,
-            rakudo_version => $rakudo-version,
-          );
+          if "{self.base-dir}/cache/modules/$d.report".IO ~~ :f {
+            # read report from cache
+            # for effecieny
+            "report.txt".IO.spurt("{self.base-dir}/cache/modules/$d.report".IO.slurp);
+          } else {
+            task-run "tasks/zef-test", %(
+              module => $d,
+              zef_install_to => tags()<zef_install_to>,
+              zef_test_degree => tags()<zef_test_degree>,
+              zef_fetch_degree => tags()<zef_fetch_degree>,
+              rakudo_version => $rakudo-version,
+            );
+            # save report into file cache for effecieny
+            mkdir "{self.base-dir}/cache/modules";
+            "{self.base-dir}/cache/modules/$d.report".IO.spurt("report.txt".IO.slurp);
+          }
           %results{$d} = %(
             time => 0,
             log => "report.txt".IO.slurp,
