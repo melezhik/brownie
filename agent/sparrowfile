@@ -240,6 +240,7 @@ does Sparky::JobApi::Role
     my $status = True;
 
     for @list -> $m {
+      
       my $test-ok = True; # module successfully passed tests
                           # could be chaged vi <testfail> section
       next if %results{$m};
