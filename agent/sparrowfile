@@ -264,6 +264,7 @@ does Sparky::JobApi::Role
             status => True,
             agent => $agent,
             parent => $m,
+            check_method => "install",
           );
           say "add $d to already processed list";
         }
@@ -299,6 +300,8 @@ does Sparky::JobApi::Role
             status => False,
             agent => $agent,
             testfail => True,
+            parent => $m,
+            check_method => "testfail",
           );
           say "add $d to already processed list";
         }
@@ -313,6 +316,7 @@ does Sparky::JobApi::Role
             status => True,
             agent => $agent,
             parent => $m,
+            check_method => "testok",
           );
           say "add $d to already processed list";
         }
