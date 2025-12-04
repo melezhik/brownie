@@ -143,7 +143,7 @@ does Sparky::JobApi::Role
         }
       }
       @d.=pick(@d) if tags()<shuffle>;
-      if  @d.elems < $mod-cnt {
+      if  @d.elems < $mod_cnt {
         $mod_cnt = @d.elems
       }
       @d = @d[0 .. $mod_cnt - 1];
