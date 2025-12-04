@@ -245,8 +245,6 @@ does Sparky::JobApi::Role
                           # could be chaged vi <testfail> section
       next if %results{$m};
 
-      my $log = ( "log.txt".IO ~~ :f ) ?? "log.txt".IO.slurp  !! "no log data";
-
       my $s = task-run "tasks/run-test", %(
         module => $m,
         zef_install_to => tags()<zef_install_to>,
@@ -254,6 +252,9 @@ does Sparky::JobApi::Role
         zef_fetch_degree => tags()<zef_fetch_degree>,
         rakudo_version => $rakudo-version,
       );
+
+      my $log = ( "log.txt".IO ~~ :f ) ?? "log.txt".IO.slurp  !! "no log data";
+
       if $s<inst> {
         say "modules installed ok during installation of module $m: ", $s<inst>.raku;
         for $s<inst><> -> $d {
