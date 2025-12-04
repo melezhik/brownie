@@ -405,7 +405,7 @@ does Sparky::JobApi::Role
          say "add module $k ... SKIP - already processed";
          next;
       }
-      say "add module $k ... OK, status: {$v<status> ?? 'OK' !! 'FAIL' }, agent: {$v<agent>||'?'}, check_method: {$v< >}, parent: {$v<parent> || 'not set'} ";
+      say "add module $k ... OK, status: {$v<status> ?? 'OK' !! 'FAIL' }, agent: {$v<agent>||'?'}, check_method: {$v<check_method>}, parent: {$v<parent> || 'not set'}";
       say "log:";
       say "===";
       mkdir "{self.base-dir}/versions/$version/$k";
