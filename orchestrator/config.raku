@@ -18,5 +18,6 @@
    "Sway::Config", # too verbose output, does not fit POST request, 413 Request Entity Too Large
    "Mint", # Install just hang 
    "ParaSeq", # Hangs on at least Rakudo 2025.10
+   "SparrowCI - super fun and flexible CI system with many programming languages support", # Typo in the name
   ]
 );
