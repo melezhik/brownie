@@ -12,7 +12,7 @@ allow_manual_run: true
 vars:
   -
       name: mods_cnt
-      values: [ 2, 10, 100, 200, 1000, 2000 ]
+      values: [ 2, 10, 100, 200, 1000, 2000, 3000 ]
       type: select
       default: 2
 
