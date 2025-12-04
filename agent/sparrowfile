@@ -264,6 +264,7 @@ does Sparky::JobApi::Role
             log => "installed as deps of module $m\n\n$log",
             status => True,
             agent => $agent,
+            testfail => False,
             parent => $m,
             check_method => "installdeps",
           );
@@ -316,6 +317,7 @@ does Sparky::JobApi::Role
             log => "tested ok as deps of module $m\n\n$log",
             status => True,
             agent => $agent,
+            testfail => False,
             parent => $m,
             check_method => "testok",
           );
