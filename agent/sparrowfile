@@ -245,6 +245,10 @@ does Sparky::JobApi::Role
                           # could be chaged vi <testfail> section
       next if %results{$m};
 
+      # this is weird Rakudo bug
+      if "log.txt".IO ~~ :e {
+        unlink "log.txt".IO;
+      }
       my $s = task-run "tasks/run-test", %(
         module => $m,
         zef_install_to => tags()<zef_install_to>,
@@ -253,7 +257,7 @@ does Sparky::JobApi::Role
         rakudo_version => $rakudo-version,
       );
 
-      my $log = ( "log.txt".IO ~~ :f ) ?? "log.txt".IO.slurp  !! "no log data";
+      my $log = ( "log.txt".IO ~~ :e ) ?? "log.txt".IO.slurp  !! "no log data";
 
       if $s<inst> {
         say "modules installed ok during installation of module $m: ", $s<inst>.raku;
