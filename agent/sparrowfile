@@ -263,6 +263,7 @@ does Sparky::JobApi::Role
             log => "installed as deps of module $m\n\n$log",
             status => True,
             agent => $agent,
+            parent => $m,
           );
           say "add $d to already processed list";
         }
@@ -311,6 +312,7 @@ does Sparky::JobApi::Role
             log => "tested ok as deps of module $m\n\n$log",
             status => True,
             agent => $agent,
+            parent => $m,
           );
           say "add $d to already processed list";
         }
