@@ -264,7 +264,7 @@ does Sparky::JobApi::Role
             status => True,
             agent => $agent,
             parent => $m,
-            check_method => "install",
+            check_method => "installdeps",
           );
           say "add $d to already processed list";
         }
@@ -327,6 +327,7 @@ does Sparky::JobApi::Role
       %results{$m}<time> = 0;
       %results{$m}<log> = "";
       %results{$m}<testfail> = not $test-ok;
+      %results{$m}<check_method> = "direct";
       if $s<success> == 1 {
         %results{$m}<status> = True
       } else {
@@ -404,7 +405,7 @@ does Sparky::JobApi::Role
          say "add module $k ... SKIP - already processed";
          next;
       }
-      say "add module $k ... OK, status: {$v<status> ?? 'OK' !! 'FAIL' }, agent: {$v<agent>||'?'}, check_method: {$v<check_method>}, parent: {$v<parent> || 'not set'} ";
+      say "add module $k ... OK, status: {$v<status> ?? 'OK' !! 'FAIL' }, agent: {$v<agent>||'?'}, check_method: {$v< >}, parent: {$v<parent> || 'not set'} ";
       say "log:";
       say "===";
       mkdir "{self.base-dir}/versions/$version/$k";
