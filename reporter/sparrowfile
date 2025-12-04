@@ -31,6 +31,7 @@ if $action eq "list" {
     :$action,
     :$new,
     :$old,
+    :fail-only,
   );
 
   my $me = Sparky::JobApi.new(:mine);
