@@ -404,8 +404,9 @@ does Sparky::JobApi::Role
          say "add module $k ... SKIP - already processed";
          next;
       }
-      say "add module $k ... OK, status: {$v<status> ?? 'OK' !! 'FAIL' }, agent: {$v<agent>||'?'}";
-      say "==================";
+      say "add module $k ... OK, status: {$v<status> ?? 'OK' !! 'FAIL' }, agent: {$v<agent>||'?'}, check_method: {$v<check_method>}, parent: {$v<parent> || 'not set'} ";
+      say "log:";
+      say "===";
       mkdir "{self.base-dir}/versions/$version/$k";
       my $time = $v<time> || "?";
       if $v<status> {
@@ -427,7 +428,7 @@ does Sparky::JobApi::Role
       "{self.base-dir}/versions/$version/$k/meta.json".IO.spurt(
          to-json($v)
       );
-      say "==================";
+      say "===";
     }
 
     "summary.txt".IO.spurt(@list.join("\n"));
