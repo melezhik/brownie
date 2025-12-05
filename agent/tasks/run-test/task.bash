@@ -4,6 +4,8 @@ rakudo_version=$(config rakudo_version)
 
 zef_install_to=$(config zef_install_to)
 
+agent=$(config agent)
+
 export ZEF_FETCH_DEGREE=$(config zef_fetch_degree)
 
 export ZEF_TEST_DEGREE=$(config zef_test_degree)
@@ -30,7 +32,11 @@ echo "==="
 
 echo "install [$module]"
 
-echo "[raku]" > log.txt
+echo "[agent]" > log.txt 
+
+echo $agent >> log.txt
+
+echo "[raku]" >> log.txt
 
 which raku >> log.txt
 
