@@ -250,6 +250,11 @@ does Sparky::JobApi::Role
       next if %results{$m};
 
       # this is weird Rakudo bug
+      # caching file content 
+      # in loop 
+      # so need to remove file
+      # to break cache
+
       if "log.txt".IO ~~ :e {
         unlink "log.txt".IO;
       }
@@ -259,6 +264,7 @@ does Sparky::JobApi::Role
         zef_test_degree => tags()<zef_test_degree>,
         zef_fetch_degree => tags()<zef_fetch_degree>,
         rakudo_version => $rakudo-version,
+        agent => $agent,
       );
 
       my $log = ( "log.txt".IO ~~ :e ) ?? "log.txt".IO.slurp  !! "no log data";
@@ -299,6 +305,7 @@ does Sparky::JobApi::Role
               zef_test_degree => tags()<zef_test_degree>,
               zef_fetch_degree => tags()<zef_fetch_degree>,
               rakudo_version => $rakudo-version,
+              agent => $agent,
             );
             # save report into file cache for effecieny
             mkdir "{self.base-dir}/cache/{$rakudo-version}/modules";
