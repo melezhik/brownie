@@ -136,7 +136,7 @@ does Sparky::JobApi::Role
           say "upgrade agent version and restart agent ... {self!agent-version} -> {$agent-version}";
           bash "bash /opt/brownie/agent/upgrade.sh";
         } else {
-          say "current agent version ({self!agent-version}) is uptodate"
+          say "current agent version: {self!agent-version} is uptodate"
         }
 
         if "{self.base-dir}/jobs/{$q<run-id>}".IO ~~ :d {
