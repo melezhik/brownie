@@ -133,7 +133,7 @@ does Sparky::JobApi::Role
         my $agent-version = $q<agent-version>;
 
         if $agent-version ne self!agent-version {
-          say "upgrade agent version and restart agent ...";
+          say "upgrade agent version and restart agent ... {self!agent-version} -> {$agent-version}";
           bash "/opt/brownie/agent/upgrade.sh";
         }
 
