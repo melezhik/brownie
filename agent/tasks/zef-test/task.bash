@@ -6,11 +6,17 @@ module=$(config module)
 
 rakudo_version=$(config rakudo_version)
 
+agent=$(config agent)
+
 old_path=$PATH
 
 export PATH=/tmp/whateverable/rakudo-moar/$rakudo_version/bin/:/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin:$PATH
 
-echo "[raku]" > report.txt
+echo "[agent]" > report.txt 
+
+echo $agent >> report.txt
+
+echo "[raku]" >> report.txt
 
 which raku >> report.txt
 
