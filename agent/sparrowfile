@@ -132,13 +132,6 @@ does Sparky::JobApi::Role
 
         my $agent-version = $q<agent-version>;
 
-        if $agent-version ne self!agent-version {
-          say "upgrade agent version and restart agent ... {self!agent-version} -> {$agent-version}";
-          bash "bash /opt/brownie/agent/upgrade.sh";
-        } else {
-          say "current agent version: {self!agent-version} is uptodate"
-        }
-
         if "{self.base-dir}/jobs/{$q<run-id>}".IO ~~ :d {
             say "skip job: {$q<run-id>}, already in agent queue";
         } elsif ($jobs-run-cnt >= $max-threads) {
