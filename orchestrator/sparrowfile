@@ -18,6 +18,10 @@ does Sparky::JobApi::Role
     "{%*ENV<HOME>}/.brownie"
   }
 
+  method !agent-version {
+    "0.0.41"
+  }
+
   method !distribute ($list,$agents, $sent-back,$rakudo-version) {
 
     my @sent;
@@ -64,6 +68,7 @@ does Sparky::JobApi::Role
         $agents-queue.put-stash(
           %( 
             version => $rakudo-version,
+            agent-version => self!agent-version,
             source-code => tags()<source_code> || False,
             agent => @agents[$i-1],
             modules => @slice,

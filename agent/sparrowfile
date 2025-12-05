@@ -127,7 +127,16 @@ does Sparky::JobApi::Role
       say "jobs-run-cnt: $jobs-run-cnt, max-threads: $max-threads";
 
       if $q {
+
         my $rakudo-version = $q<version>;
+
+        my $agent-version = $q<agent-version>;
+
+        if $agent-version ne self!agent-version {
+          say "upgrade agent version and restart agent ...";
+          bash "/opt/brownie/agent/upgrade.sh";
+        }
+
         if "{self.base-dir}/jobs/{$q<run-id>}".IO ~~ :d {
             say "skip job: {$q<run-id>}, already in agent queue";
         } elsif ($jobs-run-cnt >= $max-threads) {
