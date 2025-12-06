@@ -296,7 +296,7 @@ does Sparky::JobApi::Role
             my %state = task-run "zef fetch $d", "zef-fetch", %(
               identity => $d,
             );
-            task-run "tasks/zef-test", %(
+            my $s2 = task-run "tasks/zef-test", %(
               module => $d,
               zef_install_to => tags()<zef_install_to>,
               zef_test_degree => tags()<zef_test_degree>,
@@ -313,9 +313,9 @@ does Sparky::JobApi::Role
           %results{$d} = %(
             time => 0,
             log => "report.txt".IO.slurp,
-            status => False,
+            status => ( $s2<status> == 1 ?? True !! False) ,
             agent => $agent,
-            testfail => True,
+            testfail =>  ( $s2<status> == 1 ?? True !! False ),
             parent => $m,
             check_method => "testfail",
           );
