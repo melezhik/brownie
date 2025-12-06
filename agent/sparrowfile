@@ -289,11 +289,11 @@ does Sparky::JobApi::Role
           # re-run zef test to
           # collect test report
           my $new-status = False;
-          if "{self.base-dir}/.cache/{$rakudo-version}/modules/$d.report".IO ~~ :f {
+          if "{self.base-dir}/.cache2/{$rakudo-version}/modules/$d.report".IO ~~ :f {
             # read report from cache
             # for effecieny
-            say "read report from cache: {self.base-dir}/.cache/{$rakudo-version}/modules/$d.report";
-            "report.txt".IO.spurt("{self.base-dir}/.cache/{$rakudo-version}/modules/$d.report".IO.slurp);
+            say "read report from cache: {self.base-dir}/.cache2/{$rakudo-version}/modules/$d.report";
+            "report.txt".IO.spurt("{self.base-dir}/.cache2/{$rakudo-version}/modules/$d.report".IO.slurp);
           } else {
             my %state = task-run "zef fetch $d", "zef-fetch", %(
               identity => $d,
@@ -309,7 +309,7 @@ does Sparky::JobApi::Role
             );
             # save report into file cache for effecieny
             mkdir "{self.base-dir}/cache/{$rakudo-version}/modules";
-            "{self.base-dir}/.cache/{$rakudo-version}/modules/$d.report".IO.spurt("{%state<directory>}/report.txt".IO.slurp);
+            "{self.base-dir}/.cache2/{$rakudo-version}/modules/$d.report".IO.spurt("{%state<directory>}/report.txt".IO.slurp);
             "report.txt".IO.spurt("{%state<directory>}/report.txt".IO.slurp);
             directory-delete %state<directory>; 
             if $s2<success> == 1 {

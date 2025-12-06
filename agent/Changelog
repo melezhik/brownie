@@ -1,3 +1,9 @@
+0.0.48
+------
+finally get know
+how to use zef
+to run verbose tests
+
 0.0.47
 ------
 use prove6 verbose
@@ -27,7 +33,7 @@ upgrade
 0.0.42
 ------
 add debug info
-for ugent upgrade
+for urgent upgrade
 
 0.0.41
 ------
@@ -38,7 +44,7 @@ upgrade
 ------
 add check_method
 and parent
-meta informantion
+meta information
 to test report
 
 0.0.39

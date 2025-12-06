@@ -1,6 +1,7 @@
 set -e
 
 echo "start detailed report"
+echo "====================="
 
 module=$(config module)
 
@@ -16,7 +17,7 @@ old_path=$PATH
 
 export PATH=/tmp/whateverable/rakudo-moar/$rakudo_version/bin/:/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin:$PATH
 
-echo "run prove6 verbose for $module" > report.txt 
+echo "run zef --verbose test for $module" > report.txt 
 
 echo "[agent]" >> report.txt 
 
@@ -36,8 +37,6 @@ zef --version >> report.txt
 
 echo "===" >> report.txt
 
-echo "zef install . --verbose" >> report.txt
-
 if ! test  "${zef_install_to}" = ""; then
   #echo "zef_install_to is set to $zef_install_to, apply it"
   export ZEF_INSTALL_TO=$zef_install_to
@@ -47,7 +46,7 @@ else
   unset ZEF_INSTALL_TO
 fi
 
-if echo "1) install $module dependencies" >> report.txt && zef install . --deps-only 1>>report.txt 2>&1 && echo -e "2) prove6 -v t/" >> report.txt &&  prove6 -I lib -v t/ 1>>report.txt 2>&1; then
+if echo "1) install $module dependencies" >> report.txt && zef install . --deps-only 1>>report.txt 2>&1 && echo -e "2) zef --verbose test ." >> report.txt &&  zef test --verbose . 1>>report.txt 2>&1; then
   export PATH=$old_path
   update_state success 1
  else
