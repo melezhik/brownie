@@ -288,6 +288,7 @@ does Sparky::JobApi::Role
         for $s<fail><> -> $d {
           # re-run zef test to
           # collect test report
+          my $new-status = False;
           if "{self.base-dir}/cache/{$rakudo-version}/modules/$d.report".IO ~~ :f {
             # read report from cache
             # for effecieny
@@ -308,14 +309,17 @@ does Sparky::JobApi::Role
             # save report into file cache for effecieny
             mkdir "{self.base-dir}/cache/{$rakudo-version}/modules";
             "{self.base-dir}/cache/{$rakudo-version}/modules/$d.report".IO.spurt("{%state<directory>}/report.txt".IO.slurp);
-            directory-delete %state<directory>;
+            directory-delete %state<directory>; 
+            if s2<status> == 1 {
+              $new-status = True;
+            }
           }
           %results{$d} = %(
             time => 0,
             log => "report.txt".IO.slurp,
-            status => ( $s2<status> == 1 ?? True !! False) ,
+            status => $new-status,
             agent => $agent,
-            testfail =>  ( $s2<status> == 1 ?? True !! False ),
+            testfail =>  !$new-status,
             parent => $m,
             check_method => "testfail",
           );
