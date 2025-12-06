@@ -308,7 +308,7 @@ does Sparky::JobApi::Role
               directory => %state<directory>,
             );
             # save report into file cache for effecieny
-            mkdir "{self.base-dir}/cache/{$rakudo-version}/modules";
+            mkdir "{self.base-dir}/.cache2/{$rakudo-version}/modules";
             "{self.base-dir}/.cache2/{$rakudo-version}/modules/$d.report".IO.spurt("{%state<directory>}/report.txt".IO.slurp);
             "report.txt".IO.spurt("{%state<directory>}/report.txt".IO.slurp);
             directory-delete %state<directory>; 
