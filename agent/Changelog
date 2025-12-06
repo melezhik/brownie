@@ -1,6 +1,7 @@
 0.0.47
 ------
-run zef test . --verbose
+use prove6 verbose
+to get full report
 for failed modules
 
 0.0.46
