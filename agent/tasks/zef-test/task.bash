@@ -8,11 +8,17 @@ rakudo_version=$(config rakudo_version)
 
 agent=$(config agent)
 
+directory=$(config directory)
+
+cd $directory
+
 old_path=$PATH
 
 export PATH=/tmp/whateverable/rakudo-moar/$rakudo_version/bin/:/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin:$PATH
 
-echo "[agent]" > report.txt 
+echo "test verbose report for $module" > report.txt 
+
+echo "[agent]" >> report.txt 
 
 echo $agent >> report.txt
 
@@ -30,7 +36,7 @@ zef --version >> report.txt
 
 echo "===" >> report.txt
 
-echo "zef install $module" >> report.txt
+echo "zef install . --verbose" >> report.txt
 
 if ! test  "${zef_install_to}" = ""; then
   #echo "zef_install_to is set to $zef_install_to, apply it"
