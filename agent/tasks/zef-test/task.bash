@@ -47,7 +47,7 @@ else
   unset ZEF_INSTALL_TO
 fi
 
-if echo "1) install $module dependencies" >> report.txt && zef install . --deps-only 1>>report.txt 2>&1 && echo -e "2) prove6 -v t/" >> report.txt &&  prove6 -v t/ 1>>report.txt 2>&1; then
+if echo "1) install $module dependencies" >> report.txt && zef install . --deps-only 1>>report.txt 2>&1 && echo -e "2) prove6 -v t/" >> report.txt &&  prove6 -I lib -v t/ 1>>report.txt 2>&1; then
   export PATH=$old_path
   update_state success 1
  else
