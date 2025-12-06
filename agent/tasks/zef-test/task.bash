@@ -47,7 +47,13 @@ else
   unset ZEF_INSTALL_TO
 fi
 
-zef install $module 1>>report.txt 2>&1 || :
+if echo "1) install $module dependencies" >> report.txt && zef install . --deps-only 1>>report.txt 2>&1 && echo -e "2) install $module" >> report.txt && zef install . --vebose  1>>report.txt 2>&1; then
+  export PATH=$old_path
+  update_state success 1
+ else
+  export PATH=$old_path
+  update_state success 0
+fi
 
 echo "report"
 
