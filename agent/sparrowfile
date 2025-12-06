@@ -310,7 +310,7 @@ does Sparky::JobApi::Role
             mkdir "{self.base-dir}/cache/{$rakudo-version}/modules";
             "{self.base-dir}/cache/{$rakudo-version}/modules/$d.report".IO.spurt("{%state<directory>}/report.txt".IO.slurp);
             directory-delete %state<directory>; 
-            if s2<status> == 1 {
+            if $s2<status> == 1 {
               $new-status = True;
             }
           }
