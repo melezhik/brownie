@@ -292,6 +292,7 @@ does Sparky::JobApi::Role
           if "{self.base-dir}/.cache/{$rakudo-version}/modules/$d.report".IO ~~ :f {
             # read report from cache
             # for effecieny
+            say "read report from cache: {self.base-dir}/.cache/{$rakudo-version}/modules/$d.report";
             "report.txt".IO.spurt("{self.base-dir}/.cache/{$rakudo-version}/modules/$d.report".IO.slurp);
           } else {
             my %state = task-run "zef fetch $d", "zef-fetch", %(
