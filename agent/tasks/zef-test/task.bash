@@ -1,6 +1,6 @@
 set -e
 
-echo "start test"
+echo "start detailed report"
 
 module=$(config module)
 
@@ -16,7 +16,7 @@ old_path=$PATH
 
 export PATH=/tmp/whateverable/rakudo-moar/$rakudo_version/bin/:/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin:$PATH
 
-echo "test verbose report for $module" > report.txt 
+echo "run prove6 verbose for $module" > report.txt 
 
 echo "[agent]" >> report.txt 
 
