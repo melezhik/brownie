@@ -245,8 +245,6 @@ does Sparky::JobApi::Role
 
     for @list -> $m {
       
-      my $test-ok = True; # module successfully passed tests
-                          # could be chaged vi <testfail> section
       next if %results{$m};
 
       # this is weird Rakudo bug
@@ -288,10 +286,6 @@ does Sparky::JobApi::Role
       if $s<fail> {
         say "modules tests fail during installation of module $m: ", $s<fail>.raku;
         for $s<fail><> -> $d {
-          if $d eq $m {
-            $test-ok = False; # mark module as not passing tests
-            next
-          }
           # re-run zef test to
           # collect test report
           if "{self.base-dir}/cache/{$rakudo-version}/modules/$d.report".IO ~~ :f {
@@ -344,7 +338,6 @@ does Sparky::JobApi::Role
       %results{$m}<agent> = $agent;
       %results{$m}<time> = 0;
       %results{$m}<log> = "";
-      %results{$m}<testfail> = not $test-ok;
       %results{$m}<check_method> = "direct";
       if $s<success> == 1 {
         %results{$m}<status> = True
