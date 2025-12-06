@@ -293,6 +293,9 @@ does Sparky::JobApi::Role
             # for effecieny
             "report.txt".IO.spurt("{self.base-dir}/cache/{$rakudo-version}/modules/$d.report".IO.slurp);
           } else {
+            my %state = task-run "zef fetch $d", "zef-fetch", %(
+              identity => $d,
+            );
             task-run "tasks/zef-test", %(
               module => $d,
               zef_install_to => tags()<zef_install_to>,
@@ -300,10 +303,12 @@ does Sparky::JobApi::Role
               zef_fetch_degree => tags()<zef_fetch_degree>,
               rakudo_version => $rakudo-version,
               agent => $agent,
+              directory => %state<directory>,
             );
             # save report into file cache for effecieny
             mkdir "{self.base-dir}/cache/{$rakudo-version}/modules";
-            "{self.base-dir}/cache/{$rakudo-version}/modules/$d.report".IO.spurt("report.txt".IO.slurp);
+            "{self.base-dir}/cache/{$rakudo-version}/modules/$d.report".IO.spurt("{%state<directory>}/report.txt".IO.slurp);
+            directory-delete %state<directory>;
           }
           %results{$d} = %(
             time => 0,
