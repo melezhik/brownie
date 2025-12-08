@@ -1,3 +1,9 @@
+0.0.50
+------
+handle slow
+or infinite 
+tests with timeouts
+
 0.0.49
 ------
 fix cache dir issue
