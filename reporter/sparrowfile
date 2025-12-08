@@ -2,6 +2,16 @@ use Sparky::JobApi;
 
 my $action = tags()<action>;
 
+my %rel-to-sha = %(
+  "2025.11" => "fe0e20c28859ea709eefad19af452c9d35dff20d",
+  "2025.10" => "3f8de27bcb2ee987a2997de8fe314c460b7e53f9",
+  "2025.08" => "0310b2a586e6a80d2cced05675abe76a1ba73e02",
+  "2025.06.1" => "cf048a948a850ec7e5923021fe9fc9112056199d",
+  "2025.06" => "bc4329b15b5085387189864452cd062222bdfbea",
+  "2025.05" => "c8ffd6dbdd63f6cf90d4832204e0a0d26217bc3e",
+  "2025.04" => "57778e432003df466d8c797070345b81cb1ffdbf",
+);
+
 if $action eq "list" {
 
   task-run "list", "brownie-report", %(
@@ -9,16 +19,6 @@ if $action eq "list" {
   );
 
 } elsif $action eq "compare" {
-
-    my %rel-to-sha = %(
-      "2025.11" => "fe0e20c28859ea709eefad19af452c9d35dff20d",
-      "2025.10" => "3f8de27bcb2ee987a2997de8fe314c460b7e53f9",
-      "2025.08" => "0310b2a586e6a80d2cced05675abe76a1ba73e02",
-      "2025.06.1" => "cf048a948a850ec7e5923021fe9fc9112056199d",
-      "2025.06" => "bc4329b15b5085387189864452cd062222bdfbea",
-      "2025.05" => "c8ffd6dbdd63f6cf90d4832204e0a0d26217bc3e",
-      "2025.04" => "57778e432003df466d8c797070345b81cb1ffdbf",
-    );
 
   say "new: {tags()<new>} | old: {tags()<old>}";
   say "=======================================";
@@ -40,7 +40,30 @@ if $action eq "list" {
     "report.txt".IO.spurt($m<report>);
     $me.put-file("report.txt","$module.log");
   }
+
+} elsif $action eq "failed" {
+
+  say "rakudo: {tags()<version>}";
+  say "=======================================";
+  
+  my $version = %rel-to-sha{tags()<version>};
+
+  my $s = task-run "report", "brownie-report", %(
+    :$action,
+    :$version,
+  );
+
+  my $me = Sparky::JobApi.new(:mine);
+  
+  for $s<list><> -> $m {
+    my $module = $m<module>;
+    "report.txt".IO.spurt($m<report>);
+    $me.put-file("report.txt","$module.log");
+  }
+
 } else {
+
   die "unsupported action: $action"
+
 }
 

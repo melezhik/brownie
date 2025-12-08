@@ -20,6 +20,11 @@ vars:
         values: [ "compare" ]
         group: [ compare ]
   -
+        name: action
+        type: select
+        values: [ "failed" ]
+        group: [ failed ]
+  -
         name: new
         values: [ "2025.11", "2025.10", "2025.08", "2025.06.1", "2025.06", "2025.05", "2025.04" ]
         type: select
@@ -42,3 +47,4 @@ vars:
 group_vars:
   - list
   - compare
+  - failed
