@@ -1,4 +1,5 @@
 use Sparky::JobApi;
+use URI::Encode;
 
 my $action = tags()<action>;
 
@@ -38,7 +39,7 @@ if $action eq "list" {
   for $s<list><> -> $m {
     my $module = $m<module>;
     "report.txt".IO.spurt($m<report>);
-    $me.put-file("report.txt","$module.log");
+    $me.put-file("report.txt","{uri_encode_component($module)}.log");
   }
 
 } elsif $action eq "failed" {
@@ -58,7 +59,7 @@ if $action eq "list" {
   for $s<list><> -> $m {
     my $module = $m<module>;
     "report.txt".IO.spurt($m<report>);
-    $me.put-file("report.txt","$module.log");
+    $me.put-file("report.txt","{uri_encode_component($module)}.log");
   }
 
 } else {
