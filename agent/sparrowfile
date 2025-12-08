@@ -356,6 +356,9 @@ does Sparky::JobApi::Role
       } else {
         %results{$m}<status> = False;
         $status = False;
+        if $s<success> == - 1 {
+           %results{$m}<timeout> = True
+        }
       }
       if "log.txt".IO ~~ :e {
         %results{$m}<log> = "log.txt".IO.slurp;
