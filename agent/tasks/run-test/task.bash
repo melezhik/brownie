@@ -82,6 +82,7 @@ else
     update_state success 0
   else
     echo "10m timeout exeeded"
+    echo "10m timeout exeeded" >> log.txt
     update_state success -1
   fi
 fi
