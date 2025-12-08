@@ -69,12 +69,21 @@ env | grep RAKULIB >> dump.txt || :
 
 cat dump.txt
 
-if echo "1) install $module dependencies" >> log.txt && zef install $module --deps-only 1>>log.txt 2>&1 && echo -e "2) install $module" >> log.txt && zef install $module 1>>log.txt 2>&1; then
-  export PATH=$old_path
+echo "1) install $module dependencies" >> log.txt && timeout 10m zef install $module --deps-only 1>>log.txt 2>&1 && echo -e "2) install $module" >> log.txt && timeout 10m zef install $module 1>>log.txt 2>&1
+
+c=$?
+
+export PATH=$old_path
+
+if [ $c -eq 0 ]; then
   update_state success 1
- else
-  export PATH=$old_path
-  update_state success 0
+else
+  if [ $c -ne 124 ]; then
+    update_state success 0
+  else
+    echo "10m timeout exeeded"
+    update_state success -1
+  fi
 fi
 
 echo "test log"
