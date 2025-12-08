@@ -32,6 +32,13 @@ vars:
         group: [ compare ]
 
   -
+        name: version
+        values: [ "2025.11", "2025.10", "2025.08", "2025.06.1", "2025.06", "2025.05", "2025.04" ]
+        type: select
+        default: "2025.11"
+        group: [ failed ]
+
+  -
         name: old
         values: [ "2025.11", "2025.10", "2025.08", "2025.06.1", "2025.06", "2025.05", "2025.04" ]
         type: select
