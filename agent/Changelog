@@ -1,3 +1,8 @@
+0.0.51
+------
+set timeout
+to 20 minutes
+
 0.0.50
 ------
 handle slow
