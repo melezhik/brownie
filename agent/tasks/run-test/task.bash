@@ -69,7 +69,7 @@ env | grep RAKULIB >> dump.txt || :
 
 cat dump.txt
 
-echo "1) install $module dependencies" >> log.txt && timeout 10m zef install $module --deps-only 1>>log.txt 2>&1 && echo -e "2) install $module" >> log.txt && timeout 10m zef install $module 1>>log.txt 2>&1
+echo "1) install $module dependencies" >> log.txt && timeout 10m zef install $module --deps-only 1>>log.txt 2>&1 && echo -e "2) install $module" >> log.txt && timeout 20m zef install $module 1>>log.txt 2>&1
 
 c=$?
 
@@ -81,8 +81,8 @@ else
   if [ $c -ne 124 ]; then
     update_state success 0
   else
-    echo "10m timeout exeeded"
-    echo "10m timeout exeeded" >> log.txt
+    echo "20m timeout exeeded"
+    echo "20m timeout exeeded" >> log.txt
     update_state success -1
   fi
 fi
