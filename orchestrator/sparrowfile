@@ -171,6 +171,14 @@ does Sparky::JobApi::Role
 
     my %sent;
 
+    if tags()<module> && $ignore-skip {
+      say "ignore skip is on and module is set, clean up module data";
+      directory-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}";
+      file-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}.log";
+      file-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}.FAIL";
+      file-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}.OK";
+    }
+
     while (True) {
 
       my @_list = []; # tests to distribute
@@ -212,14 +220,6 @@ does Sparky::JobApi::Role
       # distribution
 
       my @done;
-
-      if tags()<module> && $ignore-skip {
-        say "ignore skip is on and module is set, clean up module data";
-        directory-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}";
-        file-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}.log";
-        file-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}.FAIL";
-        file-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}.OK";
-      }
 
       for @d -> $l {
         if "{self.base-dir}/versions/$rakudo-version/{$l}.OK".IO ~~ :f  ||
