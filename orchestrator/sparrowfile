@@ -105,6 +105,8 @@ does Sparky::JobApi::Role
 
     my $mod_cnt = Int(tags()<mods_cnt> || 100);
 
+    my $ignore-skip = tags()<ignore_skip> || False;
+
     my $rakudo-version = tags()<rakudo_version_release> eq "sha" ?? (tags()<sha> || $default-version)
     !! (%rel-to-sha{tags()<rakudo_version_release>} || $default-version);
         
@@ -119,6 +121,7 @@ does Sparky::JobApi::Role
     say ">>>";
     say "install from source code: ", tags()<source_code> || False;
     say "use shuffle: ", tags()<shuffle> || False;
+    say "ignore_skip: ", $ignore-skip;
     say "<<<";
     
     my $start_time = time;
@@ -126,8 +129,10 @@ does Sparky::JobApi::Role
     my @d;
 
     my %skip;
-    for config()<skip-tests><> -> $s {
-      %skip{$s} = True;
+    unless $ignore-skip {
+      for config()<skip-tests><> -> $s {
+        %skip{$s} = True;
+      }
     }
 
     if tags()<module> {
@@ -207,6 +212,14 @@ does Sparky::JobApi::Role
       # distribution
 
       my @done;
+
+      if tags()<module> && $ignore-skip {
+        say "ignore skip is on and module is set, clean up module data";
+        directory-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}";
+        file-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}.log";
+        file-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}.FAIL";
+        file-delete "{self.base-dir}/versions/$rakudo-version/{tags()<module>}.OK";
+      }
 
       for @d -> $l {
         if "{self.base-dir}/versions/$rakudo-version/{$l}.OK".IO ~~ :f  ||
