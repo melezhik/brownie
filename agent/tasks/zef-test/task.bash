@@ -46,7 +46,9 @@ else
   unset ZEF_INSTALL_TO
 fi
 
-if echo "1) install $module dependencies" >> report.txt && zef install . --deps-only 1>>report.txt 2>&1 && echo -e "2) zef --verbose test ." >> report.txt &&  zef test --verbose . 1>>report.txt 2>&1; then
+zefbin=/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin/zef
+
+if echo "1) install $module dependencies" >> report.txt && $zefbin install . --deps-only 1>>report.txt 2>&1 && echo -e "2) zef --verbose test ." >> report.txt &&  $zefbin test --verbose . 1>>report.txt 2>&1; then
   export PATH=$old_path
   update_state success 1
  else
