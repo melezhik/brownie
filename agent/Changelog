@@ -1,3 +1,10 @@
+0.0.52
+------
+Protection
+against using
+default Rakudo
+in tests
+
 0.0.51
 ------
 set timeout
