@@ -52,6 +52,8 @@ echo "===" >> log.txt
 
 echo "install [$module]" >> log.txt
 
+zefbin=/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin/zef
+
 if ! test  "${zef_install_to}" = ""; then
   echo "zef_install_to is set to $zef_install_to, apply it"
   export ZEF_INSTALL_TO=$zef_install_to
@@ -69,7 +71,7 @@ env | grep RAKULIB >> dump.txt || :
 
 cat dump.txt
 
-echo "1) install $module dependencies" >> log.txt && timeout 10m zef install $module --deps-only 1>>log.txt 2>&1 && echo -e "2) install $module" >> log.txt && timeout 20m zef install $module 1>>log.txt 2>&1
+echo "1) install $module dependencies" >> log.txt && timeout 10m $zefbin install $module --deps-only 1>>log.txt 2>&1 && echo -e "2) install $module" >> log.txt && timeout 20m $zefbin install $module 1>>log.txt 2>&1
 
 c=$?
 
