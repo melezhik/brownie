@@ -1,3 +1,8 @@
+0.0.53
+------
+fixed timeout
+10m -> 20m
+
 0.0.52
 ------
 Protection
