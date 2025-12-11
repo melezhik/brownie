@@ -1,3 +1,9 @@
+0.0.54
+------
+remove
+BRW_AGENT_CAP_INSTALL_FROM_SOURCE_FORCE
+from defaults
+
 0.0.53
 ------
 fixed timeout

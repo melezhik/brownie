@@ -4,6 +4,6 @@ docker stop -t 1 agent
 
 sleep 3
 
-docker run -d --rm --name agent -e BRW_AGENT_MAX_THREADS=1 -e BRW_AGENT_CAP_INSTALL_FROM_SOURCE_FORCE=1 -p 4002:4000 agent
+docker run -d --rm --name agent -e BRW_AGENT_MAX_THREADS=1 -p 4002:4000 agent
 
 #docker run -d --rm --name agent2 -p 4003:4000 agent
