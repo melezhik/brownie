@@ -36,8 +36,8 @@ vars:
         type: input
 
   -
-        name: module
-        type: input
+        name: modules
+        type: textarea
 
   -
         name: source_code
