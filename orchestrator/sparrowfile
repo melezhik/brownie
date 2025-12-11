@@ -112,7 +112,7 @@ does Sparky::JobApi::Role
         
     directory "{self.base-dir}/versions.known/{$rakudo-version}";
 
-    my @modules = (tags()<modules> || "").split("\n").grep(/\S/);
+    my @modules = (tags()<modules> || "").split(";").grep(/\S/).map({.chomp});
 
     if tags()<modules> {
        say "Testing module(s) against Rakudo version: {tags()<rakudo_version_release>} ($rakudo-version)";
