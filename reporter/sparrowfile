@@ -61,11 +61,18 @@ if $action eq "list" {
 
   my $me = Sparky::JobApi.new(:mine);
   
+  my @m; 
   for $s<list><> -> $m {
     my $module = $m<module>;
     "report.txt".IO.spurt($m<report>);
     $me.put-file("report.txt","{uri_encode_component($module)}.log");
+    push @m, $module;
   }
+
+  say "module list to copy/paste to orchestrator to rerun:";
+
+  say @m.join(",");
+
 
 } else {
 
