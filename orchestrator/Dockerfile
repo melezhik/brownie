@@ -42,7 +42,7 @@ RUN cd /root/.sparky/projects/brw-orch/ && mkdir -p .triggers && raku -e 'say %(
 
 RUN apt-get install -y jq && echo OK2 && cd /opt/sparky && git pull && zef install --/test --force-install .
 
-RUN zef install --/test URI::Encode
+RUN zef install --/test URI::Encode File::Directory::Tree
 
 RUN cd /opt/ && git clone https://github.com/melezhik/brownie.git
 

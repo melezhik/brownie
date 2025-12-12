@@ -1,6 +1,7 @@
 #!raku
 
 use Sparky::JobApi;
+use File::Directory::Tree;
 
 #use Ecosystem;
 
@@ -177,10 +178,18 @@ does Sparky::JobApi::Role
     if tags()<modules> && $ignore-skip {
       say "ignore skip is on and module is set, clean up module data";
       for @modules -> $m {
-        directory-delete "{self.base-dir}/versions/$rakudo-version/{$m}";
-        file-delete "{self.base-dir}/versions/$rakudo-version/{$m}.log";
-        file-delete "{self.base-dir}/versions/$rakudo-version/{$m}.FAIL";
-        file-delete "{self.base-dir}/versions/$rakudo-version/{$m}.OK";
+        if "{self.base-dir}/versions/$rakudo-version/{$m}".IO ~~ :d {
+          rmtree "{self.base-dir}/versions/$rakudo-version/{$m}";
+        }
+        if "{self.base-dir}/versions/$rakudo-version/{$m}.log".IO ~~ :f {
+          "{self.base-dir}/versions/$rakudo-version/{$m}.log".IO.unlink;
+        };
+        if "{self.base-dir}/versions/$rakudo-version/{$m}.FAIL".IO ~~ :f {
+          "{self.base-dir}/versions/$rakudo-version/{$m}.FAIL".IO.unlink;
+        };
+        if "{self.base-dir}/versions/$rakudo-version/{$m}.OK".IO ~~ :f {
+          "{self.base-dir}/versions/$rakudo-version/{$m}.OK".IO.unlink;
+        };
       }
     }
 
