@@ -9,6 +9,8 @@ use JSON::Fast;
 
 use URI::Encode;
 
+my %agent-stat;
+
 class Pipeline
 
 does Sparky::JobApi::Role
@@ -53,7 +55,20 @@ does Sparky::JobApi::Role
 
         my @slice = $list[$a .. $a + $chunk - 1];
 
-        @slice = @slice.sort;
+        # grep makes it sure
+        # modules are not sent to agents
+        # to which they have already been sent
+
+        @slice = @slice.grep({not %agent-stat{@agents[$i-1]}{$_}:exists}).sort;
+
+        for @slice -> $m {
+          # invalidate agents modules cache after 60 minutes
+          if Int(now - %agent-stat{@agents[$i-1]}{$m}) > 600*6 {
+              %agent-stat{@agents[$i-1]}{$m}:delete;
+          };
+        }
+
+        next unless @slice.elems;
 
         say "push job to agent {@agents[$i-1]}";
 
@@ -62,6 +77,9 @@ does Sparky::JobApi::Role
           :job-id(@agents[$i-1]),
         );
 
+        for @slice -> $m {
+          %agent-stat{@agents[$i-1]}{$m} = now;
+        }
         $agents-queue.put-stash(
           %( 
             version => $rakudo-version,
@@ -93,7 +111,7 @@ does Sparky::JobApi::Role
     #my $eco = Ecosystem.new;
 
     my $default-version = "fe0e20c28859ea709eefad19af452c9d35dff20d";
-
+    
     my %rel-to-sha = %(
       "2025.11" => $default-version,
       "2025.10" => "3f8de27bcb2ee987a2997de8fe314c460b7e53f9",
