@@ -55,12 +55,6 @@ does Sparky::JobApi::Role
 
         my @slice = $list[$a .. $a + $chunk - 1];
 
-        # grep makes it sure
-        # modules are not sent to agents
-        # to which they have already been sent
-
-        @slice = @slice.grep({not %agent-stat{@agents[$i-1]}{$_}:exists}).sort;
-
         for @slice -> $m {
           # invalidate agents modules cache after 60 minutes
           next unless %agent-stat{@agents[$i-1]}:exists;
@@ -69,6 +63,12 @@ does Sparky::JobApi::Role
               %agent-stat{@agents[$i-1]}{$m}:delete;
           };
         }
+
+        # grep makes it sure
+        # modules are not sent to agents
+        # to which they have already been sent
+
+        @slice = @slice.grep({not %agent-stat{@agents[$i-1]}{$_}:exists}).sort;
 
         next unless @slice.elems;
 
