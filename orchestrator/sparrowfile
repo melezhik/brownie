@@ -63,6 +63,8 @@ does Sparky::JobApi::Role
 
         for @slice -> $m {
           # invalidate agents modules cache after 60 minutes
+          next unless %agent-stat{@agents[$i-1]}:exists;
+          next unless %agent-stat{@agents[$i-1]}{$m}:exists;
           if Int(now - %agent-stat{@agents[$i-1]}{$m}) > 600*6 {
               %agent-stat{@agents[$i-1]}{$m}:delete;
           };
