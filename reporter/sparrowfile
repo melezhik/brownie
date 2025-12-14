@@ -11,6 +11,7 @@ my %rel-to-sha = %(
   "2025.06" => "bc4329b15b5085387189864452cd062222bdfbea",
   "2025.05" => "c8ffd6dbdd63f6cf90d4832204e0a0d26217bc3e",
   "2025.04" => "57778e432003df466d8c797070345b81cb1ffdbf",
+   "head" => "63bc8b839300eff9f13bac2cae62bd108207b510",
 );
 
 if $action eq "list" {
