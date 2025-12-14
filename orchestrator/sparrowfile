@@ -68,9 +68,9 @@ does Sparky::JobApi::Role
         # modules are not sent to agents
         # to which they have already been sent
 
-        @slice = @slice.grep({not %agent-stat{@agents[$i-1]}{$_}:exists}).sort;
+        #@slice = @slice.grep({not %agent-stat{@agents[$i-1]}{$_}:exists}).sort;
 
-        next unless @slice.elems;
+        #next unless @slice.elems;
 
         say "push job to agent {@agents[$i-1]}";
 
