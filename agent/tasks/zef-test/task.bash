@@ -35,6 +35,8 @@ which zef >> report.txt
 
 zef --version >> report.txt
 
+env | grep BRW >> report.txt || :
+
 echo "===" >> report.txt
 
 if ! test  "${zef_install_to}" = ""; then

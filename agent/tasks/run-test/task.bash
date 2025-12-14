@@ -69,6 +69,8 @@ env | grep ZEF_ >> dump.txt || :
 
 env | grep RAKULIB >> dump.txt || :
 
+env | grep BRW >> dump.txt || :
+
 cat dump.txt
 
 echo "1) install $module dependencies" >> log.txt && timeout 20m $zefbin install $module --deps-only 1>>log.txt 2>&1 && echo -e "2) install $module" >> log.txt && timeout 20m $zefbin install $module 1>>log.txt 2>&1
