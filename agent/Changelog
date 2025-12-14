@@ -1,3 +1,8 @@
+0.0.56
+------
+use zef test --debug .
+in zef-test
+
 0.0.55
 ------
 add BWR env

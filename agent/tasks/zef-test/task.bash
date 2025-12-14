@@ -17,7 +17,7 @@ old_path=$PATH
 
 export PATH=/tmp/whateverable/rakudo-moar/$rakudo_version/bin/:/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin:$PATH
 
-echo "run zef --verbose test for $module" > report.txt 
+echo "run zef --debug test for $module" > report.txt 
 
 echo "[agent]" >> report.txt 
 
@@ -50,7 +50,7 @@ fi
 
 zefbin=/tmp/whateverable/rakudo-moar/$rakudo_version/share/perl6/site/bin/zef
 
-if echo "1) install $module dependencies" >> report.txt && $zefbin install . --deps-only 1>>report.txt 2>&1 && echo -e "2) zef --verbose test ." >> report.txt &&  $zefbin test --verbose . 1>>report.txt 2>&1; then
+if echo "1) install $module dependencies" >> report.txt && $zefbin install . --deps-only 1>>report.txt 2>&1 && echo -e "2) zef --debug test ." >> report.txt &&  $zefbin test --debug . 1>>report.txt 2>&1; then
   export PATH=$old_path
   update_state success 1
  else
