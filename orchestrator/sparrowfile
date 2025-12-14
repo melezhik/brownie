@@ -237,6 +237,7 @@ does Sparky::JobApi::Role
               $jobs-run-cnt = %meta<jobs-run-cnt> || 0;
               $max-threads = %meta<max-threads> || 3;
             }
+            next if $max-threads > 10; # temporary disable patric's agent
             say "agent {$ag.basename} heartbeat OK - [$age] seconds | job runs cnt - [$jobs-run-cnt] / max-threads - [$max-threads]";
             push @agents, %( name => $ag.basename, jobs-run-cnt => Int($jobs-run-cnt), max-threads => Int($max-threads) );
           } else {
