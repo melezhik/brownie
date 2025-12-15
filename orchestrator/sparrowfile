@@ -70,7 +70,7 @@ does Sparky::JobApi::Role
 
         #@slice = @slice.grep({not %agent-stat{@agents[$i-1]}{$_}:exists}).sort;
 
-        #next unless @slice.elems;
+        if @slice.elems {
 
         say "push job to agent {@agents[$i-1]}";
 
@@ -93,6 +93,7 @@ does Sparky::JobApi::Role
         );
 
         say "slice: {@slice.raku}";
+        }
         $a = $a + $chunk;
         say "...";
         
