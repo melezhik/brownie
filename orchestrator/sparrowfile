@@ -91,7 +91,7 @@ does Sparky::JobApi::Role
             agent => @agents[$i-1],
             modules => @slice,
             run-id => time,
-            $round-id => $round-id,
+            round-id => $round-id,
           )
         );
 
