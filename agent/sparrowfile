@@ -182,7 +182,7 @@ does Sparky::JobApi::Role
                 zef_test_degree => %*ENV<ZEF_FETCH_DEGREE>,
                 zef_fetch_degree => %*ENV<ZEF_TEST_DEGREE>,
                 run-id => $q<run-id>,
-                round-id => $q<round-id>,
+                round-id => $q<round-id> || "03",
             );
             %tags<zef_install_to> = True if %*ENV<ZEF_INSTALL_TO>;
             $j.queue({
