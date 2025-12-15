@@ -1,6 +1,7 @@
 set -e
 
 echo "start detailed report"
+
 echo "====================="
 
 module=$(config module)
@@ -8,6 +9,8 @@ module=$(config module)
 rakudo_version=$(config rakudo_version)
 
 agent=$(config agent)
+
+round_id=$(config round_id)
 
 directory=$(config directory)
 
@@ -22,6 +25,10 @@ echo "run zef --debug test for $module" > report.txt
 echo "[agent]" >> report.txt 
 
 echo $agent >> report.txt
+
+echo "[round_id]" >> report.txt
+
+echo $round_id >> report.txt
 
 echo "[raku]" >> report.txt
 

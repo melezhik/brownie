@@ -6,6 +6,8 @@ zef_install_to=$(config zef_install_to)
 
 agent=$(config agent)
 
+round_id=$(config round_id)
+
 export ZEF_FETCH_DEGREE=$(config zef_fetch_degree)
 
 export ZEF_TEST_DEGREE=$(config zef_test_degree)
@@ -35,6 +37,10 @@ echo "install [$module]"
 echo "[agent]" > log.txt 
 
 echo $agent >> log.txt
+
+echo "[round_id]" >> log.txt 
+
+echo $round_id >> log.txt
 
 echo "[raku]" >> log.txt
 

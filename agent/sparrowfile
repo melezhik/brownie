@@ -182,6 +182,7 @@ does Sparky::JobApi::Role
                 zef_test_degree => %*ENV<ZEF_FETCH_DEGREE>,
                 zef_fetch_degree => %*ENV<ZEF_TEST_DEGREE>,
                 run-id => $q<run-id>,
+                round-id => $q<round-id>,
             );
             %tags<zef_install_to> = True if %*ENV<ZEF_INSTALL_TO>;
             $j.queue({
@@ -204,6 +205,8 @@ does Sparky::JobApi::Role
     my $my = Sparky::JobApi.new( :mine );
 
     my $rakudo-version = tags()<rakudo-version>;
+
+    my $round-id = tags()<round-id>;
 
     bash "export PATH=/tmp/whateverable/rakudo-moar/{$rakudo-version}/bin/:/tmp/whateverable/rakudo-moar/{$rakudo-version}/share/perl6/site/bin:\$PATH && which zef > raku.env && zef --version >> raku.env && which raku >> raku.env && raku -V >> rakuenv.txt";
 
@@ -263,6 +266,7 @@ does Sparky::JobApi::Role
         zef_fetch_degree => tags()<zef_fetch_degree>,
         rakudo_version => $rakudo-version,
         agent => $agent,
+        round_id => $round-id,
       );
 
       my $log = ( "log.txt".IO ~~ :e ) ?? "log.txt".IO.slurp  !! "no log data";
@@ -289,11 +293,11 @@ does Sparky::JobApi::Role
           # re-run zef test to
           # collect test report
           my $new-status = False;
-          if "{self.base-dir}/.cache2/{$rakudo-version}/modules/$d.report".IO ~~ :f {
+          if "{self.base-dir}/.{$round-id}/{$rakudo-version}/modules/$d.report".IO ~~ :f {
             # read report from cache
             # for effecieny
-            say "read report from cache: {self.base-dir}/.cache2/{$rakudo-version}/modules/$d.report";
-            "report.txt".IO.spurt("{self.base-dir}/.cache2/{$rakudo-version}/modules/$d.report".IO.slurp);
+            say "read report from cache: {self.base-dir}/.{$round-id}/{$rakudo-version}/modules/$d.report";
+            "report.txt".IO.spurt("{self.base-dir}/.{$round-id}/{$rakudo-version}/modules/$d.report".IO.slurp);
           } else {
             my %state = task-run "zef fetch $d", "zef-fetch", %(
               identity => $d,
@@ -306,10 +310,11 @@ does Sparky::JobApi::Role
               rakudo_version => $rakudo-version,
               agent => $agent,
               directory => %state<directory>,
+              round_id => $round-id,
             );
             # save report into file cache for effecieny
-            mkdir "{self.base-dir}/.cache2/{$rakudo-version}/modules";
-            "{self.base-dir}/.cache2/{$rakudo-version}/modules/$d.report".IO.spurt("{%state<directory>}/report.txt".IO.slurp);
+            mkdir "{self.base-dir}/.{$round-id}/{$rakudo-version}/modules";
+            "{self.base-dir}/.{$round-id}/{$rakudo-version}/modules/$d.report".IO.spurt("{%state<directory>}/report.txt".IO.slurp);
             "report.txt".IO.spurt("{%state<directory>}/report.txt".IO.slurp);
             directory-delete %state<directory>; 
             if $s2<success> == 1 {

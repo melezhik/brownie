@@ -1,3 +1,11 @@
+0.0.57
+------
+add round-id
+to set a new
+cache for failed
+modules reports
+for every run
+
 0.0.56
 ------
 use zef test --debug .

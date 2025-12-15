@@ -11,6 +11,8 @@ use URI::Encode;
 
 my %agent-stat;
 
+my $round-id = Int(now);
+
 class Pipeline
 
 does Sparky::JobApi::Role
@@ -89,6 +91,7 @@ does Sparky::JobApi::Role
             agent => @agents[$i-1],
             modules => @slice,
             run-id => time,
+            $round-id => $round-id,
           )
         );
 
