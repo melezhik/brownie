@@ -44,7 +44,7 @@ COPY tasks /root/.sparky/projects/agent/tasks/
 
 RUN cd /root/.sparky/projects/agent/ && mkdir -p .triggers && raku -e 'say %( :description<go_go_go> ).raku' > .triggers/go
 
-RUN echo OK && cd /opt/sparky && git pull && zef install --/test --force-install .
+RUN echo OK4 && cd /opt/sparky && git pull && zef install --/test --force-install .
 
 RUN cd /opt/ && git clone https://github.com/melezhik/brownie.git
 
